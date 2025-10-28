@@ -1,13 +1,10 @@
 package com.myteam.work;
 
-/**
- * Hello world!
- *
- */
-public class App 
-{
-    public static void main( String[] args )
-    {
-        System.out.println( "Hello World!" );
+import com.myteam.work.gui.Window;
+import com.myteam.work.gui.pages.LoginPage;
+
+public class App {
+    public static void main( String[] args ) {
+		Window.getWindow().switchPage(LoginPage.getPage());
     }
 }
