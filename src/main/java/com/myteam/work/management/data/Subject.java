@@ -1,6 +1,7 @@
 package com.myteam.work.management.data;
 
 import java.util.List;
+import java.util.Arrays;
 import java.util.ArrayList;
 
 import lombok.Getter;
@@ -17,17 +18,17 @@ public class Subject {
 	private String subjectName;
 	private List<Subject> prerequisites;
 
-	public Subject(short credits, bool required, String subjectName) {
+	public Subject(short credits, boolean required, String subjectName) {
 		this.credits = credits;
 		this.required = required;
 		this.subjectName = subjectName;
 		this.prerequisites = new ArrayList<>();
 	}
 
-	public Subject(short credits, bool required, String subjectName, Subject... prerequisites) {
+	public Subject(short credits, boolean required, String subjectName, Subject... prerequisites) {
 		this.credits = credits;
 		this.required = required;
 		this.subjectName = subjectName;
-		this.prerequisites = new ArrayList<>(prerequisites);
+		this.prerequisites = new ArrayList<Subject>(Arrays.asList(prerequisites));
 	}
 }
