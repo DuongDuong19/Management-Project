@@ -13,7 +13,7 @@ import lombok.EqualsAndHashCode;
 public class Subject {
 	private int id;
 	private short credits;
-	private bool required;
+	private boolean required;
 	private String subjectName;
 	private List<Subject> prerequisites;
 
