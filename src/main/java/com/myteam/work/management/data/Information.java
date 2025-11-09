@@ -5,21 +5,33 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 @Getter
-@Setter
+@EqualsAndHashCode
+@ToString
 public class Information {
+	@Setter
+	@NonNull 
 	private String name;
 	private LocalDate birth;
+	@Setter
+	@NonNull
 	private String placeOfBirth;
+	@Setter
 	private boolean sex;
 
-	public Information(String name, String day, String month, String year, String placeOfBirth, boolean sex) throws DateTimeParseException {
+	public Information(@NonNull String name, @NonNull String birth, @NonNull String placeOfBirth, boolean sex) throws DateTimeParseException {
 		this.name = name;
-		this.birth = LocalDate.parse(day + "-" + month + "-" + year, DateTimeFormatter.ofPattern("dd-mm-yyyy"));
+		this.birth = LocalDate.parse(birth, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 		this.placeOfBirth = placeOfBirth;
 		this.sex = sex;
+	}
+
+	public void setBirth(@NonNull String birth) throws DateTimeParseException {
+		this.birth = LocalDate.parse(birth, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 	}
 }
