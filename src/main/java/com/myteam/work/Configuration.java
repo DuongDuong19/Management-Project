@@ -1,5 +1,7 @@
 package com.myteam.work;
 
+import java.awt.Cursor;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.NonNull;
@@ -18,6 +20,8 @@ public class Configuration {
 	@Setter
 	@NonNull
 	private static String sqlPassword;
+	@Getter
+	private static Cursor handCursor = new Cursor(Cursor.HAND_CURSOR);
 
 	static {
 		sqlURL = "jdbc:postgresql://localhost:5432/doanoop";

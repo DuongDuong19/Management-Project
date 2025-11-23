@@ -14,11 +14,16 @@ import com.myteam.work.management.handler.SQLHandler;
 @Slf4j
 public class LoginController {
 	private static LoginController lgCtrl;
-
 	@Getter
 	private User currentUser;
 
-	public LoginController() {}
+	LoginController() {}
+
+	public static LoginController getController() {
+		if(lgCtrl == null) lgCtrl = new LoginController();
+
+		return lgCtrl;
+	}
 
 	public boolean login(String username, String password) {
 		var result = SQLHandler.getUserByAuthentication(username, password);
@@ -26,7 +31,11 @@ public class LoginController {
 
 		if(result != null) {
 			this.currentUser = result;
-			logInfo = "Login as " + this.currentUser.getInfo().getName();
+			var userRealName = this.currentUser.getInfo().getName();
+			logInfo = "Login as " + userRealName;
+
+			if(this.currentUser.isRole()) PageController.getController().getTeacherHomePage(userRealName);
+			else PageController.getController().getManagerHomePage(userRealName);
 		}
 
 		log.info(logInfo);
@@ -37,6 +46,6 @@ public class LoginController {
 	public void logout() {
 		log.info("Logout as" + this.currentUser.getInfo().getName());
 		this.currentUser = null;
-		Window.getWindow().switchPage(LoginPage.getPage());
+		PageController.getController().getLoginPage();
 	}
 }

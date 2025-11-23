@@ -26,6 +26,7 @@ import javax.swing.JPasswordField;
 import javax.swing.border.EmptyBorder;
 
 import com.myteam.work.gui.Window;
+import com.myteam.work.Configuration;
 import com.myteam.work.controller.LoginController;
 
 public class LoginPage extends JPanel {
@@ -36,9 +37,8 @@ public class LoginPage extends JPanel {
 	private static final String defaultPasswordPlaceholder = "Please enter password!";
 	private static final Image eye = new ImageIcon(LoginPage.class.getClassLoader().getResource("eye.png")).getImage();
 	private static final Image eyeHide = new ImageIcon(LoginPage.class.getClassLoader().getResource("eyeHide.png")).getImage();
-	private static final Cursor handCursor = new Cursor(Cursor.HAND_CURSOR);
+	private static Configuration config = Configuration.getConfiguration();
 	private static LoginPage lp;
-	private static LoginController controller;
 
 	private static class DefaultTextDisplayer extends FocusAdapter {
 		private String defaultText;
@@ -66,8 +66,7 @@ public class LoginPage extends JPanel {
 		}
 	}
 
-	private LoginPage() {
-		this.controller = new LoginController();
+	public LoginPage() {
 		var windowSize = Window.getWindow().getSize();
 		var loginContainer = new JPanel(new GridBagLayout()) {
 			protected void paintComponent(Graphics g) {
@@ -124,7 +123,7 @@ public class LoginPage extends JPanel {
 		});
 		passwordField.addMouseMotionListener(new MouseMotionAdapter() {
 			public void mouseMoved(MouseEvent e) {
-				if(new Rectangle(passwordField.getWidth() - 30, 0, 30, 30).contains(e.getPoint())) passwordField.setCursor(handCursor);
+				if(new Rectangle(passwordField.getWidth() - 30, 0, 30, 30).contains(e.getPoint())) passwordField.setCursor(config.getHandCursor());
 				else passwordField.setCursor(new Cursor(Cursor.TEXT_CURSOR));
 			}
 		});
@@ -144,14 +143,17 @@ public class LoginPage extends JPanel {
 		loginBtn.setBackground(new Color(0, 120, 215));
 		loginBtn.setForeground(Color.WHITE);
 		loginBtn.setFocusPainted(false);
-		loginBtn.setCursor(handCursor);
+		loginBtn.setCursor(config.getHandCursor());
 		loginBtn.addActionListener(e -> {
-			var result = this.controller.login(usernameField.getText(), new String(passwordField.getPassword()));
+			var result = LoginController.getController().login(usernameField.getText(), new String(passwordField.getPassword()));
 			loginStatus.setText(result ? "" : "Incorrect username or password! Please try again!");
 			usernameField.setText(defaultUsernamePlaceholder);
 			usernameField.setForeground(fieldColor);
 			passwordField.setText(defaultPasswordPlaceholder);
 			passwordField.setForeground(fieldColor);
+			passwordField.hide = false;
+			passwordField.setEchoChar(passwordField.echoChar);
+			passwordField.repaint();
 		});
 		gbc.gridy = 4;
 		loginContainer.add(loginBtn, gbc);
@@ -171,9 +173,9 @@ public class LoginPage extends JPanel {
 		g2d.fillRect(0, 0, this.getWidth(), this.getHeight());
 	}
 
-	public static JPanel getPage() {
-		if(lp == null) lp = new LoginPage();
+	//public static JPanel getPage() {
+	//	if(lp == null) lp = new LoginPage();
 
-		return lp;
-	}
+	//	return lp;
+	//}
 }

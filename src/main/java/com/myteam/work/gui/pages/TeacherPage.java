@@ -1,21 +1,20 @@
 package com.myteam.work.gui.pages;
 
-import java.awt.Color;
 import java.awt.BorderLayout;
 
 import javax.swing.JPanel;
 
-public class TeacherHomePage extends JPanel {
-	private static TeacherHomePage thp;
+public class TeacherPage extends JPanel {
+	private static TeacherPage tp;
 
-	private TeacherHomePage() {
+	private TeacherPage() {
 		this.setLayout(new BorderLayout());
 		this.add(PageHeader.getPage(), BorderLayout.NORTH);
 	}
 
 	public static JPanel getPage() {
-		if(thp == null) thp = new TeacherHomePage();
+		if(tp == null) tp = new TeacherPage();
 
-		return thp;
+		return tp;
 	}
 }
