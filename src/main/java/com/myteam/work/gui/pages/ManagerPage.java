@@ -9,7 +9,6 @@ public class ManagerPage extends JPanel {
 
 	private ManagerPage() {
 		this.setLayout(new BorderLayout());
-		this.add(PageHeader.getPage(), BorderLayout.NORTH);
 	}
 
 	public static JPanel getPage() {

@@ -9,7 +9,6 @@ public class TeacherPage extends JPanel {
 
 	private TeacherPage() {
 		this.setLayout(new BorderLayout());
-		this.add(PageHeader.getPage(), BorderLayout.NORTH);
 	}
 
 	public static JPanel getPage() {

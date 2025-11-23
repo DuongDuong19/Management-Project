@@ -1,10 +1,14 @@
 package com.myteam.work.controller;
 
 import java.awt.CardLayout;
-import java.awt.LayoutManager;
+import java.awt.BorderLayout;
+
+import javax.swing.JPanel;
 
 import com.myteam.work.gui.Window;
 import com.myteam.work.gui.pages.PageHeader;
+import com.myteam.work.gui.pages.TeacherHomePage;
+import com.myteam.work.gui.pages.ManagerHomePage;
 
 public class PageController {
 	private static PageController pc;
@@ -22,16 +26,42 @@ public class PageController {
 
 	public void getLoginPage() {
 		pageSwitcher.show(Window.getWindow().getContentPane(), "login");
-		((PageHeader) PageHeader.getPage()).updateUsername("");
+		setUsername("");
 	}
 
 	public void getManagerHomePage(String username) {
 		pageSwitcher.show(Window.getWindow().getContentPane(), "managerHome");
-		((PageHeader) PageHeader.getPage()).updateUsername(username);
+		getHeader(ManagerHomePage.getPage());
+		setMenu(false);
 	}
 
 	public void getTeacherHomePage(String username) {
 		pageSwitcher.show(Window.getWindow().getContentPane(), "teacherHome");
+		getHeader(TeacherHomePage.getPage());
+		setMenu(false);
+	}
+
+	public void getTeacherPage() {
+		pageSwitcher.show(Window.getWindow().getContentPane(), "teacher");
+		setHeader(TeacherPage.getPage());
+		setMenu(true);
+	}
+
+	public void getManagerPage() {
+		pageSwitcher.show(Window.getWindow().getContentPane(), "manager");
+		setHeader(ManagerPage.getPage());
+		setMenu(true);
+	}
+
+	public void setUsername(String username) {
 		((PageHeader) PageHeader.getPage()).updateUsername(username);
+	}
+
+	private void getHeader(JPanel needed) {
+		needed.add(PageHeader.getPage(), BorderLayout.NORTH);
+	}
+
+	private void setMenu(boolean menu) {
+		((PageHeader) PageHeader.getPage()).setMenu(menu);
 	}
 }

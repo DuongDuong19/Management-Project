@@ -10,7 +10,6 @@ public class TeacherHomePage extends JPanel {
 
 	private TeacherHomePage() {
 		this.setLayout(new BorderLayout());
-		this.add(PageHeader.getPage(), BorderLayout.NORTH);
 	}
 
 	public static JPanel getPage() {

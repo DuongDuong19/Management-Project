@@ -33,9 +33,11 @@ public class LoginController {
 			this.currentUser = result;
 			var userRealName = this.currentUser.getInfo().getName();
 			logInfo = "Login as " + userRealName;
+			var pc = PageController.getController();
+			pc.setUsername(userRealName);
 
-			if(this.currentUser.isRole()) PageController.getController().getTeacherHomePage(userRealName);
-			else PageController.getController().getManagerHomePage(userRealName);
+			if(this.currentUser.isRole()) pc.getTeacherHomePage(userRealName);
+			else pc.getManagerHomePage(userRealName);
 		}
 
 		log.info(logInfo);
