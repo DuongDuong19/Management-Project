@@ -7,6 +7,8 @@ import javax.swing.JPanel;
 
 import com.myteam.work.gui.Window;
 import com.myteam.work.gui.pages.PageHeader;
+import com.myteam.work.gui.pages.TeacherPage;
+import com.myteam.work.gui.pages.ManagerPage;
 import com.myteam.work.gui.pages.TeacherHomePage;
 import com.myteam.work.gui.pages.ManagerHomePage;
 
@@ -43,13 +45,13 @@ public class PageController {
 
 	public void getTeacherPage() {
 		pageSwitcher.show(Window.getWindow().getContentPane(), "teacher");
-		setHeader(TeacherPage.getPage());
+		getHeader(TeacherPage.getPage());
 		setMenu(true);
 	}
 
 	public void getManagerPage() {
 		pageSwitcher.show(Window.getWindow().getContentPane(), "manager");
-		setHeader(ManagerPage.getPage());
+		getHeader(ManagerPage.getPage());
 		setMenu(true);
 	}
 
