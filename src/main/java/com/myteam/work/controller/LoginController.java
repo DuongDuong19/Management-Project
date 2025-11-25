@@ -36,8 +36,8 @@ public class LoginController {
 			var pc = PageController.getController();
 			pc.setUsername(userRealName);
 
-			if(this.currentUser.isRole()) pc.getTeacherHomePage(userRealName);
-			else pc.getManagerHomePage(userRealName);
+			if(this.currentUser.isRole()) pc.getTeacherPage(userRealName);
+			else pc.getManagerPage(userRealName);
 		}
 
 		log.info(logInfo);

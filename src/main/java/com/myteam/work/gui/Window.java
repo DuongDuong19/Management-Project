@@ -14,8 +14,6 @@ import lombok.Getter;
 import com.myteam.work.gui.pages.LoginPage;
 import com.myteam.work.gui.pages.ManagerPage;
 import com.myteam.work.gui.pages.TeacherPage;
-import com.myteam.work.gui.pages.ManagerHomePage;
-import com.myteam.work.gui.pages.TeacherHomePage;
 import com.myteam.work.management.handler.SQLHandler;
 
 @Slf4j
@@ -62,8 +60,6 @@ public class Window extends JFrame {
 		log.info("initializing page");
 		this.setLayout(this.pageSwitcher);
 		this.add(new LoginPage(), "login");
-		this.add(ManagerHomePage.getPage(), "managerHome");
-		this.add(TeacherHomePage.getPage(), "teacherHome");
 		this.add(ManagerPage.getPage(), "manager");
 		this.add(TeacherPage.getPage(), "teacher");
 	}

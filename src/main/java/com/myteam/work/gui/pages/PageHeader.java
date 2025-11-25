@@ -34,25 +34,24 @@ public class PageHeader extends JPanel {
 	private PageHeader() {
 		super(new BorderLayout(20, 0));
 		var windowSize = Window.getWindow().getSize();
-		this.setSize(new Dimension(windowSize.width, windowSize.height / 10));
+		this.setPreferredSize(new Dimension(windowSize.width, windowSize.height / 10));
 		this.setBackground(background);
 		this.setBorder(BorderFactory.createCompoundBorder(
 			BorderFactory.createMatteBorder(0, 0, 2, 0, new Color(211, 211, 211)),
 			BorderFactory.createEmptyBorder(20, 30, 20, 30)
 		));
-		var btnPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 10));
+		var btnPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
 		btnPanel.setOpaque(false);
 		this.menuBtn = new JButton();
 		this.menuBtn.setBackground(background);
-		this.menuBtn.setIcon(null);
+		this.menuBtn.setIcon(menuIcon);
 		this.menuBtn.setCursor(config.getHandCursor());
-		this.menuOn = false;
 		this.menuBtn.setBorder(new LineBorder(Color.BLACK));
 		btnPanel.add(this.menuBtn);
 		var titleLabel = new JLabel("Score Management System");
 		titleLabel.setFont(headerFont);
 		titleLabel.setForeground(Color.WHITE);
-		var userPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 5, 15));
+		var userPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 5));
 		userPanel.setBackground(background);
 		this.userLabel = new JLabel("");
 		userLabel.setForeground(Color.WHITE);
@@ -78,19 +77,5 @@ public class PageHeader extends JPanel {
 
 	public void updateUsername(String username) {
 		this.userLabel.setText(username);
-	}
-
-	public void setMenu(boolean menu) {
-		if(menu) {
-			if(!this.menuOn) {
-				this.menuOn = !this.menuOn;
-				this.menuBtn.setIcon(menuIcon);
-				this.menuBtn.setEnabled(true);
-			}
-		} else if(this.menuOn) {
-			this.menuBtn.setIcon(null);
-			this.menuBtn.setEnabled(false);
-			this.menuOn = !this.menuOn;
-		};
 	}
 }
