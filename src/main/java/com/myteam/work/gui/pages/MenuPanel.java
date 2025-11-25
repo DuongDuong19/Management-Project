@@ -62,6 +62,8 @@ public class MenuPanel extends JPanel {
 				this.add(managerBtns[i]);
 				this.add(Box.createRigidArea(new Dimension(0, 5)));
 			}
+
+			this.current = false;
 		}
 	}
 }
