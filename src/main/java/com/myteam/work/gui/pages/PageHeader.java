@@ -27,8 +27,6 @@ public class PageHeader extends JPanel {
 	private static final Font headerFont = new Font(defaultFont.getName(), Font.BOLD | Font.ITALIC, defaultFont.getSize() * 2);
 	private static Configuration config = Configuration.getConfiguration();
 	private static PageHeader ph;
-	private JButton menuBtn;
-	private boolean menuOn;
 	private JLabel userLabel;
 
 	private PageHeader() {
@@ -37,17 +35,16 @@ public class PageHeader extends JPanel {
 		this.setPreferredSize(new Dimension(windowSize.width, windowSize.height / 10));
 		this.setBackground(background);
 		this.setBorder(BorderFactory.createCompoundBorder(
-			BorderFactory.createMatteBorder(0, 0, 2, 0, new Color(211, 211, 211)),
+			BorderFactory.createMatteBorder(0, 0, 2, 0, new Color(99, 102, 241)),
 			BorderFactory.createEmptyBorder(20, 30, 20, 30)
 		));
-		var btnPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
-		btnPanel.setOpaque(false);
-		this.menuBtn = new JButton();
-		this.menuBtn.setBackground(background);
-		this.menuBtn.setIcon(menuIcon);
-		this.menuBtn.setCursor(config.getHandCursor());
-		this.menuBtn.setBorder(new LineBorder(Color.BLACK));
-		btnPanel.add(this.menuBtn);
+		var mp = MenuPanel.getPage();
+		var menuBtn = new JButton();
+		menuBtn.setBackground(background);
+		menuBtn.setIcon(menuIcon);
+		menuBtn.setCursor(config.getHandCursor());
+		menuBtn.setBorder(new LineBorder(Color.BLACK));
+		menuBtn.addActionListener(e -> mp.setVisible(!mp.isVisible()));
 		var titleLabel = new JLabel("Score Management System");
 		titleLabel.setFont(headerFont);
 		titleLabel.setForeground(Color.WHITE);
@@ -64,7 +61,7 @@ public class PageHeader extends JPanel {
 		userPanel.add(this.userLabel);
 		userPanel.add(new JSeparator(SwingConstants.VERTICAL));
 		userPanel.add(logoutBtn);
-		this.add(btnPanel, BorderLayout.WEST);
+		this.add(menuBtn, BorderLayout.WEST);
 		this.add(titleLabel, BorderLayout.CENTER);
 		this.add(userPanel, BorderLayout.EAST);
 	}

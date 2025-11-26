@@ -16,4 +16,12 @@ public class TeacherPage extends JPanel {
 
 		return tp;
 	}
+
+	private JPanel studentManagementPage() {
+
+	}
+
+	private JPanel subjectManagementPage() {
+
+	}
 }

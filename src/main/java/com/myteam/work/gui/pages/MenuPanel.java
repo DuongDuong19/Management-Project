@@ -1,17 +1,21 @@
 package com.myteam.work.gui.pages;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 
 import javax.swing.Box;
 import javax.swing.JPanel;
 import javax.swing.JButton;
 import javax.swing.BoxLayout;
+import javax.swing.BorderFactory;
+import javax.swing.SwingConstants;
 
 import com.myteam.work.gui.Window;
+import com.myteam.work.Configuration;
 
 public class MenuPanel extends JPanel {
-	private static final Color background = new Color(99, 102, 241);
+	private static final Color background = new Color(15, 23, 42);
 	private static final JButton[] teacherBtns = new JButton[2];
 	private static final JButton[] managerBtns = new JButton[4];
 	private static MenuPanel mp;
@@ -20,21 +24,15 @@ public class MenuPanel extends JPanel {
 	private MenuPanel() {
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		var windowSize = Window.getWindow().getSize();
-		this.setPreferredSize(new Dimension(windowSize.width / 5, windowSize.height / 10 * 9));
+		this.setPreferredSize(new Dimension(windowSize.width / 7, windowSize.height / 10 * 9));
 		this.setBackground(background);
 		this.add(Box.createRigidArea(new Dimension(0, 20)));
-		var studentBtn = new JButton("Tsudent Management");
-		var subjectBtn = new JButton("Subjects");
-		teacherBtns[0] = studentBtn;
-		teacherBtns[1] = subjectBtn;
-		var studentManagerBtn = new JButton("Tsudent Management");
-		var teacherBtn = new JButton("Teacher Management");
-		var subjectManagerBtn = new JButton("Subjects Management");
-		var classBtn = new JButton("Classes");
-		managerBtns[0] = studentManagerBtn;
-		managerBtns[1] = teacherBtn;
-		managerBtns[2] = subjectManagerBtn;
-		managerBtns[3] = classBtn;
+		teacherBtns[0] = createMenuBtn("Student Management");
+		teacherBtns[1] = createMenuBtn("Subjects");
+		managerBtns[0] = createMenuBtn("Student Management");
+		managerBtns[1] = createMenuBtn("Teacher Management");
+		managerBtns[2] = createMenuBtn("Subject Management");
+		managerBtns[3] = createMenuBtn("Classes");
 	}
 
 	public static JPanel getPage() {
@@ -65,5 +63,19 @@ public class MenuPanel extends JPanel {
 
 			this.current = false;
 		}
+	}
+
+	private JButton createMenuBtn(String title) {
+		var btn = new JButton(title);
+		btn.setAlignmentX(Component.CENTER_ALIGNMENT);
+		btn.setForeground(Color.WHITE);
+		btn.setBackground(background);
+		btn.setContentAreaFilled(false);
+		btn.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
+		btn.setFocusPainted(false);
+		btn.setHorizontalAlignment(SwingConstants.LEFT);
+		btn.setCursor(Configuration.getConfiguration().getHandCursor());
+
+		return btn;
 	}
 }

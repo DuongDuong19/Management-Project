@@ -16,4 +16,20 @@ public class ManagerPage extends JPanel {
 
 		return mp;
 	}
+
+	private JPanel studentManagementPage() {
+
+	}
+
+	private JPanel subjectManagementPage() {
+
+	}
+
+	private JPanel teacherManagementPage() {
+
+	}
+
+	private JPanel classPage () {
+
+	}
 }
