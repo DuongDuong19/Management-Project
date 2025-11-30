@@ -71,8 +71,8 @@ searchField.setForeground(config.getFieldColor());
 		searchBtn.setForeground(Color.WHITE);
 		searchPanel.add(searchField, BorderLayout.CENTER);
 		searchPanel.add(searchBtn, BorderLayout.EAST);
-		var subjectTable = new MSTable(new String[]{"ID", "SubjectName", "Credits", "Required"}, 
-				List.<Class<?>>of(String.class, Short.class, String.class), Collections.EMPTY_LIST);
+		var subjectTable = new MSTable(new String[]{"ID", "Subject name", "Prerequisites", "Credits", "Required"}, 
+				List.<Class<?>>of(String.class, String[].class, Short.class, String.class), Collections.EMPTY_LIST);
 		subjectTable.setRowHeight(42);
 		subjectTable.setShowGrid(true);
 		subjectTable.setPreferredWidth(0, 200);
