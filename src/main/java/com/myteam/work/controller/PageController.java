@@ -62,6 +62,5 @@ public class PageController {
 		var mp = MenuPanel.getPage();
 		needed.add(mp, BorderLayout.WEST);
 		((MenuPanel) mp).changeMenu(needed instanceof TeacherPage);
-		mp.setVisible(false);
 	}
 }

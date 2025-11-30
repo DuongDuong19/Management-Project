@@ -5,11 +5,14 @@ import java.awt.Component;
 import java.awt.Dimension;
 
 import javax.swing.Box;
+import javax.swing.Timer;
 import javax.swing.JPanel;
 import javax.swing.JButton;
 import javax.swing.BoxLayout;
 import javax.swing.BorderFactory;
 import javax.swing.SwingConstants;
+
+import lombok.Getter;
 
 import com.myteam.work.gui.Window;
 import com.myteam.work.Configuration;
@@ -21,12 +24,28 @@ public class MenuPanel extends JPanel {
 	private static final JButton[] managerBtns = new JButton[4];
 	private static MenuPanel mp;
 	private Boolean current;
+	@Getter
+	private boolean expand;
+	private Timer sliding;
+	private int currentWidth;
 
 	private MenuPanel() {
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		var windowSize = Window.getWindow().getSize();
-		this.setPreferredSize(new Dimension(windowSize.width / 7, windowSize.height / 10 * 9));
+		this.currentWidth = 0;
+		var height = windowSize.height / 10 * 9;
+		this.setPreferredSize(new Dimension(0, height));
 		this.setBackground(background);
+		this.expand = false;
+		this.sliding = new Timer(16, e -> {
+			var targetWidth = expand ? windowSize.width / 7 : 0;
+			currentWidth = currentWidth < targetWidth ? Math.min(currentWidth + 15, targetWidth) : Math.max(currentWidth - 15, targetWidth);
+
+			setPreferredSize(new Dimension(currentWidth, height));
+			revalidate();
+
+			if(currentWidth == targetWidth) sliding.stop();
+		});
 		this.add(Box.createRigidArea(new Dimension(0, 20)));
 		teacherBtns[0] = createMenuBtn("Student Management", "student");
 		teacherBtns[1] = createMenuBtn("Subjects", "subject");
@@ -64,6 +83,11 @@ public class MenuPanel extends JPanel {
 
 			this.current = false;
 		}
+	}
+
+	public void toggleMenu() {
+		this.expand = !this.expand;
+		this.sliding.start();
 	}
 
 	private JButton createMenuBtn(String title, String content) {
