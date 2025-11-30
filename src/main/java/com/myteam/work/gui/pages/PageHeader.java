@@ -46,7 +46,7 @@ public class PageHeader extends JPanel {
 		menuBtn.setIcon(menuIcon);
 		menuBtn.setCursor(config.getHandCursor());
 		menuBtn.setBorder(new LineBorder(Color.BLACK));
-		menuBtn.addActionListener(e -> mp.setVisible(!mp.isVisible()));
+		menuBtn.addActionListener(e -> ((MenuPanel) mp).toggleMenu());
 		var titleLabel = new JLabel("Score Management System");
 		titleLabel.setFont(headerFont);
 		titleLabel.setForeground(Color.WHITE);
@@ -59,7 +59,11 @@ public class PageHeader extends JPanel {
 		logoutBtn.setForeground(Color.WHITE);
 		logoutBtn.setBackground(background);
 		logoutBtn.setCursor(config.getHandCursor());
-		logoutBtn.addActionListener(e -> LoginController.getController().logout());
+		logoutBtn.addActionListener(e -> {
+			LoginController.getController().logout();
+
+			if(((MenuPanel) mp).isExpand()) ((MenuPanel) mp).toggleMenu();
+		});
 		userPanel.add(this.userLabel);
 		userPanel.add(new JSeparator(SwingConstants.VERTICAL));
 		userPanel.add(logoutBtn);
