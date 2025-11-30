@@ -30,41 +30,13 @@ import com.myteam.work.Configuration;
 import com.myteam.work.controller.LoginController;
 
 public class LoginPage extends JPanel {
-	private static final Color fieldColor = new Color(150, 150, 150);
-	private static final Color textColor = new Color(30, 30, 30);
+	private static final Configuration config = Configuration.getConfiguration();
+	private static final Color fieldColor = config.getFieldColor();
 	private static final Color labelColor = new Color(50, 50, 50);
 	private static final String defaultUsernamePlaceholder = "Please enter username!";
 	private static final String defaultPasswordPlaceholder = "Please enter password!";
 	private static final Image eye = new ImageIcon(LoginPage.class.getClassLoader().getResource("eye.png")).getImage();
 	private static final Image eyeHide = new ImageIcon(LoginPage.class.getClassLoader().getResource("eyeHide.png")).getImage();
-	private static Configuration config = Configuration.getConfiguration();
-	private static LoginPage lp;
-
-	private static class DefaultTextDisplayer extends FocusAdapter {
-		private String defaultText;
-
-		public DefaultTextDisplayer(String defaultText) {
-			this.defaultText = defaultText;
-		}
-
-		public void focusGained(FocusEvent e) {
-			var textField = (JTextField) e.getSource();
-
-			if(textField.getText().equals(defaultText)) {
-				textField.setText("");
-				textField.setForeground(textColor);
-			}
-		}
-
-		public void focusLost(FocusEvent e) {
-			var textField = (JTextField) e.getSource();
-
-			if(textField.getText().equals("")) {
-				textField.setText(defaultText);
-				textField.setForeground(fieldColor);
-			}
-		}
-	}
 
 	public LoginPage() {
 		var windowSize = Window.getWindow().getSize();
@@ -172,10 +144,4 @@ public class LoginPage extends JPanel {
 					this.getWidth(), this.getHeight(), new Color(155, 89, 182)));
 		g2d.fillRect(0, 0, this.getWidth(), this.getHeight());
 	}
-
-	//public static JPanel getPage() {
-	//	if(lp == null) lp = new LoginPage();
-
-	//	return lp;
-	//}
 }

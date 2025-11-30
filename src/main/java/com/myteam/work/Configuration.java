@@ -1,5 +1,6 @@
 package com.myteam.work;
 
+import java.awt.Color;
 import java.awt.Cursor;
 
 import lombok.Getter;
@@ -22,6 +23,8 @@ public class Configuration {
 	private static String sqlPassword;
 	@Getter
 	private static Cursor handCursor = new Cursor(Cursor.HAND_CURSOR);
+	@Getter
+	private static Color fieldColor = new Color(150, 150, 150);
 
 	static {
 		sqlURL = "jdbc:postgresql://localhost:5432/doanoop";

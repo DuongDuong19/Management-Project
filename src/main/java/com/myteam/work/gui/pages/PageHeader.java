@@ -41,6 +41,8 @@ public class PageHeader extends JPanel {
 		var mp = MenuPanel.getPage();
 		var menuBtn = new JButton();
 		menuBtn.setBackground(background);
+		menuBtn.setBorder(null);
+		menuBtn.setContentAreaFilled(false);
 		menuBtn.setIcon(menuIcon);
 		menuBtn.setCursor(config.getHandCursor());
 		menuBtn.setBorder(new LineBorder(Color.BLACK));

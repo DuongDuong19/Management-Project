@@ -13,6 +13,7 @@ import javax.swing.SwingConstants;
 
 import com.myteam.work.gui.Window;
 import com.myteam.work.Configuration;
+import com.myteam.work.controller.PageController;
 
 public class MenuPanel extends JPanel {
 	private static final Color background = new Color(15, 23, 42);
@@ -27,12 +28,12 @@ public class MenuPanel extends JPanel {
 		this.setPreferredSize(new Dimension(windowSize.width / 7, windowSize.height / 10 * 9));
 		this.setBackground(background);
 		this.add(Box.createRigidArea(new Dimension(0, 20)));
-		teacherBtns[0] = createMenuBtn("Student Management");
-		teacherBtns[1] = createMenuBtn("Subjects");
-		managerBtns[0] = createMenuBtn("Student Management");
-		managerBtns[1] = createMenuBtn("Teacher Management");
-		managerBtns[2] = createMenuBtn("Subject Management");
-		managerBtns[3] = createMenuBtn("Classes");
+		teacherBtns[0] = createMenuBtn("Student Management", "student");
+		teacherBtns[1] = createMenuBtn("Subjects", "subject");
+		managerBtns[0] = createMenuBtn("Student Management", "student");
+		managerBtns[1] = createMenuBtn("Teacher Management", "teacher");
+		managerBtns[2] = createMenuBtn("Subject Management", "subject");
+		managerBtns[3] = createMenuBtn("Classes", "class");
 	}
 
 	public static JPanel getPage() {
@@ -65,8 +66,9 @@ public class MenuPanel extends JPanel {
 		}
 	}
 
-	private JButton createMenuBtn(String title) {
+	private JButton createMenuBtn(String title, String content) {
 		var btn = new JButton(title);
+		btn.addActionListener(e -> PageController.getController().getContent(content));
 		btn.setAlignmentX(Component.CENTER_ALIGNMENT);
 		btn.setForeground(Color.WHITE);
 		btn.setBackground(background);

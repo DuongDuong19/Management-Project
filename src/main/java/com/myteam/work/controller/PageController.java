@@ -49,6 +49,11 @@ public class PageController {
 		((PageHeader) PageHeader.getPage()).updateUsername(username);
 	}
 
+	public void getContent(String content) {
+		if(LoginController.getController().getCurrentUser().isRole()) ((TeacherPage) TeacherPage.getPage()).changeContent(content);
+		else ((ManagerPage) ManagerPage.getPage()).changeContent(content);
+	}
+
 	private void getHeader(JPanel needed) {
 		needed.add(PageHeader.getPage(), BorderLayout.NORTH);
 	}
