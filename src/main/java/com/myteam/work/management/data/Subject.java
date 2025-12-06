@@ -24,8 +24,7 @@ public class Subject {
 		this.id = id;
 		this.credits = credits;
 		this.required = required;
-		this.subjectName = subjectName;
-	
+		this.subjectName = subjectName;	
 	}
 
 	public void setId(int id) {
@@ -39,5 +38,4 @@ public class Subject {
 		   throw new IllegalArgumentException("Credits cannot be less than 1");
 		this.credits = credits;
 	}
-
 } 

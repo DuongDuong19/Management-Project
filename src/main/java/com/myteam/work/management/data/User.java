@@ -14,6 +14,8 @@ import lombok.ToString;
 @ToString
 public class User {
 	private int id;
+	@Setter
+	@NonNull
 	private String authName;
 	private String authPass;
 	private boolean ur;
@@ -39,5 +41,4 @@ public class User {
 
 		this.id = id;
 	}
-	
 }

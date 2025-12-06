@@ -50,5 +50,4 @@ public class TeachClass {
 
 		this.semester = semester;
 	}
-
 }

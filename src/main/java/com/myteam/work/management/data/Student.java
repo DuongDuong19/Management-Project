@@ -52,5 +52,4 @@ public class Student {
 
 		this.gpa = gpa;
 	}
-	
 }
