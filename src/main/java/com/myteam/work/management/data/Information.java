@@ -10,12 +10,11 @@ import lombok.Setter;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
-@Getter
 @EqualsAndHashCode
 @ToString
+@Getter
 public class Information {
-	private int id;
-	private String urName;
+	private String name;
 	private LocalDate birth;
 	@Setter
 	@NonNull
@@ -23,16 +22,14 @@ public class Information {
 	@Setter
 	private boolean sex;
 
-	public Information(@NonNull int id, @NonNull String urName, @NonNull LocalDate birth, @NonNull String placeOfBirth, @NonNull boolean sex) {
-		this.id = id;
-		this.urName = urName;
-		this.birth = birth;
+	public Information(@NonNull String name, @NonNull String birth, @NonNull String placeOfBirth, boolean sex) throws DateTimeParseException {
+		this.name = name;
+		this.birth = LocalDate.parse(birth, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 		this.placeOfBirth = placeOfBirth;
 		this.sex = sex;
-	
+
 	}
 	public void setBirth(@NonNull String birth) throws DateTimeParseException {
 		this.birth = LocalDate.parse(birth, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 	}
-
 }

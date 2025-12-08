@@ -17,27 +17,22 @@ public class User {
 	@Setter
 	@NonNull
 	private String authName;
+	@Setter
+	@NonNull
 	private String authPass;
-	private boolean ur;
-	private String urName;
-	private LocalDate birth;
-	private String placeOfBirth;
-	private boolean sex;
+	private boolean role;
+	private Information info;
 
-	public User (int id, @NonNull String authName, @NonNull String authPass, boolean ur, String urName, LocalDate birth, String placeOfBirth, boolean sex) {
+	public User (int id, @NonNull String authName, @NonNull String authPass, boolean role, String urName, String birth, String placeOfBirth, boolean sex) {
 		this.id = id;
 		this.authName = authName;
 		this.authPass =  authPass;
-		this.ur = ur;
-		this.urName = urName;
-		this.birth = birth;
-		this.placeOfBirth = placeOfBirth;
-		this.sex = sex;
+		this.role = role;
+		this.info = new Information(urName, birth, placeOfBirth, sex);
 	}
 
 	public void setId(int id) {
-		if(id < 0) 
-			throw new IllegalArgumentException("Id cannot be less than 0");
+		if(id < 0) throw new IllegalArgumentException("Id cannot be less than 0");
 
 		this.id = id;
 	}

@@ -11,31 +11,27 @@ public class Semester {
 	private short semester;
 	private short years;
 
-	public Semester(int id, @NonNull short semester, @NonNull short years) {
+	public Semester(int id, short semester, short years) {
 		this.id = id;
 		this.semester = semester;
 		this.years = years;
 	}
 
 	public void setId(int id) {
-		if (id < 0)
-			throw new IllegalArgumentException("Id cannot be negative");
+		if(id < 0) throw new IllegalArgumentException("Id cannot be negative");
 
 		this.id = id;
 	}
 
 	public void setSemester(short semester) {
-		if (semester < 0)
-			throw new IllegalArgumentException("Semester id cannot be negative");
+		if(semester < 0) throw new IllegalArgumentException("Semester id cannot be negative");
 
 		this.semester = semester;
 	}
 
 	public void setYears(short years) {
-		if (years < 0)
-			throw new IllegalArgumentException("Years cannot be less than 0");
+		if(years < 0) throw new IllegalArgumentException("Years cannot be less than 0");
 
 		this.years = years;
 	}
-
 }

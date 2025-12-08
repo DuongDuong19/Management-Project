@@ -21,7 +21,7 @@ public class TeachClass {
 	private int subject;
 	private float gpa;
 
-	public TeachClass(int id, int semester, @NonNull String className, @NonNull int subject, @NonNull float gpa) {
+	public TeachClass(int id, int semester, @NonNull String className, int subject, float gpa) {
 		this.id = id;
 		this.semester = semester;
 		this.className = className;

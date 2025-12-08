@@ -7,22 +7,16 @@ import java.awt.Component;
 import java.awt.Dimension;
 
 import javax.swing.JList;
+import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.JViewport;
+import javax.swing.UIManager;
 import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.table.DefaultTableCellRenderer;
-
-class MultipleLineRenderer extends JList<Object> implements TableCellRenderer {
-	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-		if(value instanceof Object[] oa) setListData(oa);
-
-		return this;
-	}
-}
 
 public class MSTable {
 	private JScrollPane sp;
@@ -53,18 +47,45 @@ public class MSTable {
 				return contentEditableColumn.contains(column);
 			}
 		};
-		var centerRenderer = new DefaultTableCellRenderer();
-		centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
-		var mlr = new MultipleLineRenderer();
+		var mlr = new DefaultTableCellRenderer() {
+			public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+				var c = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+				c.setBackground(row % 2 == 0 ? Color.WHITE : Color.LIGHT_GRAY);
+
+				if(isSelected) c.setBackground(UIManager.getColor("Table.selectionBackground"));
+
+				if(value != null && value.getClass().isArray()) {
+					JList<Object> list = new JList<>();
+					list.setBackground(getBackground());
+					list.setForeground(getForeground());
+					list.setFont(c.getFont());
+					list.setCellRenderer(new DefaultListCellRenderer() {
+						public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean hasFocus) {
+							var label = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, hasFocus);
+							label.setHorizontalAlignment(SwingConstants.CENTER);
+
+							return label;
+						}
+					});
+
+					list.setListData((Object[]) value);
+
+					return list;
+				}
+
+				return c;
+			}
+		};
+		mlr.setHorizontalAlignment(SwingConstants.CENTER);
 		this.stickyTable = new JTable(stickyTableModel);
 		this.stickyTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-		this.stickyTable.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
-		this.stickyTable.setDefaultRenderer(Object.class, mlr);
+		this.stickyTable.getColumnModel().getColumn(0).setCellRenderer(mlr);
 		this.contentTable = new JTable(contentTableModel);
 		this.contentTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		this.contentTable.setSelectionModel(this.stickyTable.getSelectionModel());
-		for(int i = 0; i < this.contentTable.getColumnCount(); i++) this.contentTable.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
-		this.contentTable.setDefaultRenderer(Object.class, mlr);
+
+		for(var i = 0; i < this.contentTable.getColumnCount(); i++) this.contentTable.getColumnModel().getColumn(i).setCellRenderer(mlr);
+
 		this.sp = new JScrollPane(contentTable);
 		var vp = new JViewport() {
 			public Dimension getPreferredSize() {
