@@ -53,7 +53,7 @@ public class SubjectHandler {
 
 			while(requiredInfo.next()) result.add(requiredInfo.getInt("require"));
 
-			return result;
+			if(!result.isEmpty()) return result;
 		} catch(SQLException e) {
 			log.error(e.toString());
 		}

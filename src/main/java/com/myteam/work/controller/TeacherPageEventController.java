@@ -13,9 +13,17 @@ import com.myteam.work.management.handler.SubjectHandler;
 public class TeacherPageEventController {
 	private static TeacherPageEventController tpec;
 	private SubjectHandler sh;
+	private StudentHandler sth;
+	private TeacherHandler th;
+	private TeachClassHandler tch;
+	private SemesterHandler seh;
 
 	private TeacherPageEventController() {
 		this.sh = new SubjectHandler();
+		this.sth = new StudentHandler();
+		this.th = new TeacherHandler();
+		this.tch = new TeachClassHandler();
+		this.seh = new SemesterHandler();
 	}
 
 	public static TeacherPageEventController getController() {
@@ -44,6 +52,35 @@ public class TeacherPageEventController {
 		if(subjects == null) return;
 
 		table.addData(loadSubject(subjects));
+	}
+
+	public void loadSemester() {
+		var semesters = this.seh.getAllSemester();
+		var selector = ((TeacherPage) TeacherPage.getPage()).getSemesterSelector();
+		selector.removeAllItems();
+		selector.add(null);
+
+		if(semesters == null) return;
+
+		for(Semester sm : semesters) selector.add(sm);
+	}
+
+	public void loadTeachClass(Semester sm) {
+		var selector = ((TeacherPage) TeacherPage.getPage()).getClassSelector();
+		selector.removeAllItems();
+		selector.add(null);
+
+		if(sm == null) return;
+
+		var classes = this.tch.getClass(sm.getYear(), LoginController.getController().getCurrentUser().getId());
+
+		if(class == null) return;
+
+		for(TeachClass tc : classes) selector.add(class);
+	}
+
+	public void loadStudentInTeachClass(TeachClass tc) {
+		
 	}
 
 	private Object[][] loadSubject(List<Subject> subjects) {

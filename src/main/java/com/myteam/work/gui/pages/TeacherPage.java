@@ -11,6 +11,7 @@ import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JTextField;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
@@ -30,6 +31,13 @@ public class TeacherPage extends JPanel {
 	@Getter
 	private MSTable subjectTable;
 	private TeacherPageEventController tpec;
+	@Getter
+	private JComboBox semesterSelector;
+	@Getter
+	private JComboBox classSelector;
+	@Getter
+	private MSTable studentTable;
+	private JTextField searchField;
 
 	private TeacherPage() {
 		this.tpec = TeacherPageEventController.getController();
@@ -52,8 +60,40 @@ public class TeacherPage extends JPanel {
 	}
 
 	private JPanel studentManagementPage() {
-		var contentPanel = new JPanel();
-		contentPanel.add(new JLabel("student"));
+		var contentPanel = new JPanel(new BorderLayout(15, 15));
+		contentPanel.setBorder(new EmptyBorder(20, 25, 20, 25));
+		contentPanel.setOpaque(false);
+		var searchPanel = new JPanel(new BorderLayout(15, 0));
+		searchPanel.setOpaque(false);
+		searchPanel.setBorder(new EmptyBorder(0, 0, 15, 0));
+		this.semesterSelector = new JComboBox();
+		this.semesterSelector.setPreferredSize(new Dimension(500, 0));
+		this.classSelector = new JComboBox();
+		var submitBtn = new JButton("Submit Change");
+		searchPanel.add(this.semesterSelector, BorderLayout.WEST);
+		searchPanel.add(this.classSelector, BorderLayout.CENTER);
+		searchPanel.add(submitBtn, BorderLayout.EAST);
+		this.studentTable = new MSTable(new String[]{"ID", "Student Name", "Sex", "Generation", "Test 1", "Test 2", "End test", "Total Score", "Normalized Score", "Rate"},
+				List.<Class<?>>of(Integer.class, String.class, String.class, Short.class, Float.class, Float.class, Float.class, Float.class, Float.class, String.class),
+				List.of(4, 5));
+		this.studentTable.setRowHeight(42);
+		this.studentTable.setShowGrid(true);
+		this.studentTable.setPreferredWidth(0, 1000);
+		this.studentTable.setPreferredWidth(1, 1000);
+		this.studentTable.setPreferredWidth(2, 1000);
+		this.studentTable.setPreferredWidth(3, 1000);
+		this.studentTable.setPreferredWidth(4, 1000);
+		this.studentTable.setPreferredWidth(5, 1000);
+		this.studentTable.setPreferredWidth(6, 1000);
+		this.studentTable.setPreferredWidth(7, 1000);
+		this.studentTable.setPreferredWidth(8, 1000);
+		this.studentTable.setPreferredWidth(9, 1000);
+		this.studentTable.setIntercellSpacing(new Dimension(1, 1));
+		this.studentTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		this.studentTable.setReorderingColumn(false);
+		this.studentTable.setResizingColumn(false);
+		contentPanel.add(searchPanel, BorderLayout.NORTH);
+		contentPanel.add(this.studentTable.getDisplayer(), BorderLayout.CENTER);
 
 		return contentPanel;
 	}
@@ -66,10 +106,11 @@ public class TeacherPage extends JPanel {
 		searchPanel.setOpaque(false);
 		searchPanel.setBorder(new EmptyBorder(0, 0, 15, 0));
 		var defaultText = "Search by subject name or subject id";
-		var searchField = new JTextField(defaultText);
-		searchField.setBorder(null);
-		searchField.setForeground(config.getFieldColor());
-		searchField.addFocusListener(new DefaultTextDisplayer(defaultText));
+		this.searchField = new JTextField(defaultText);
+		this.searchField.setBorder(null);
+		this.searchField.setForeground(config.getFieldColor());
+		this.searchField.addFocusListener(new DefaultTextDisplayer(defaultText));
+		//replace with dynamic update with timer when have time
 		var searchBtn = new JButton("Search");
 		searchBtn.setFocusPainted(false);
 		searchBtn.setBorderPainted(false);
@@ -80,16 +121,16 @@ public class TeacherPage extends JPanel {
 				if(searchField.getText().equals(defaultText)) tpec.loadAllSubject();
 				else tpec.searchSubject(searchField.getText());
 		});
-		searchPanel.add(searchField, BorderLayout.CENTER);
+		searchPanel.add(this.searchField, BorderLayout.CENTER);
 		searchPanel.add(searchBtn, BorderLayout.EAST);
 		this.subjectTable = new MSTable(new String[]{"ID", "Subject name", "Prerequisites", "Credits", "Required"}, 
 				List.<Class<?>>of(String.class, String[].class, Short.class, String.class), Collections.EMPTY_LIST);
 		this.subjectTable.setRowHeight(42);
 		this.subjectTable.setShowGrid(true);
-		this.subjectTable.setPreferredWidth(0, 200);
-		this.subjectTable.setPreferredWidth(1, 1000);
+		this.subjectTable.setPreferredWidth(0, 100);
+		this.subjectTable.setPreferredWidth(1, 400);
 		this.subjectTable.setPreferredWidth(2, 200);
-		this.subjectTable.setPreferredWidth(3, 600);
+		this.subjectTable.setPreferredWidth(3, 487);
 		this.subjectTable.setIntercellSpacing(new Dimension(1, 1));
 		this.subjectTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		this.subjectTable.setReorderingColumn(false);
@@ -98,5 +139,11 @@ public class TeacherPage extends JPanel {
 		contentPanel.add(this.subjectTable.getDisplayer(), BorderLayout.CENTER);
 
 		return contentPanel;
+	}
+
+	public void logout() {
+		this.subjectTable.clearData();
+		this.searchField.setText(defaultText);
+		this.searchField.setForeground(config.getFieldColor());
 	}
 }

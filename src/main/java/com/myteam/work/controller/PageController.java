@@ -36,6 +36,9 @@ public class PageController {
 		setUsername(username);
 		getHeader(TeacherPage.getPage());
 		getMenu(TeacherPage.getPage());
+		var tpec = TeacherPageEventController.getController();
+		tpec.loadAllSubject();
+		tpec.loadSemester();
 	}
 
 	public void getManagerPage(String username) {

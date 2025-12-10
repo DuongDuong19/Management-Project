@@ -9,6 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import com.myteam.work.gui.Window;
 import com.myteam.work.gui.pages.LoginPage;
 import com.myteam.work.management.data.User;
+import com.myteam.work.gui.pages.TeacherPage;
+import com.myteam.work.gui.pages.ManagerPage;
 import com.myteam.work.management.handler.SQLHandler;
 
 @Slf4j
@@ -49,5 +51,7 @@ public class LoginController {
 		log.info("Logout as" + this.currentUser.getInfo().getName());
 		this.currentUser = null;
 		PageController.getController().getLoginPage();
+		if(this.currentUser.isRole()) ((TeacherPage) TeacherPage.getPage()).logout();
+		else ((ManagerPage) ManagerPage.getPage()).logout();
 	}
 }
