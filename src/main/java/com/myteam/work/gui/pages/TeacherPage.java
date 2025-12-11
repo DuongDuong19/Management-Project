@@ -1,27 +1,24 @@
 package com.myteam.work.gui.pages;
 
-import java.util.List;
-import java.util.Collections;
+import java.awt.BorderLayout;
+import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.CardLayout;
-import java.awt.BorderLayout;
+import java.util.Collections;
+import java.util.List;
 
-import javax.swing.JPanel;
-import javax.swing.JLabel;
-import javax.swing.JTable;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.JScrollPane;
-import javax.swing.border.EmptyBorder;
 import javax.swing.ListSelectionModel;
-import javax.swing.table.DefaultTableModel;
-
-import lombok.Getter;
+import javax.swing.border.EmptyBorder;
 
 import com.myteam.work.Configuration;
 import com.myteam.work.controller.TeacherPageEventController;
+import com.myteam.work.management.data.Semester;
+
+import lombok.Getter;
 
 public class TeacherPage extends JPanel {
 	private static final Configuration config = Configuration.getConfiguration();
@@ -32,12 +29,13 @@ public class TeacherPage extends JPanel {
 	private MSTable subjectTable;
 	private TeacherPageEventController tpec;
 	@Getter
-	private JComboBox semesterSelector;
+	private JComboBox<Semester> semesterSelector;
 	@Getter
 	private JComboBox classSelector;
 	@Getter
 	private MSTable studentTable;
 	private JTextField searchField;
+	String defaultText;
 
 	private TeacherPage() {
 		this.tpec = TeacherPageEventController.getController();
@@ -78,16 +76,16 @@ public class TeacherPage extends JPanel {
 				List.of(4, 5));
 		this.studentTable.setRowHeight(42);
 		this.studentTable.setShowGrid(true);
-		this.studentTable.setPreferredWidth(0, 1000);
-		this.studentTable.setPreferredWidth(1, 1000);
-		this.studentTable.setPreferredWidth(2, 1000);
-		this.studentTable.setPreferredWidth(3, 1000);
-		this.studentTable.setPreferredWidth(4, 1000);
-		this.studentTable.setPreferredWidth(5, 1000);
-		this.studentTable.setPreferredWidth(6, 1000);
-		this.studentTable.setPreferredWidth(7, 1000);
-		this.studentTable.setPreferredWidth(8, 1000);
-		this.studentTable.setPreferredWidth(9, 1000);
+		this.studentTable.setPreferredWidth(0, 100);
+		this.studentTable.setPreferredWidth(1, 492);
+		this.studentTable.setPreferredWidth(2, 110);
+		this.studentTable.setPreferredWidth(3, 110);
+		this.studentTable.setPreferredWidth(4, 112);
+		this.studentTable.setPreferredWidth(5, 112);
+		this.studentTable.setPreferredWidth(6, 112);
+		this.studentTable.setPreferredWidth(7, 112);
+		this.studentTable.setPreferredWidth(8, 112);
+		this.studentTable.setPreferredWidth(9, 111);
 		this.studentTable.setIntercellSpacing(new Dimension(1, 1));
 		this.studentTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		this.studentTable.setReorderingColumn(false);
@@ -129,8 +127,9 @@ public class TeacherPage extends JPanel {
 		this.subjectTable.setShowGrid(true);
 		this.subjectTable.setPreferredWidth(0, 100);
 		this.subjectTable.setPreferredWidth(1, 400);
-		this.subjectTable.setPreferredWidth(2, 200);
-		this.subjectTable.setPreferredWidth(3, 487);
+		this.subjectTable.setPreferredWidth(2, 380);
+		this.subjectTable.setPreferredWidth(3, 191);
+		this.subjectTable.setPreferredWidth(4, 191);
 		this.subjectTable.setIntercellSpacing(new Dimension(1, 1));
 		this.subjectTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		this.subjectTable.setReorderingColumn(false);

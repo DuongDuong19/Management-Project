@@ -4,8 +4,8 @@ import java.awt.Color;
 import java.awt.Cursor;
 
 import lombok.Getter;
-import lombok.Setter;
 import lombok.NonNull;
+import lombok.Setter;
 
 public class Configuration {
 	private static Configuration config;
@@ -29,7 +29,7 @@ public class Configuration {
 	static {
 		sqlURL = "jdbc:postgresql://localhost:5432/doanoop";
 		sqlUsername = "postgres";
-		sqlPassword = "0928765431";
+		sqlPassword = "duong@190906";
 	}
 
 	public static Configuration getConfiguration() {

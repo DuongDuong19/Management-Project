@@ -1,10 +1,11 @@
 package com.myteam.work.management.handler;
 
-import java.util.List;
-import java.util.LinkedList;
-
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.LinkedList;
+import java.util.List;
+
+import com.myteam.work.management.data.Semester;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -29,7 +30,7 @@ public class SemesterHandler {
 
 			if(!result.isEmpty()) return result;
 		} catch(SQLException e) {
-			log.error(e);
+			log.error(e.toString());
 		}
 
 		return null;
