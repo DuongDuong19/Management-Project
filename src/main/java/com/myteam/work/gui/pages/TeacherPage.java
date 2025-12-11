@@ -26,7 +26,7 @@ import lombok.Getter;
 
 public class TeacherPage extends JPanel {
 	private static final Configuration config = Configuration.getConfiguration();
-	private static String defaultText = "Search by subject name or subject id";
+	private static final String defaultText = "Search by subject name or subject id";
 	private static TeacherPage tp;
 	private CardLayout pager;
 	private JPanel contentPanel;
@@ -67,7 +67,6 @@ public class TeacherPage extends JPanel {
 		contentPanel.setOpaque(false);
 		var searchPanel = new JPanel(new BorderLayout(15, 0));
 		searchPanel.setOpaque(false);
-		searchPanel.setBorder(new EmptyBorder(0, 0, 15, 0));
 		this.semesterSelector = new JComboBox();
 		this.semesterSelector.setPreferredSize(new Dimension(500, 0));
 		this.semesterSelector.addActionListener(e -> tpec.loadTeachClass((Semester) ((JComboBox) e.getSource()).getSelectedItem()));
@@ -135,7 +134,7 @@ public class TeacherPage extends JPanel {
 			}
 		});
 		searchPanel.add(this.searchField, BorderLayout.CENTER);
-		this.subjectTable = new MSTable(new String[]{"ID", "Subject name", "Prerequisites", "Credits", "Required"}, 
+		this.subjectTable = new MSTable(new String[]{"ID", "Subject name", "Prerequisites", "Credits", "Require"}, 
 				List.<Class<?>>of(String.class, String[].class, Short.class, String.class), Collections.EMPTY_LIST);
 		this.subjectTable.setRowHeight(42);
 		this.subjectTable.setShowGrid(true);

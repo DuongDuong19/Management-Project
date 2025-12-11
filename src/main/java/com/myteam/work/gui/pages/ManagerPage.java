@@ -1,19 +1,27 @@
 package com.myteam.work.gui.pages;
 
+import java.awt.Dimension;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.util.Collections;
 import java.util.List;
 
+import javax.swing.Timer;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
+import javax.swing.JScrollPane;
+import javax.swing.ListSelectionModel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 import lombok.Getter;
 
 public class ManagerPage extends JPanel {
+	private static final String subjectTableDefaultText = "Search by subject name or subject id";
 	private static ManagerPage mp;
 	private CardLayout pager;
 	private JPanel contentPanel;
@@ -31,6 +39,9 @@ public class ManagerPage extends JPanel {
 	private MSTable studentClassTable;
 	@Getter
 	private JComboBox classSemesterSelector;
+	@Getter
+	private JComboBox classManagementSemesterSelector;
+	private JTextField subjectSearchField;
 
 	private ManagerPage() {
 		this.setLayout(new BorderLayout());
@@ -65,11 +76,60 @@ public class ManagerPage extends JPanel {
 	}
 
 	private JPanel subjectManagementPage() {
-		var contentPanel = new JPanel();
-		contentPanel.add(new JLabel("subject"));
+		var contentPanel = new JPanel(new BorderLayout(15, 15));
+		contentPanel.setBorder(new EmptyBorder(20, 25, 20, 25));
+		contentPanel.setOpaque(false);
+		var searchPanel = new JPanel(new BorderLayout(15, 0));
+		searchPanel.setOpaque(false);
+		var searchBtn = new JPanel(new BorderLayout());
+		searchBtn.setOpaque(false);
+		this.subjectSearchField = new JTextField(subjectTableDefaultText);
+		this.subjectSearchField.setBorder(null);
+		this.subjectSearchField.setForeground(config.getFieldColor());
+		this.subjectSearchField.addFocusListener(new DefaultTextDisplayer(subjectTableDefaultText));
+		this.subjectSearchField.getDocument().addDocumentListener(new DocumentListener() {
+			private Timer updater = new Timer(125, e -> {
+				if(subjectSearchField.getText().equals(subjectTableDefaultText)) mpec.loadAllSubject();
+				else mpec.searchSubject(subjectSearchField.getText());
 
-		this.subjectTable = new MSTable(new String[]{"ID", "Subject name", "Prerequisites", "Credits", "Require"},
-				List.<Class<?>>of(Integer.class, String.class, String.class, Short.class, String.class), Collections.EMPTY_LIST);
+			});
+
+			public void changedUpdate(DocumentEvent e) {
+				updater.setRepeats(false);
+				updater.restart();
+			}
+
+			public void insertUpdate(DocumentEvent e) {
+				updater.setRepeats(false);
+				updater.restart();
+			}
+
+			public void removeUpdate(DocumentEvent e) {
+				updater.setRepeats(false);
+				updater.restart();
+			}
+		});
+		var subjectCreateBtn = new JButton("Create subject");
+		var subjectEditBtn = new JButton("Edit subject");
+		var subjectDeleteBtn = new JButton("Delete subject");
+		searchBtn.add(subjectCreateBtn, BorderLayout.WEST);
+		searchBtn.add(subjectEditBtn, BorderLayout.CENTER);
+		searchBtn.add(subjectDeleteBtn, BorderLayout.EAST);
+		searchPanel.add(this.subjectSearchField, BorderLayout.CENTER);
+		searchPanel.add(searchPanel, BorderLayout.EAST);
+		this.subjectTable = new MSTable(new String[]{"ID", "Subject name", "Prerequisites", "Credits", "Require"}, 
+				List.<Class<?>>of(String.class, String[].class, Short.class, String.class), Collections.EMPTY_LIST);
+		this.subjectTable.setRowHeight(42);
+		this.subjectTable.setShowGrid(true);
+		this.subjectTable.setPreferredWidth(0, 191);
+		this.subjectTable.setPreferredWidth(3, 191);
+		this.subjectTable.setPreferredWidth(4, 191);
+		this.subjectTable.setIntercellSpacing(new Dimension(1, 1));
+		this.subjectTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		this.subjectTable.setReorderingColumn(false);
+		this.subjectTable.setResizingColumn(false);
+		contentPanel.add(searchPanel, BorderLayout.NORTH);
+		contentPanel.add(this.subjectTable.getDisplayer(), BorderLayout.CENTER);
 
 		return contentPanel;
 	}
@@ -84,49 +144,68 @@ public class ManagerPage extends JPanel {
 		return contentPanel;
 	}
 
-	private JPanel classPage() {
+	private JScrollPane classPage() {
 		var contentPanel = new JPanel(new BorderLayout(15, 15));
+		contentPanel.setBorder(new EmptyBorder(20, 25, 20, 25));
 		contentPanel.setOpaque(false);
 		var classPanel = new JPanel(new BorderLayout(15, 0));
 		var classSearchPanel = new JPanel(new BorderLayout(15, 0));
+		var classSearchBtn = new JPanel(new BorderLayout());
 		this.classSemesterSelector = new JComboBox<>();
 		var classSearchField = new JTextField();
 		var classCreateBtn = new JButton("Create class");
 		var classEditBtn = new JButton("Edit class");
 		var classDeleteBtn = new JButton("Delete class");
-		classSearchPanel.add(this.classSemesterSelector, BorderLayout.EAST);
+		classSearchBtn.add(classCreateBtn, BorderLayout.WEST);
+		classSearchBtn.add(classEditBtn, BorderLayout.CENTER);
+		classSearchBtn.add(classDeleteBtn, BorderLayout.EAST);
+		classSearchPanel.add(this.classSemesterSelector, BorderLayout.WEST);
 		classSearchPanel.add(classSearchField, BorderLayout.CENTER);
-		classSearchPanel.add(classCreateBtn, BorderLayout.WEST);
-		classSearchPanel.add(classEditBtn, BorderLayout.WEST);
-		classSearchPanel.add(classDeleteBtn, BorderLayout.WEST);
+		classSearchPanel.add(classSearchBtn, BorderLayout.EAST);
 		this.classTable = new MSTable(new String[]{"ID", "Class name", "Semester", "Subject", "GPA", "Teacher"},
 				List.<Class<?>>of(Integer.class, String.class, String.class, String.class, Float.class, String[].class), Collections.EMPTY_LIST);
 		classPanel.add(classSearchPanel, BorderLayout.NORTH);
 		classPanel.add(this.classTable.getDisplayer(), BorderLayout.CENTER);
 		var semesterPanel = new JPanel(new BorderLayout(15, 0));
 		var semesterSearchPanel = new JPanel(new BorderLayout(15, 0));
+		var semesterSearchBtn = new JPanel(new BorderLayout());
 		var semesterSearchField = new JTextField();
 		var semesterCreateBtn = new JButton("Create semester");
 		var semesterEditBtn = new JButton("Edit semester");
 		var semesterDeleteBtn = new JButton("Delete semester");
+		semesterSearchBtn.add(semesterCreateBtn, BorderLayout.WEST);
+		semesterSearchBtn.add(semesterEditBtn, BorderLayout.CENTER);
+		semesterSearchBtn.add(semesterDeleteBtn, BorderLayout.EAST);
 		semesterSearchPanel.add(semesterSearchField, BorderLayout.CENTER);
-		semesterSearchPanel.add(semesterCreateBtn, BorderLayout.CENTER);
-		semesterSearchPanel.add(semesterEditBtn, BorderLayout.CENTER);
-		semesterSearchPanel.add(semesterDeleteBtn, BorderLayout.CENTER);
+		semesterSearchPanel.add(semesterSearchBtn, BorderLayout.EAST);
 		this.semesterTable = new MSTable(new String[]{"ID", "Semester", "Year"}, List.<Class<?>>of(Integer.class, Short.class, Short.class), Collections.EMPTY_LIST);
 		semesterPanel.add(semesterSearchPanel, BorderLayout.NORTH);
 		semesterPanel.add(this.semesterTable.getDisplayer(), BorderLayout.CENTER);
 		contentPanel.add(classPanel, BorderLayout.CENTER);
 		contentPanel.add(semesterPanel, BorderLayout.SOUTH);
 
-		return contentPanel;
+		return new JScrollPane(contentPanel);
 	}
 
 	private JPanel classManagement() {
-		var contentPanel = new JPanel();
-
+		var contentPanel = new JPanel(new BorderLayout(15, 15));
+		contentPanel.setBorder(new EmptyBorder(20, 25, 20, 25));
+		var searchPanel = new JPanel(new BorderLayout(15, 0));
+		var searchBtn = new JPanel(new BorderLayout());
+		searchPanel.setOpaque(false);
+		this.classManagementSemesterSelector = new JComboBox();
+		var searchField = new JTextField();
+		var addStudentBtn = new JButton("Add student");
+		var removeStudentBtn = new JButton("Remove student");
+		searchBtn.add(addStudentBtn, BorderLayout.WEST);
+		searchBtn.add(removeStudentBtn, BorderLayout.CENTER);
+		searchPanel.add(this.classManagementSemesterSelector, BorderLayout.WEST);
+		searchPanel.add(searchField, BorderLayout.CENTER);
+		searchPanel.add(searchBtn, BorderLayout.EAST);
 		this.studentClassTable = new MSTable(new String[]{"ID", "Student name", "Sex", "Generation", "Test 1", "Test 2", "End test", "Total Score", "Normalized Score", "Rate"},
 				List.<Class<?>>of(Integer.class, String.class, String.class, Short.class, Float.class, Float.class, Float.class, Float.class, Float.class, String.class), Collections.EMPTY_LIST);
+		contentPanel.add(searchPanel, BorderLayout.NORTH);
+		contentPanel.add(this.studentClassTable.getDisplayer(), BorderLayout.CENTER);
 
 		return contentPanel;
 	}
