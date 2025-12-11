@@ -11,17 +11,22 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.Timer;
 import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 import com.myteam.work.Configuration;
 import com.myteam.work.controller.TeacherPageEventController;
 import com.myteam.work.management.data.Semester;
+import com.myteam.work.management.data.TeachClass;
 
 import lombok.Getter;
 
 public class TeacherPage extends JPanel {
 	private static final Configuration config = Configuration.getConfiguration();
+	private static String defaultText = "Search by subject name or subject id";
 	private static TeacherPage tp;
 	private CardLayout pager;
 	private JPanel contentPanel;
@@ -35,7 +40,6 @@ public class TeacherPage extends JPanel {
 	@Getter
 	private MSTable studentTable;
 	private JTextField searchField;
-	String defaultText;
 
 	private TeacherPage() {
 		this.tpec = TeacherPageEventController.getController();
@@ -66,7 +70,9 @@ public class TeacherPage extends JPanel {
 		searchPanel.setBorder(new EmptyBorder(0, 0, 15, 0));
 		this.semesterSelector = new JComboBox();
 		this.semesterSelector.setPreferredSize(new Dimension(500, 0));
+		this.semesterSelector.addActionListener(e -> tpec.loadTeachClass((Semester) ((JComboBox) e.getSource()).getSelectedItem()));
 		this.classSelector = new JComboBox();
+		this.classSelector.addActionListener(e -> tpec.loadStudentInTeachClass((TeachClass) ((JComboBox) e.getSource()).getSelectedItem()));
 		var submitBtn = new JButton("Submit Change");
 		searchPanel.add(this.semesterSelector, BorderLayout.WEST);
 		searchPanel.add(this.classSelector, BorderLayout.CENTER);
@@ -77,7 +83,6 @@ public class TeacherPage extends JPanel {
 		this.studentTable.setRowHeight(42);
 		this.studentTable.setShowGrid(true);
 		this.studentTable.setPreferredWidth(0, 100);
-		this.studentTable.setPreferredWidth(1, 492);
 		this.studentTable.setPreferredWidth(2, 110);
 		this.studentTable.setPreferredWidth(3, 110);
 		this.studentTable.setPreferredWidth(4, 112);
@@ -103,7 +108,6 @@ public class TeacherPage extends JPanel {
 		var searchPanel = new JPanel(new BorderLayout(15, 0));
 		searchPanel.setOpaque(false);
 		searchPanel.setBorder(new EmptyBorder(0, 0, 15, 0));
-		var defaultText = "Search by subject name or subject id";
 		this.searchField = new JTextField(defaultText);
 		this.searchField.setBorder(null);
 		this.searchField.setForeground(config.getFieldColor());
@@ -135,9 +139,7 @@ public class TeacherPage extends JPanel {
 				List.<Class<?>>of(String.class, String[].class, Short.class, String.class), Collections.EMPTY_LIST);
 		this.subjectTable.setRowHeight(42);
 		this.subjectTable.setShowGrid(true);
-		this.subjectTable.setPreferredWidth(0, 100);
-		this.subjectTable.setPreferredWidth(1, 400);
-		this.subjectTable.setPreferredWidth(2, 380);
+		this.subjectTable.setPreferredWidth(0, 191);
 		this.subjectTable.setPreferredWidth(3, 191);
 		this.subjectTable.setPreferredWidth(4, 191);
 		this.subjectTable.setIntercellSpacing(new Dimension(1, 1));

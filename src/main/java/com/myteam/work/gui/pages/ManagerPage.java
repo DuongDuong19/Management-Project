@@ -7,6 +7,9 @@ import java.util.List;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JTextField;
 
 import lombok.Getter;
 
@@ -99,20 +102,20 @@ public class ManagerPage extends JPanel {
 		this.classTable = new MSTable(new String[]{"ID", "Class name", "Semester", "Subject", "GPA", "Teacher"},
 				List.<Class<?>>of(Integer.class, String.class, String.class, String.class, Float.class, String[].class), Collections.EMPTY_LIST);
 		classPanel.add(classSearchPanel, BorderLayout.NORTH);
-		classPanel.add(this.classTable, BorderLayout.CENTER);
+		classPanel.add(this.classTable.getDisplayer(), BorderLayout.CENTER);
 		var semesterPanel = new JPanel(new BorderLayout(15, 0));
 		var semesterSearchPanel = new JPanel(new BorderLayout(15, 0));
 		var semesterSearchField = new JTextField();
 		var semesterCreateBtn = new JButton("Create semester");
 		var semesterEditBtn = new JButton("Edit semester");
 		var semesterDeleteBtn = new JButton("Delete semester");
-		semesterSearchPanel.add(semesterSearchPanel, BorderLayout.CENTER);
-		semesterSearchPanel.add(semesterCreateBtn, BorderLayout.WEST);
-		semesterSearchPanel.add(semesterEditBtn, BorderLayout.WEST);
-		semesterSearchPanel.add(semesterDeleteBtn, BorderLayout.WEST);
+		semesterSearchPanel.add(semesterSearchField, BorderLayout.CENTER);
+		semesterSearchPanel.add(semesterCreateBtn, BorderLayout.CENTER);
+		semesterSearchPanel.add(semesterEditBtn, BorderLayout.CENTER);
+		semesterSearchPanel.add(semesterDeleteBtn, BorderLayout.CENTER);
 		this.semesterTable = new MSTable(new String[]{"ID", "Semester", "Year"}, List.<Class<?>>of(Integer.class, Short.class, Short.class), Collections.EMPTY_LIST);
 		semesterPanel.add(semesterSearchPanel, BorderLayout.NORTH);
-		semesterPanel.add(this.semesterTable, BorderLayout.CENTER);
+		semesterPanel.add(this.semesterTable.getDisplayer(), BorderLayout.CENTER);
 		contentPanel.add(classPanel, BorderLayout.CENTER);
 		contentPanel.add(semesterPanel, BorderLayout.SOUTH);
 

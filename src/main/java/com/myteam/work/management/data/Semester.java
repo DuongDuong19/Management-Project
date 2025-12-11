@@ -34,4 +34,8 @@ public class Semester {
 
 		this.years = years;
 	}
+
+	public String toString() {
+		return semester + "-" + years;
+	}
 }
