@@ -1,17 +1,12 @@
 package com.myteam.work.controller;
 
-import java.util.List;
-import java.util.ArrayList;
+import com.myteam.work.gui.pages.ManagerPage;
+import com.myteam.work.gui.pages.TeacherPage;
+import com.myteam.work.management.data.User;
+import com.myteam.work.management.handler.SQLHandler;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-
-import com.myteam.work.gui.Window;
-import com.myteam.work.gui.pages.LoginPage;
-import com.myteam.work.management.data.User;
-import com.myteam.work.gui.pages.TeacherPage;
-import com.myteam.work.gui.pages.ManagerPage;
-import com.myteam.work.management.handler.SQLHandler;
 
 @Slf4j
 public class LoginController {

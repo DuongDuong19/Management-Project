@@ -1,27 +1,34 @@
 package com.myteam.work.controller;
 
-import java.util.List;
 import java.util.LinkedList;
-
-import lombok.extern.slf4j.Slf4j;
+import java.util.List;
 
 import com.myteam.work.gui.pages.TeacherPage;
+import com.myteam.work.management.data.Semester;
 import com.myteam.work.management.data.Subject;
+import com.myteam.work.management.data.TeachClass;
+import com.myteam.work.management.handler.SemesterHandler;
+import com.myteam.work.management.handler.StudentHandler;
 import com.myteam.work.management.handler.SubjectHandler;
+import com.myteam.work.management.handler.TeachClassHandler;
+
+import lombok.extern.slf4j.Slf4j;
+// import com.myteam.work.management.handler.TeacherHandler;
+
 
 @Slf4j
 public class TeacherPageEventController {
 	private static TeacherPageEventController tpec;
 	private SubjectHandler sh;
 	private StudentHandler sth;
-	private TeacherHandler th;
+	// private TeacherHandler th;
 	private TeachClassHandler tch;
 	private SemesterHandler seh;
 
 	private TeacherPageEventController() {
 		this.sh = new SubjectHandler();
 		this.sth = new StudentHandler();
-		this.th = new TeacherHandler();
+		// this.th = new TeacherHandler();
 		this.tch = new TeachClassHandler();
 		this.seh = new SemesterHandler();
 	}
@@ -58,25 +65,26 @@ public class TeacherPageEventController {
 		var semesters = this.seh.getAllSemester();
 		var selector = ((TeacherPage) TeacherPage.getPage()).getSemesterSelector();
 		selector.removeAllItems();
-		selector.add(null);
+		selector.addItem(null);
 
 		if(semesters == null) return;
 
-		for(Semester sm : semesters) selector.add(sm);
+		for(Semester sm : semesters) selector.addItem(sm);
 	}
 
 	public void loadTeachClass(Semester sm) {
 		var selector = ((TeacherPage) TeacherPage.getPage()).getClassSelector();
 		selector.removeAllItems();
-		selector.add(null);
+		selector.addItem(null);
 
 		if(sm == null) return;
 
-		var classes = this.tch.getClass(sm.getYear(), LoginController.getController().getCurrentUser().getId());
+		//var class = this.tch.getClass(sm.getYears(), LoginController.getController().getCurrentUser().getId());
+		var clazz = this.tch.getClass(sm.getYears(), LoginController.getController().getCurrentUser().getId());
 
-		if(class == null) return;
+		if(clazz == null) return;
 
-		for(TeachClass tc : classes) selector.add(class);
+		for(TeachClass tc : clazz) selector.addItem(clazz);
 	}
 
 	public void loadStudentInTeachClass(TeachClass tc) {

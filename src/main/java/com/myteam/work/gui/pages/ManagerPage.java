@@ -1,13 +1,12 @@
 package com.myteam.work.gui.pages;
 
-import java.awt.CardLayout;
 import java.awt.BorderLayout;
-
-import java.util.List;
+import java.awt.CardLayout;
 import java.util.Collections;
+import java.util.List;
 
-import javax.swing.JPanel;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 import lombok.Getter;
 
@@ -127,5 +126,9 @@ public class ManagerPage extends JPanel {
 				List.<Class<?>>of(Integer.class, String.class, String.class, Short.class, Float.class, Float.class, Float.class, Float.class, Float.class, String.class), Collections.EMPTY_LIST);
 
 		return contentPanel;
+	}
+
+	public void logout() {
+		
 	}
 }
