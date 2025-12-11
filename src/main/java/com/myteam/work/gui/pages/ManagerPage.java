@@ -27,6 +27,8 @@ public class ManagerPage extends JPanel {
 	private MSTable semesterTable;
 	@Getter
 	private MSTable studentClassTable;
+	@Getter
+	private JComboBox classSemesterSelector;
 
 	private ManagerPage() {
 		this.setLayout(new BorderLayout());
@@ -81,12 +83,39 @@ public class ManagerPage extends JPanel {
 	}
 
 	private JPanel classPage() {
-		var contentPanel = new JPanel();
-		contentPanel.add(new JLabel("class"));
-
-		this.semesterTable = new MSTable(new String[]{"ID", "Semester", "Year"}, List.<Class<?>>of(Integer.class, Short.class, Short.class), Collections.EMPTY_LIST);
+		var contentPanel = new JPanel(new BorderLayout(15, 15));
+		contentPanel.setOpaque(false);
+		var classPanel = new JPanel(new BorderLayout(15, 0));
+		var classSearchPanel = new JPanel(new BorderLayout(15, 0));
+		this.classSemesterSelector = new JComboBox<>();
+		var classSearchField = new JTextField();
+		var classCreateBtn = new JButton("Create class");
+		var classEditBtn = new JButton("Edit class");
+		var classDeleteBtn = new JButton("Delete class");
+		classSearchPanel.add(this.classSemesterSelector, BorderLayout.EAST);
+		classSearchPanel.add(classSearchField, BorderLayout.CENTER);
+		classSearchPanel.add(classCreateBtn, BorderLayout.WEST);
+		classSearchPanel.add(classEditBtn, BorderLayout.WEST);
+		classSearchPanel.add(classDeleteBtn, BorderLayout.WEST);
 		this.classTable = new MSTable(new String[]{"ID", "Class name", "Semester", "Subject", "GPA", "Teacher"},
-				List.<Class<?>>of(Integer.class, String.class, String.class, String[].class, Float.class, String[].class), Collections.EMPTY_LIST);
+				List.<Class<?>>of(Integer.class, String.class, String.class, String.class, Float.class, String[].class), Collections.EMPTY_LIST);
+		classPanel.add(classSearchPanel, BorderLayout.NORTH);
+		classPanel.add(this.classTable, BorderLayout.CENTER);
+		var semesterPanel = new JPanel(new BorderLayout(15, 0));
+		var semesterSearchPanel = new JPanel(new BorderLayout(15, 0));
+		var semesterSearchField = new JTextField();
+		var semesterCreateBtn = new JButton("Create semester");
+		var semesterEditBtn = new JButton("Edit semester");
+		var semesterDeleteBtn = new JButton("Delete semester");
+		semesterSearchPanel.add(semesterSearchPanel, BorderLayout.CENTER);
+		semesterSearchPanel.add(semesterCreateBtn, BorderLayout.WEST);
+		semesterSearchPanel.add(semesterEditBtn, BorderLayout.WEST);
+		semesterSearchPanel.add(semesterDeleteBtn, BorderLayout.WEST);
+		this.semesterTable = new MSTable(new String[]{"ID", "Semester", "Year"}, List.<Class<?>>of(Integer.class, Short.class, Short.class), Collections.EMPTY_LIST);
+		semesterPanel.add(semesterSearchPanel, BorderLayout.NORTH);
+		semesterPanel.add(this.semesterTable, BorderLayout.CENTER);
+		contentPanel.add(classPanel, BorderLayout.CENTER);
+		contentPanel.add(semesterPanel, BorderLayout.SOUTH);
 
 		return contentPanel;
 	}

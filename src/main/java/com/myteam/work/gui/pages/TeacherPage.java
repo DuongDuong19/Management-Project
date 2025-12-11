@@ -110,19 +110,29 @@ public class TeacherPage extends JPanel {
 		this.searchField.setBorder(null);
 		this.searchField.setForeground(config.getFieldColor());
 		this.searchField.addFocusListener(new DefaultTextDisplayer(defaultText));
-		//replace with dynamic update with timer when have time
-		var searchBtn = new JButton("Search");
-		searchBtn.setFocusPainted(false);
-		searchBtn.setBorderPainted(false);
-		searchBtn.setCursor(config.getHandCursor());
-		searchBtn.setBackground(Color.BLUE);
-		searchBtn.setForeground(Color.WHITE);
-		searchBtn.addActionListener(e -> {
+		this.searchField.getDocument().addDocumentListener(new DocumentListener() {
+			private Timer updater = new Timer(125, e -> {
 				if(searchField.getText().equals(defaultText)) tpec.loadAllSubject();
 				else tpec.searchSubject(searchField.getText());
+
+			});
+
+			public void changedUpdate(DocumentEvent e) {
+				updater.setRepeats(false);
+				updater.restart();
+			}
+
+			public void insertUpdate(DocumentEvent e) {
+				updater.setRepeats(false);
+				updater.restart();
+			}
+
+			public void removeUpdate(DocumentEvent e) {
+				updater.setRepeats(false);
+				updater.restart();
+			}
 		});
 		searchPanel.add(this.searchField, BorderLayout.CENTER);
-		searchPanel.add(searchBtn, BorderLayout.EAST);
 		this.subjectTable = new MSTable(new String[]{"ID", "Subject name", "Prerequisites", "Credits", "Required"}, 
 				List.<Class<?>>of(String.class, String[].class, Short.class, String.class), Collections.EMPTY_LIST);
 		this.subjectTable.setRowHeight(42);
