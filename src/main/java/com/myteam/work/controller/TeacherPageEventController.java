@@ -3,6 +3,8 @@ package com.myteam.work.controller;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.swing.JTable;
+
 import com.myteam.work.gui.pages.TeacherPage;
 import com.myteam.work.management.data.Semester;
 import com.myteam.work.management.data.Subject;
@@ -11,9 +13,9 @@ import com.myteam.work.management.handler.SemesterHandler;
 import com.myteam.work.management.handler.StudentHandler;
 import com.myteam.work.management.handler.SubjectHandler;
 import com.myteam.work.management.handler.TeachClassHandler;
+import com.myteam.work.management.handler.TeacherHandler;
 
 import lombok.extern.slf4j.Slf4j;
-// import com.myteam.work.management.handler.TeacherHandler;
 
 
 @Slf4j
@@ -21,14 +23,16 @@ public class TeacherPageEventController {
 	private static TeacherPageEventController tpec;
 	private SubjectHandler sh;
 	private StudentHandler sth;
-	// private TeacherHandler th;
+	private TeacherHandler th;
 	private TeachClassHandler tch;
 	private SemesterHandler seh;
+	private JTable stickyTable;
+	private JTable contentTable;
 
 	private TeacherPageEventController() {
 		this.sh = new SubjectHandler();
 		this.sth = new StudentHandler();
-		// this.th = new TeacherHandler();
+		this.th = new TeacherHandler();
 		this.tch = new TeachClassHandler();
 		this.seh = new SemesterHandler();
 	}
@@ -59,6 +63,16 @@ public class TeacherPageEventController {
 		if(subjects == null) return;
 
 		table.addData(loadSubject(subjects));
+	}
+//=============================================
+	public void loadStudent() {
+		var students = this.sth.getStudent();
+		var selector = ((TeacherPage) TeacherPage.getPage()).getStudentTable();
+		selector.clearData();
+
+		if(students == null)	return;
+
+		
 	}
 
 	public void loadSemester() {
