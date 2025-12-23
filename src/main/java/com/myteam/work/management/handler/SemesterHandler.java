@@ -1,6 +1,7 @@
 package com.myteam.work.management.handler;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
@@ -34,5 +35,40 @@ public class SemesterHandler {
 		}
 
 		return null;
+	}
+
+	public int createSemester(short semester, short years) {
+		try {
+			PreparedStatement statement = this.connection.prepareStatement("insert into semester(semester, years) values (?, ?)");
+			// statement.setShort(1, semester);
+			// statement.setShort(2, years);
+			
+			statement.executeUpdate();
+			
+		} catch (SQLException e) {
+			log.error(e.toString());
+		}
+
+		return 1;
+	}
+
+	public void editSemester(int id) {
+		try {
+			PreparedStatement statement = this.connection.prepareStatement("update semester set semester = ?, years = ? where id = ?");
+
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			log.error(e.toString());
+		}
+	}
+
+	public void deleteSemester(int id) {
+		try {
+			PreparedStatement statement = this.connection.prepareStatement("delete from semester where id = ?");
+
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			log.error(e.toString());
+		}
 	}
 }

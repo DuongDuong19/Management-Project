@@ -4,11 +4,13 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.myteam.work.gui.pages.ManagerPage;
+import com.myteam.work.management.data.Semester;
 import com.myteam.work.management.data.Subject;
 import com.myteam.work.management.handler.SemesterHandler;
 import com.myteam.work.management.handler.StudentHandler;
 import com.myteam.work.management.handler.SubjectHandler;
 import com.myteam.work.management.handler.TeachClassHandler;
+import com.myteam.work.management.handler.TeacherHandler;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -18,14 +20,14 @@ public class ManagerPageEventController {
     private static ManagerPageEventController mpec;
     private SubjectHandler sh;
     private StudentHandler sth;
-	// private TeacherHandler th;
+	private TeacherHandler th;
 	private TeachClassHandler tch;
 	private SemesterHandler seh;
 
     private ManagerPageEventController() {
 		this.sh = new SubjectHandler();
 		this.sth = new StudentHandler();
-		// this.th = new TeacherHandler();
+		this.th = new TeacherHandler();
 		this.tch = new TeachClassHandler();
 		this.seh = new SemesterHandler();
 	}
@@ -61,6 +63,18 @@ public class ManagerPageEventController {
 		table.addData(loadSubject(subjects));
     }
 
+	//==========================================
+	public void loadSemester() {
+		var semesters = this.seh.getAllSemester();
+		var selector = ((ManagerPage) ManagerPage.getPage()).getClassSemesterSelector();
+		selector.removeAllItems();
+		selector.addItem(null);
+
+		if(semesters == null) return;
+
+		for(Semester sm : semesters) selector.addItem(sm);
+	}
+	//==========================================
     private Object[][] loadSubject(List<Subject> subjects) {
 		List<Object[]> data = new LinkedList<>();
 
