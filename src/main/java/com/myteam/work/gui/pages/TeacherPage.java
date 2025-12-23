@@ -19,8 +19,8 @@ import javax.swing.event.DocumentListener;
 import com.myteam.work.Configuration;
 import com.myteam.work.controller.TeacherPageEventController;
 import com.myteam.work.management.data.Semester;
-import com.myteam.work.management.data.TeachClass;
 import com.myteam.work.management.data.Subject;
+import com.myteam.work.management.data.TeachClass;
 
 import lombok.Getter;
 
@@ -74,7 +74,10 @@ public class TeacherPage extends JPanel {
 		this.semesterSelector.addActionListener(e -> loadTeachClass());
 		this.semesterSelector.setRenderer(config.getComboBoxRenderer());
 		this.classSelector = new JComboBox();
-		this.classSelector.addActionListener(e -> tpec.loadStudentInTeachClass((TeachClass) ((JComboBox) e.getSource()).getSelectedItem()));
+		this.classSelector.addActionListener(e -> tpec.loadStudentInTeachClass(
+			(Semester) ((JComboBox) e.getSource()).getSelectedItem(),
+			(TeachClass) ((JComboBox) e.getSource()).getSelectedItem(),
+			(Subject) ((JComboBox) e.getSource()).getSelectedItem()));
 		this.classSelector.setRenderer(config.getComboBoxRenderer());
 		this.subjectSelector = new JComboBox();
 		this.subjectSelector.addActionListener(e -> loadTeachClass());

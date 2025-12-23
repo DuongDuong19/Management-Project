@@ -29,10 +29,7 @@ public class TeachClassHandler {
 			while(classInformation.next())
 				result.add(new TeachClass(
 						classInformation.getInt("id"), 
-						classInformation.getInt("semester"),
-						classInformation.getString("className"),
-						classInformation.getInt("subject"),
-						classInformation.getFloat("gpa")));
+						classInformation.getString("className")));
 
 			if(!result.isEmpty())
 				return result;
