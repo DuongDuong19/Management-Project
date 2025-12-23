@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 
+import com.myteam.work.gui.pages.ComboBoxNullNameRenderer;
+
 public class Configuration {
 	private static Configuration config;
 	@Getter
@@ -22,14 +24,19 @@ public class Configuration {
 	@NonNull
 	private static String sqlPassword;
 	@Getter
-	private static Cursor handCursor = new Cursor(Cursor.HAND_CURSOR);
+	private static Cursor handCursor;
 	@Getter
-	private static Color fieldColor = new Color(150, 150, 150);
+	private static Color fieldColor;
+	@Getter
+	private static ComboBoxNullNameRenderer comboBoxRenderer;
 
 	static {
 		sqlURL = "jdbc:postgresql://localhost:5432/doanoop";
 		sqlUsername = "postgres";
 		sqlPassword = "";
+		handCursor = new Cursor(Cursor.HAND_CURSOR);
+		fieldColor = new Color(150, 150, 150);
+		comboBoxRenderer = new ComboBoxNullNameRenderer();
 	}
 
 	public static Configuration getConfiguration() {

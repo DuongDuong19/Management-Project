@@ -39,6 +39,7 @@ public class PageController {
 		var tpec = TeacherPageEventController.getController();
 		tpec.loadAllSubject();
 		tpec.loadSemester();
+		tpec.loadSubject();
 	}
 
 	public void getManagerPage(String username) {

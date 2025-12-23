@@ -21,7 +21,7 @@ public class TeachClass {
 	private int subject;
 	private float gpa;
 
-	public TeachClass(int id, int semester, @NonNull String className, int subject, float gpa) {
+	public TeachClass(int id, @NonNull String className) {
 		this.id = id;
 		this.semester = semester;
 		this.className = className;
@@ -35,19 +35,5 @@ public class TeachClass {
 			throw new IllegalArgumentException("Id cannot be negative");
 
 		this.id = id;
-	}
-
-	public void setGpa(float gpa) {
-		if(gpa < 0 || gpa > 4) 
-			throw new IllegalArgumentException("Gpa must be in range of 0 to 4");
-
-		this.gpa = gpa;
-	}
-	
-	public void setSemester(int semester) {
-		if(semester < 0) 
-			throw new IllegalArgumentException("Semester id cannot be negative");
-
-		this.semester = semester;
-	}
+	}	
 }

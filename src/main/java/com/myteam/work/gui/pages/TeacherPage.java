@@ -20,6 +20,7 @@ import com.myteam.work.Configuration;
 import com.myteam.work.controller.TeacherPageEventController;
 import com.myteam.work.management.data.Semester;
 import com.myteam.work.management.data.TeachClass;
+import com.myteam.work.management.data.Subject;
 
 import lombok.Getter;
 
@@ -36,6 +37,8 @@ public class TeacherPage extends JPanel {
 	private JComboBox semesterSelector;
 	@Getter
 	private JComboBox classSelector;
+	@Getter
+	private JComboBox subjectSelector;
 	@Getter
 	private MSTable studentTable;
 	private JTextField searchField;
@@ -67,13 +70,20 @@ public class TeacherPage extends JPanel {
 		var searchPanel = new JPanel(new BorderLayout(15, 0));
 		searchPanel.setOpaque(false);
 		this.semesterSelector = new JComboBox();
-		this.semesterSelector.setPreferredSize(new Dimension(500, 0));
-		this.semesterSelector.addActionListener(e -> tpec.loadTeachClass((Semester) ((JComboBox) e.getSource()).getSelectedItem()));
+		this.semesterSelector.setPreferredSize(new Dimension(300, 0));
+		this.semesterSelector.addActionListener(e -> loadTeachClass());
+		this.semesterSelector.setRenderer(config.getComboBoxRenderer());
 		this.classSelector = new JComboBox();
 		this.classSelector.addActionListener(e -> tpec.loadStudentInTeachClass((TeachClass) ((JComboBox) e.getSource()).getSelectedItem()));
+		this.classSelector.setRenderer(config.getComboBoxRenderer());
+		this.subjectSelector = new JComboBox();
+		this.subjectSelector.addActionListener(e -> loadTeachClass());
+		this.subjectSelector.setPreferredSize(new Dimension(500, 0));
+		this.subjectSelector.setRenderer(config.getComboBoxRenderer());
 		var submitBtn = new JButton("Submit Change");
 		searchPanel.add(this.semesterSelector, BorderLayout.WEST);
-		searchPanel.add(this.classSelector, BorderLayout.CENTER);
+		searchPanel.add(this.subjectSelector, BorderLayout.CENTER);
+		searchPanel.add(this.classSelector, BorderLayout.EAST);
 		searchPanel.add(submitBtn, BorderLayout.EAST);
 		this.studentTable = new MSTable(new String[]{"ID", "Student Name", "Sex", "Generation", "Test 1", "Test 2", "End test", "Total Score", "Normalized Score", "Rate"},
 				List.<Class<?>>of(Integer.class, String.class, String.class, Short.class, Float.class, Float.class, Float.class, Float.class, Float.class, String.class),
@@ -138,6 +148,8 @@ public class TeacherPage extends JPanel {
 		this.subjectTable.setRowHeight(42);
 		this.subjectTable.setShowGrid(true);
 		this.subjectTable.setPreferredWidth(0, 191);
+		this.subjectTable.setPreferredWidth(1, 500);
+		this.subjectTable.setPreferredWidth(2, 500);
 		this.subjectTable.setPreferredWidth(3, 191);
 		this.subjectTable.setPreferredWidth(4, 191);
 		this.subjectTable.setIntercellSpacing(new Dimension(1, 1));
@@ -154,5 +166,9 @@ public class TeacherPage extends JPanel {
 		this.subjectTable.clearData();
 		this.searchField.setText(defaultText);
 		this.searchField.setForeground(config.getFieldColor());
+	}
+
+	private void loadTeachClass() {
+		tpec.loadTeachClass((Semester) this.semesterSelector.getSelectedItem(), (Subject) this.subjectSelector.getSelectedItem());	
 	}
 }
