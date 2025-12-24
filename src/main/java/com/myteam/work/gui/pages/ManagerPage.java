@@ -20,6 +20,9 @@ import javax.swing.event.DocumentListener;
 
 import com.myteam.work.Configuration;
 import com.myteam.work.controller.ManagerPageEventController;
+import com.myteam.work.management.data.Semester;
+import com.myteam.work.management.data.Subject;
+import com.myteam.work.management.data.TeachClass;
 
 import lombok.Getter;
 
@@ -223,7 +226,7 @@ public class ManagerPage extends JPanel {
 		searchBtn.add(addStudentBtn, BorderLayout.WEST);
 		searchBtn.add(removeStudentBtn, BorderLayout.CENTER);
 		selectorPanel.add(this.classManagementSemesterSelector, BorderLayout.WEST);
-		selectorPanel.add(this.classManagementSubjectSelector, BorderLayout.CENTER)
+		selectorPanel.add(this.classManagementSubjectSelector, BorderLayout.CENTER);
 		selectorPanel.add(this.classManagementClassSelector, BorderLayout.EAST);
 		searchPanel.add(selectorPanel, BorderLayout.CENTER);
 		searchPanel.add(searchBtn, BorderLayout.EAST);

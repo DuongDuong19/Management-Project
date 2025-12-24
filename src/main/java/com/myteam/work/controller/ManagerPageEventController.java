@@ -1,17 +1,15 @@
 package com.myteam.work.controller;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import com.myteam.work.gui.pages.ManagerPage;
+import com.myteam.work.management.data.DataTableParser;
 import com.myteam.work.management.data.Semester;
 import com.myteam.work.management.data.Subject;
+import com.myteam.work.management.data.TeachClass;
 import com.myteam.work.management.handler.SemesterHandler;
 import com.myteam.work.management.handler.StudentHandler;
 import com.myteam.work.management.handler.SubjectHandler;
 import com.myteam.work.management.handler.TeachClassHandler;
 import com.myteam.work.management.handler.TeacherHandler;
-import com.myteam.work.management.data.DataTableParser;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -48,12 +46,12 @@ public class ManagerPageEventController {
 
 		if(subjects == null) return;
 
-		table.addData(loadSubject(subjects));
+		table.addData(DataTableParser.parseSubjectFetchPrerequisites(subjects));
     }
 
 	public void loadManagementAllSubject() {
 		var subjects = this.sh.getAllSubject();
-		var selector = ((ManagePage) ManagePage.getPage()).getClassManagementSubjectSelector();
+		var selector = ((ManagerPage) ManagerPage.getPage()).getClassManagementSubjectSelector();
 		selector.removeAllItems();
 		selector.addItem(null);
 
@@ -70,7 +68,7 @@ public class ManagerPageEventController {
 
 		if(subjects == null) return;
 
-		table.addData(loadSubject(subjects));
+		table.addData(DataTableParser.parseSubjectFetchPrerequisites(subjects));
     }
 
 	public void loadClassSemester() {
@@ -95,28 +93,36 @@ selector.addItem(null);
 		for(Semester sm : semesters) selector.addItem(sm);
 	}
 
-	public void loadManagementTeachClass(Semester sm, Subject s) {
-		var selector = ((ManagePage) ManagePage.getPage()).getClassManagementClassSelector();
+	public void loadManagementTeachClass(Semester sm, Subject s, TeachClass tc) {
+		var selector = ((ManagerPage) ManagerPage.getPage()).getClassManagementClassSelector();
 		selector.removeAllItems();
 		selector.addItem(null);
 
 		if(sm == null || s == null) return;
 
-		var clazz = this.tch.getClass(sm.getId(), s.getId());
+		var clazz = this.tch.getClass(sm.getId(), s.getId(), tc.getId());
 
 		if(clazz == null) return;
 
-		for(TeachClass tc : clazz) selector.addItem(tc);
+		for(TeachClass tcs : clazz) selector.addItem(tcs);
 	}
 
 	public void loadStudentInTeachClass(Semester s, TeachClass tc, Subject sj) {
 		log.info("load student list in: " + tc.toString() + " of " + sj.toString() + " in " + s.toString());
-		var studentTable = ((ManagePage) ManagePage.getPage()).getStudentClassTable();
+		var studentTable = ((ManagerPage) ManagerPage.getPage()).getStudentClassTable();
 		studentTable.clearData();
 		var studentList = this.sth.loadStudentListInfo(s.getId(), tc.getId(), s.getId());
 
 		if(studentList == null) return;
 		
 		studentTable.addData(DataTableParser.parseInfoFetchData(studentList));
+	}
+
+	public void loadAllSubject() {
+
+	}
+
+	public void loadTeachClass(Semester semester, Subject subject) {
+
 	}
 }
