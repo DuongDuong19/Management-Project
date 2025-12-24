@@ -45,7 +45,11 @@ public class ManagerPage extends JPanel {
 	@Getter
 	private JComboBox classSemesterSelector;
 	@Getter
-	private JComboBox classManagementSemesterSelector;
+	private JComboBox<Semester> classManagementSemesterSelector;
+	@Getter
+	private JComboBox<Semester> classManagementSubjectSelector;
+	@Getter
+	private JComboBox<TeachClass> classManagementClassSelector;
 	private JTextField subjectSearchField;
 
 	private ManagerPage() {
@@ -197,16 +201,31 @@ public class ManagerPage extends JPanel {
 		var contentPanel = new JPanel(new BorderLayout(15, 15));
 		contentPanel.setBorder(new EmptyBorder(20, 25, 20, 25));
 		var searchPanel = new JPanel(new BorderLayout(15, 0));
+		var selectorPanel = new JPanel(new BorderLayout(12, 0));
 		var searchBtn = new JPanel(new BorderLayout());
 		searchPanel.setOpaque(false);
-		this.classManagementSemesterSelector = new JComboBox();
+		this.classManagementSemesterSelector = new JComboBox<>();
+		this.classManagementSemesterSelector.setRenderer(config.getComboBoxRenderer());
+		this.classManagementSemesterSelector.addActionListener(e -> loadManagementTeachClass());
+		this.classManagementSubjectSelector = new JComboBox<>();
+		this.classManagementSubjectSelector.setRenderer(config.getComboBoxRenderer());
+		this.classManagementSubjectSelector.addActionListener(e -> loadManagementTeachClass());
+		this.classManagementClassSelector = new JComboBox<>();
+		this.classManagementClassSelector.setRenderer(config.getComboBoxRenderer());
+		this.classManagementClassSelector.addActionListener(e -> mpec.loadStudentInTeachClass(
+					(Semester) classManagementSemesterSelector.getSelectedItem(),
+					(TeachClass) ((JComboBox) e.getSource()).getSelectedItem(),
+					(Subject) classManagementSubjectSelector.getSelectedItem()
+					));
 		var searchField = new JTextField();
 		var addStudentBtn = new JButton("Add student");
 		var removeStudentBtn = new JButton("Remove student");
 		searchBtn.add(addStudentBtn, BorderLayout.WEST);
 		searchBtn.add(removeStudentBtn, BorderLayout.CENTER);
-		searchPanel.add(this.classManagementSemesterSelector, BorderLayout.WEST);
-		searchPanel.add(searchField, BorderLayout.CENTER);
+		selectorPanel.add(this.classManagementSemesterSelector, BorderLayout.WEST);
+		selectorPanel.add(this.classManagementSubjectSelector, BorderLayout.CENTER)
+		selectorPanel.add(this.classManagementClassSelector, BorderLayout.EAST);
+		searchPanel.add(selectorPanel, BorderLayout.CENTER);
 		searchPanel.add(searchBtn, BorderLayout.EAST);
 		this.studentClassTable = new MSTable(new String[]{"ID", "Student name", "Sex", "Generation", "Test 1", "Test 2", "End test", "Total Score", "Normalized Score", "Rate"},
 				List.<Class<?>>of(Integer.class, String.class, String.class, Short.class, Float.class, Float.class, Float.class, Float.class, Float.class, String.class), Collections.EMPTY_LIST);
@@ -218,5 +237,9 @@ public class ManagerPage extends JPanel {
 
 	public void logout() {
 		
+	}
+
+	private void loadManagementTeachClass() {
+		mpec.loadTeachClass((Semester) this.classManagementSemesterSelector.getSelectedItem(), (Subject) this.classManagementSubjectSelector.getSelectedItem());
 	}
 }

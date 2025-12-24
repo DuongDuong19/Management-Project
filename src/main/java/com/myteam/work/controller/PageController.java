@@ -47,6 +47,9 @@ public class PageController {
 		setUsername(username);
 		getHeader(ManagerPage.getPage());
 		getMenu(ManagerPage.getPage());
+		var mpec = ManagerPageEventController.getController();
+		mpec.loadManagementSemester();
+		mpec.loadManagementAllSubject();
 	}
 
 	public void setUsername(String username) {
