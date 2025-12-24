@@ -63,7 +63,6 @@ public class ManagerPageEventController {
 		table.addData(loadSubject(subjects));
     }
 
-	//==========================================
 	public void loadSemester() {
 		var semesters = this.seh.getAllSemester();
 		var selector = ((ManagerPage) ManagerPage.getPage()).getClassSemesterSelector();
@@ -74,9 +73,9 @@ public class ManagerPageEventController {
 
 		for(Semester sm : semesters) selector.addItem(sm);
 	}
-	//==========================================
+	
     private Object[][] loadSubject(List<Subject> subjects) {
-		List<Object[]> data = new LinkedList<>();
+		List<Object[]> data = new LinkedList<Object[]>();
 
 		for(Subject subject : subjects) {
 			var id = subject.getId();
