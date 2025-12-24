@@ -57,6 +57,41 @@ public class StudentHandler {
 	}
 
 	public List<List<String>> loadStudentListInfo(int semester, int teachclass, int subject) {
+		try {
+			List<Student> result = new LinkedList<>();
+			var prepareStatement = SQLHandler.getConnection().prepareStatement("""
+				SELECT
+					se.id AS semester_id,
+					se.semester,
+					se.years,
+					tc.className,
+					sb.subjectName
+				FROM SubjectClass sc
+				JOIN Semester se ON se.id = sc.semester
+				JOIN TeachClass tc ON tc.id = sc.classes
+				JOIN Subject sb ON sb.id = sc.subject
+				ORDER BY se.years, se.semester, tc.className, sb.subjectName;
+			""");
+			prepareStatement.setInt(1, semester);
+			prepareStatement.setInt(2, teachclass);
+			prepareStatement.setInt(3, subject);
 
+			var studentInfo = prepareStatement.executeQuery();
+
+			while(studentInfo.next())
+				result.add(new Student(
+					studentInfo.getInt("id"),
+					studentInfo.getShort("generation"),
+					studentInfo.getFloat("gpa"),
+					studentInfo.getString("urName"),
+					studentInfo.getString("birth"),
+					studentInfo.getString("placeOfBirth"),
+					studentInfo.getBoolean("sex")));
+
+		} catch (SQLException e) {
+			log.error(e.toString());
+		}
+
+		return null;
 	}
 }
