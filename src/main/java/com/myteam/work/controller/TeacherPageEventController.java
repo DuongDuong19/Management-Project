@@ -14,6 +14,7 @@ import com.myteam.work.management.handler.StudentHandler;
 import com.myteam.work.management.handler.SubjectHandler;
 import com.myteam.work.management.handler.TeachClassHandler;
 import com.myteam.work.management.handler.TeacherHandler;
+import com.myteam.work.management.data.DataTableParser;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -62,8 +63,8 @@ public class TeacherPageEventController {
 
 		if(subjects == null) return;
 
-		table.addData(loadSubject(subjects));
-	}
+		table.addData(DataTableParser.parseSubjectFetchPrerequisites(subjects));
+}
 
 	public void loadTeacherSubject() {
 		var subjects = this.sh.loadTeacherSubject(LoginController.getController().getCurrentUser().getId());
@@ -112,28 +113,15 @@ public class TeacherPageEventController {
 	}
 
 	public void loadStudentInTeachClass(Semester s, TeachClass tc, Subject sj) {
+		log.info("load student list in: " + tc.toString() + " of " + sj.toString() + " in " + s.toString());
+		var studentTable = ((TeacherPage) TeacherPage.getPage()).getStudentTable();
+		studentTable.clearData();
+		var studentList = this.sth.loadStudentListInfo(s.getId(), tc.getId(), s.getId());
+
+		if(studentList == null) return;
 		
+		studentTable.addData(DataTableParser.parseInfoFetchData(studentList));
 	}
 
-	private Object[][] loadSubject(List<Subject> subjects) {
-		List<Object[]> data = new LinkedList<>();
-
-		for(Subject subject : subjects) {
-			var id = subject.getId();
-			var prerequisites = sh.getPrerequistes(id);
-			var prerequisitesName = new String[prerequisites == null ? 0 : prerequisites.size()];
-
-			for(var i = 0; i < prerequisitesName.length; i++) prerequisitesName[i] = sh.getName(prerequisites.get(i));
-
-			var subjectRow = new Object[5];
-			subjectRow[0] = id;
-			subjectRow[1] = subject.getSubjectName();
-			subjectRow[2] = prerequisitesName;
-			subjectRow[3] = subject.getCredits();
-			subjectRow[4] = subject.isRequired() ? "yes" : "no";
-			data.add(subjectRow);
-		}
-
-		return data.toArray(Object[][]::new);
-	}
+	
 }

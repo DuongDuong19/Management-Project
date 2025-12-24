@@ -55,4 +55,8 @@ public class StudentHandler {
 
 		return null;
 	}
+
+	public List<List<String>> loadStudentListInfo(int semester, int teachclass, int subject) {
+
+	}
 }
