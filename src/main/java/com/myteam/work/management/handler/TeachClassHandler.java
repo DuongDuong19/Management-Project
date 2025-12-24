@@ -22,7 +22,7 @@ public class TeachClassHandler {
 			var prepareStatement = this.connection.prepareStatement("""
 									SELECT DISTINCT
 									tc.id AS class_id,
-    								tc.className AS class_name,
+    								tc.className AS class_name
 									FROM SubjectClass sc
 									JOIN TeachClass tc ON tc.id = sc.classes
 									JOIN Subject sb ON sb.id = sc.subject
@@ -40,8 +40,8 @@ public class TeachClassHandler {
 
 			while(classInformation.next())
 				result.add(new TeachClass(
-						classInformation.getInt("id"), 
-						classInformation.getString("className")));
+						classInformation.getInt("class_id"), 
+						classInformation.getString("class_name")));
 
 			if(!result.isEmpty())
 				return result;
