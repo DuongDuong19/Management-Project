@@ -69,6 +69,8 @@ public class TeacherPage extends JPanel {
 		contentPanel.setOpaque(false);
 		var searchPanel = new JPanel(new BorderLayout(15, 0));
 		searchPanel.setOpaque(false);
+		var selectorPanel = new JPanel(new BorderLayout(12, 0));
+		selectorPanel.setOpaque(false);
 		this.semesterSelector = new JComboBox();
 		this.semesterSelector.setPreferredSize(new Dimension(300, 0));
 		this.semesterSelector.addActionListener(e -> loadTeachClass());
@@ -84,9 +86,10 @@ public class TeacherPage extends JPanel {
 		this.subjectSelector.setPreferredSize(new Dimension(500, 0));
 		this.subjectSelector.setRenderer(config.getComboBoxRenderer());
 		var submitBtn = new JButton("Submit Change");
-		searchPanel.add(this.semesterSelector, BorderLayout.WEST);
-		searchPanel.add(this.subjectSelector, BorderLayout.CENTER);
-		searchPanel.add(this.classSelector, BorderLayout.EAST);
+		selectorPanel.add(this.semesterSelector, BorderLayout.WEST);
+		selectorPanel.add(this.subjectSelector, BorderLayout.CENTER);
+		selectorPanel.add(this.classSelector, BorderLayout.EAST);
+		searchPanel.add(selectorPanel, BorderLayout.CENTER);
 		searchPanel.add(submitBtn, BorderLayout.EAST);
 		this.studentTable = new MSTable(new String[]{"ID", "Student Name", "Sex", "Generation", "Test 1", "Test 2", "End test", "Total Score", "Normalized Score", "Rate"},
 				List.<Class<?>>of(Integer.class, String.class, String.class, Short.class, Float.class, Float.class, Float.class, Float.class, Float.class, String.class),
