@@ -17,13 +17,25 @@ public class TeachClassHandler {
 		this.connection = SQLHandler.getConnection();
 	}
 
-	public List<TeachClass> getClass(int year, int teacher) {
+	public List<TeachClass> getClass(int semester, int teacher, int subject) {
 		try {
-			var classInformation = this.connection.prepareStatement("""
-									SELECT TeachClass.* FROM TeachClass
-									INNER JOIN Semester ON TeachClass.id = Semester.id
-									INNER JOIN Subject ON TeachClass.id = Subject.id
-								""").executeQuery();
+			var prepareStatement = this.connection.prepareStatement("""
+									SELECT DISTINCT
+									tc.id AS class_id,
+    								tc.className AS class_name,
+									FROM SubjectClass sc
+									JOIN TeachClass tc ON tc.id = sc.classes
+									JOIN Subject sb ON sb.id = sc.subject
+									JOIN Semester se ON se.id = sc.semester
+									JOIN TeacherTeachClass ttc ON ttc.classes = tc.id
+									JOIN TeachSubject ts ON ts.subject = sb.id AND ts.teacher = ttc.teacher
+									JOIN Users u ON u.id = ts.teacher
+									WHERE sc.semester = ? AND ts.teacher  = ? AND sc.subject  = ?
+								""");
+			prepareStatement.setInt(1, semester);
+			prepareStatement.setInt(2, teacher);
+			prepareStatement.setInt(3, subject);
+			var classInformation = prepareStatement.executeQuery();
 			List<TeachClass> result = new LinkedList<>();
 
 			while(classInformation.next())

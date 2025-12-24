@@ -35,5 +35,9 @@ public class TeachClass {
 			throw new IllegalArgumentException("Id cannot be negative");
 
 		this.id = id;
-	}	
+	}
+
+	public String toString() {
+		return this.className;
+	}
 }

@@ -118,4 +118,31 @@ public class SubjectHandler {
 
 		return null;
 	}
+
+	public List<Subject> loadTeacherSubject(int id) {
+		try {
+			List<Subject> result = new LinkedList<>();
+			var prepareStatement = SQLHandler.getConnection().prepareStatement("""
+					SELECT sb.*
+					FROM TeachSubject ts
+					JOIN Subject sb ON sb.id = ts.subject
+					WHERE ts.teacher = ?; 
+					""");
+			prepareStatement.setInt(1, id);
+			var subjectInformation = prepareStatement.executeQuery();
+
+			while(subjectInformation.next()) result.add(new Subject(
+								subjectInformation.getInt("id"),
+								subjectInformation.getShort("credits"),
+								subjectInformation.getBoolean("required"),
+								subjectInformation.getString("subjectname")
+						));
+
+			if(!result.isEmpty()) return result;
+		} catch(SQLException e) {
+			log.error(e.toString());
+		}
+
+		return null;
+	}
 }

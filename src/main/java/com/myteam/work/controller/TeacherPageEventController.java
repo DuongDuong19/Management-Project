@@ -65,8 +65,15 @@ public class TeacherPageEventController {
 		table.addData(loadSubject(subjects));
 	}
 
-	public void loadSubject() {
+	public void loadTeacherSubject() {
+		var subjects = this.sh.loadTeacherSubject(LoginController.getController().getCurrentUser().getId());
+		var selector = ((TeacherPage) TeacherPage.getPage()).getSubjectSelector();
+		selector.removeAllItems();
+		selector.addItem(null);
 
+		if(subjects == null) return;
+
+		for(Subject subject : subjects) selector.addItem(subject);
 	}
 
 	public void loadStudent() {
@@ -95,9 +102,9 @@ public class TeacherPageEventController {
 		selector.removeAllItems();
 		selector.addItem(null);
 
-		if(sm == null) return;
+		if(sm == null || s == null) return;
 
-		var clazz = this.tch.getClass(sm.getYears(), LoginController.getController().getCurrentUser().getId());
+		var clazz = this.tch.getClass(sm.getId(), LoginController.getController().getCurrentUser().getId(), s.getId());
 
 		if(clazz == null) return;
 

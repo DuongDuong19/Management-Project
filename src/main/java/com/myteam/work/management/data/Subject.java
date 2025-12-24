@@ -39,4 +39,8 @@ public class Subject {
 
 		this.credits = credits;
 	}
+
+	public String toString() {
+		return this.subjectName;
+	}
 }

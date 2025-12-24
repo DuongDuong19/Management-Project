@@ -34,11 +34,11 @@ public class TeacherPage extends JPanel {
 	private MSTable subjectTable;
 	private TeacherPageEventController tpec;
 	@Getter
-	private JComboBox semesterSelector;
+	private JComboBox<Semester> semesterSelector;
 	@Getter
-	private JComboBox classSelector;
+	private JComboBox<TeachClass> classSelector;
 	@Getter
-	private JComboBox subjectSelector;
+	private JComboBox<Subject> subjectSelector;
 	@Getter
 	private MSTable studentTable;
 	private JTextField searchField;
@@ -71,17 +71,17 @@ public class TeacherPage extends JPanel {
 		searchPanel.setOpaque(false);
 		var selectorPanel = new JPanel(new BorderLayout(12, 0));
 		selectorPanel.setOpaque(false);
-		this.semesterSelector = new JComboBox();
+		this.semesterSelector = new JComboBox<>();
 		this.semesterSelector.setPreferredSize(new Dimension(300, 0));
 		this.semesterSelector.addActionListener(e -> loadTeachClass());
 		this.semesterSelector.setRenderer(config.getComboBoxRenderer());
-		this.classSelector = new JComboBox();
+		this.classSelector = new JComboBox<>();
 		this.classSelector.addActionListener(e -> tpec.loadStudentInTeachClass(
 			(Semester) ((JComboBox) e.getSource()).getSelectedItem(),
 			(TeachClass) ((JComboBox) e.getSource()).getSelectedItem(),
 			(Subject) ((JComboBox) e.getSource()).getSelectedItem()));
 		this.classSelector.setRenderer(config.getComboBoxRenderer());
-		this.subjectSelector = new JComboBox();
+		this.subjectSelector = new JComboBox<>();
 		this.subjectSelector.addActionListener(e -> loadTeachClass());
 		this.subjectSelector.setPreferredSize(new Dimension(500, 0));
 		this.subjectSelector.setRenderer(config.getComboBoxRenderer());
@@ -130,7 +130,6 @@ public class TeacherPage extends JPanel {
 			private Timer updater = new Timer(125, e -> {
 				if(searchField.getText().equals(defaultText)) tpec.loadAllSubject();
 				else tpec.searchSubject(searchField.getText());
-
 			});
 
 			public void changedUpdate(DocumentEvent e) {
