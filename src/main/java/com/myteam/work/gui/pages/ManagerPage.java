@@ -50,7 +50,7 @@ public class ManagerPage extends JPanel {
 	@Getter
 	private JComboBox<Semester> classManagementSemesterSelector;
 	@Getter
-	private JComboBox<Semester> classManagementSubjectSelector;
+	private JComboBox<Subject> classManagementSubjectSelector;
 	@Getter
 	private JComboBox<TeachClass> classManagementClassSelector;
 	private JTextField subjectSearchField;
