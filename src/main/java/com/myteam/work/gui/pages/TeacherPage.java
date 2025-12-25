@@ -76,10 +76,7 @@ public class TeacherPage extends JPanel {
 		this.semesterSelector.addActionListener(e -> loadTeachClass());
 		this.semesterSelector.setRenderer(config.getComboBoxRenderer());
 		this.classSelector = new JComboBox<>();
-		this.classSelector.addActionListener(e -> tpec.loadStudentInTeachClass(
-			(Semester) semesterSelector.getSelectedItem(),
-			(TeachClass) classSelector.getSelectedItem(),
-			(Subject) subjectSelector.getSelectedItem()));
+		this.classSelector.addActionListener(e -> tpec.loadStudentInTeachClass((TeachClass) classSelector.getSelectedItem()));
 		this.classSelector.setRenderer(config.getComboBoxRenderer());
 		this.subjectSelector = new JComboBox<>();
 		this.subjectSelector.addActionListener(e -> loadTeachClass());

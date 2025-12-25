@@ -21,6 +21,7 @@ public class ManagerPageEventController {
 	private TeacherHandler th;
 	private TeachClassHandler tch;
 	private SemesterHandler seh;
+	private DataTableParser parser;
 
     private ManagerPageEventController() {
 		this.sh = new SubjectHandler();
@@ -28,6 +29,7 @@ public class ManagerPageEventController {
 		this.th = new TeacherHandler();
 		this.tch = new TeachClassHandler();
 		this.seh = new SemesterHandler();
+		this.parser = new DataTableParser();
 	}
 
     public static ManagerPageEventController getController() {
@@ -46,7 +48,7 @@ public class ManagerPageEventController {
 
 		if(subjects == null) return;
 
-		table.addData(DataTableParser.parseSubjectFetchPrerequisites(subjects));
+		table.addData(this.parser.parseSubjectFetchPrerequisites(subjects));
     }
 
 	public void loadManagementAllSubject() {
@@ -68,7 +70,7 @@ public class ManagerPageEventController {
 
 		if(subjects == null) return;
 
-		table.addData(DataTableParser.parseSubjectFetchPrerequisites(subjects));
+		table.addData(this.parser.parseSubjectFetchPrerequisites(subjects));
     }
 
 	public void loadClassSemester() {
@@ -107,15 +109,18 @@ selector.addItem(null);
 		for(TeachClass tcs : clazz) selector.addItem(tcs);
 	}
 
-	public void loadStudentInTeachClass(Semester s, TeachClass tc, Subject sj) {
-		log.info("load student list in: " + tc.toString() + " of " + sj.toString() + " in " + s.toString());
+	public void loadStudentInTeachClass(TeachClass tc) {
 		var studentTable = ((ManagerPage) ManagerPage.getPage()).getStudentClassTable();
 		studentTable.clearData();
-		var studentList = this.sth.loadStudentListInfo(s.getId(), tc.getId(), s.getId());
+		var studentList = this.sth.loadStudentListInfo(tc.getId());
 
 		if(studentList == null) return;
+
+		var data = this.parser.parseInfoFetchData(studentList);
 		
-		studentTable.addData(DataTableParser.parseInfoFetchData(studentList));
+		if(data == null) return;
+
+		studentTable.addData(data);
 	}
 
 	public void loadAllSubject() {

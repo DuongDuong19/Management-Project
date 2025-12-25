@@ -215,11 +215,7 @@ public class ManagerPage extends JPanel {
 		this.classManagementSubjectSelector.addActionListener(e -> loadManagementTeachClass());
 		this.classManagementClassSelector = new JComboBox<>();
 		this.classManagementClassSelector.setRenderer(config.getComboBoxRenderer());
-		this.classManagementClassSelector.addActionListener(e -> mpec.loadStudentInTeachClass(
-					(Semester) classManagementSemesterSelector.getSelectedItem(),
-					(TeachClass) ((JComboBox) e.getSource()).getSelectedItem(),
-					(Subject) classManagementSubjectSelector.getSelectedItem()
-					));
+		this.classManagementClassSelector.addActionListener(e -> mpec.loadStudentInTeachClass((TeachClass) ((JComboBox) e.getSource()).getSelectedItem()));
 		var searchField = new JTextField();
 		var addStudentBtn = new JButton("Add student");
 		var removeStudentBtn = new JButton("Remove student");
