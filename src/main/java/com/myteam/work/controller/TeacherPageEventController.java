@@ -100,6 +100,8 @@ public class TeacherPageEventController {
 	public void loadStudentInTeachClass(TeachClass tc) {
 		var studentTable = ((TeacherPage) TeacherPage.getPage()).getStudentTable();
 		studentTable.clearData();
+
+		if(tc == null)	return;
 		var studentList = this.sth.loadStudentListInfo(tc.getId());
 
 		if(studentList == null) return;
