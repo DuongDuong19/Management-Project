@@ -1,10 +1,12 @@
 package com.myteam.work.controller;
 
-import java.util.List;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 
 import com.myteam.work.gui.pages.TeacherPage;
 import com.myteam.work.management.data.DataTableParser;
+import com.myteam.work.management.data.Pair;
 import com.myteam.work.management.data.Semester;
 import com.myteam.work.management.data.Subject;
 import com.myteam.work.management.data.TeachClass;
@@ -13,7 +15,6 @@ import com.myteam.work.management.handler.StudentHandler;
 import com.myteam.work.management.handler.SubjectHandler;
 import com.myteam.work.management.handler.TeachClassHandler;
 import com.myteam.work.management.handler.TeacherHandler;
-import com.myteam.work.management.data.Triple;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -27,7 +28,7 @@ public class TeacherPageEventController {
 	private TeachClassHandler tch;
 	private SemesterHandler seh;
 	private DataTableParser parser;
-	private List<Triple<Integer, String, Object>> changeRecorder;
+	private List<HashMap<Pair<Integer, String>, Object>> changeRecorder;
 
 	private TeacherPageEventController() {
 		this.sh = new SubjectHandler();
@@ -119,7 +120,7 @@ public class TeacherPageEventController {
 		studentTable.addData(data);
 	}
 
-	public List<Triple<Integer, String, Object>> getRecorder() {
+	public List<HashMap<Pair<Integer, String>, Object>> getRecorder() {
 		return this.changeRecorder;
 	}
 }

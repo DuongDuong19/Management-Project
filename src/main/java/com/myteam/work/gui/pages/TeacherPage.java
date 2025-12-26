@@ -17,6 +17,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import com.myteam.work.Configuration;
+import com.myteam.work.controller.ManagerPageEventController;
 import com.myteam.work.controller.TeacherPageEventController;
 import com.myteam.work.management.data.Semester;
 import com.myteam.work.management.data.Subject;
@@ -42,6 +43,7 @@ public class TeacherPage extends JPanel {
 	@Getter
 	private MSTable studentTable;
 	private JTextField searchField;
+	private ManagerPageEventController mpec;
 
 	private TeacherPage() {
 		this.tpec = TeacherPageEventController.getController();
