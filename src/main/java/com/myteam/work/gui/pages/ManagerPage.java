@@ -24,6 +24,8 @@ import com.myteam.work.management.data.Semester;
 import com.myteam.work.management.data.Subject;
 import com.myteam.work.management.data.TeachClass;
 
+import com.myteam.work.gui.pages.utilWin.CreateSubjectWindow;
+
 import lombok.Getter;
 
 public class ManagerPage extends JPanel {
@@ -123,6 +125,7 @@ public class ManagerPage extends JPanel {
 			}
 		});
 		var subjectCreateBtn = new JButton("Create subject");
+		subjectCreateBtn.addEventListener(e -> new CreateSubjectWindow());
 		var subjectEditBtn = new JButton("Edit subject");
 		var subjectDeleteBtn = new JButton("Delete subject");
 		searchBtn.add(subjectCreateBtn, BorderLayout.WEST);

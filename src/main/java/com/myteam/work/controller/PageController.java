@@ -48,6 +48,7 @@ public class PageController {
 		getHeader(ManagerPage.getPage());
 		getMenu(ManagerPage.getPage());
 		var mpec = ManagerPageEventController.getController();
+		mpec.loadSubjectAllSubject();
 		mpec.loadManagementSemester();
 		mpec.loadManagementAllSubject();
 	}

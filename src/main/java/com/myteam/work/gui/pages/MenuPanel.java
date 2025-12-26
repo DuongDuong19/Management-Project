@@ -53,6 +53,7 @@ public class MenuPanel extends JPanel {
 		managerBtns[1] = createMenuBtn("Teacher Management", "teacher");
 		managerBtns[2] = createMenuBtn("Subject Management", "subject");
 		managerBtns[3] = createMenuBtn("Classes", "class");
+		managerBtns[4] = createMenuBtn("Class Management", "classManagement");
 	}
 
 	public static JPanel getPage() {
