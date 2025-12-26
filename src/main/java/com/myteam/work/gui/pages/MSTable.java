@@ -51,7 +51,10 @@ public class MSTable {
 			}
 
 			public boolean isCellEditable(int row, int column) {
-				return contentEditableColumn.contains(column);
+				// Allow callers to specify editable columns either as content-table indices
+				// (0-based for the content table) or as original column indices
+				// (including the sticky ID column) — originalIndex = column + 1.
+				return contentEditableColumn.contains(column) || contentEditableColumn.contains(column + 1);
 			}
 		};
 		var mlr = new DefaultTableCellRenderer() {
