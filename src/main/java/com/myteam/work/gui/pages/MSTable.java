@@ -18,10 +18,13 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.table.DefaultTableCellRenderer;
 
+import com.myteam.work.management.data.Triple;
+
 public class MSTable {
 	private JScrollPane sp;
 	private JTable stickyTable;
 	private JTable contentTable;
+	private Triple<Integer, String, ?> dest;
 
 	public MSTable(String[] columnName, List<Class<?>> contentTypes, List<Integer> contentEditableColumn) {
 		var stickyColumnName = new String[] {columnName[0]};
@@ -86,6 +89,21 @@ public class MSTable {
 
 		for(var i = 0; i < this.contentTable.getColumnCount(); i++) this.contentTable.getColumnModel().getColumn(i).setCellRenderer(mlr);
 
+		this.contentTable.addTableModelListener(e -> {
+			if(dest == null) {
+				log.error("Missing fired destination");
+
+				return;
+			}
+
+			if(e.getType() == TableModelEvent.UPDATE) {
+				var column = e.getColumn();
+				var row = e.getFirstRow();
+				
+				result.add(new Triple<Integer, String, ?>(stickyTable.getValueAt(row, 0), contentTable.getColumnName(column), contentTable.getValueAt(row, column)));
+			}
+		});
+
 		this.sp = new JScrollPane(contentTable);
 		var vp = new JViewport() {
 			public Dimension getPreferredSize() {
@@ -149,5 +167,9 @@ public class MSTable {
 			((DefaultTableModel) this.stickyTable.getModel()).addRow(new Object[]{datum[0]});
 			((DefaultTableModel) this.contentTable.getModel()).addRow(Arrays.copyOfRange(datum, 1, datum.length));
 		}
+	}
+
+	public void setDestination(List<Integer, String, ?> destination) {
+		this.dest = destination;
 	}
 }
