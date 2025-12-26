@@ -1,30 +1,34 @@
 package com.myteam.work.gui.pages;
 
-import java.util.List;
-import java.util.Arrays;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
-import javax.swing.JList;
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JViewport;
-import javax.swing.UIManager;
-import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
-import javax.swing.ListSelectionModel;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.DefaultListCellRenderer;
+import javax.swing.UIManager;
+import javax.swing.event.TableModelEvent;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
 
 import com.myteam.work.management.data.Triple;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class MSTable {
 	private JScrollPane sp;
 	private JTable stickyTable;
 	private JTable contentTable;
-	private Triple<Integer, String, ?> dest;
+	private List<Triple<Integer, String, ?>> dest;
 
 	public MSTable(String[] columnName, List<Class<?>> contentTypes, List<Integer> contentEditableColumn) {
 		var stickyColumnName = new String[] {columnName[0]};
@@ -89,7 +93,7 @@ public class MSTable {
 
 		for(var i = 0; i < this.contentTable.getColumnCount(); i++) this.contentTable.getColumnModel().getColumn(i).setCellRenderer(mlr);
 
-		this.contentTable.addTableModelListener(e -> {
+		this.contentTable.getModel().addTableModelListener(e -> {
 			if(dest == null) {
 				log.error("Missing fired destination");
 
@@ -100,6 +104,7 @@ public class MSTable {
 				var column = e.getColumn();
 				var row = e.getFirstRow();
 				
+				List<Triple> result = new LinkedList<>();
 				result.add(new Triple<Integer, String, ?>(stickyTable.getValueAt(row, 0), contentTable.getColumnName(column), contentTable.getValueAt(row, column)));
 			}
 		});
@@ -169,7 +174,7 @@ public class MSTable {
 		}
 	}
 
-	public void setDestination(List<Integer, String, ?> destination) {
+	public void setDestination(List<Triple<Integer, String, ?>> destination) {
 		this.dest = destination;
 	}
 }
