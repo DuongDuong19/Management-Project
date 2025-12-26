@@ -24,7 +24,7 @@ import com.myteam.work.management.data.Semester;
 import com.myteam.work.management.data.Subject;
 import com.myteam.work.management.data.TeachClass;
 
-import com.myteam.work.gui.pages.utilWin.CreateSubjectWindow;
+import com.myteam.work.gui.pages.utilwin.CreateSubjectWindow;
 
 import lombok.Getter;
 
@@ -125,14 +125,14 @@ public class ManagerPage extends JPanel {
 			}
 		});
 		var subjectCreateBtn = new JButton("Create subject");
-		subjectCreateBtn.addEventListener(e -> new CreateSubjectWindow());
+		subjectCreateBtn.addActionListener(e -> new CreateSubjectWindow());
 		var subjectEditBtn = new JButton("Edit subject");
 		var subjectDeleteBtn = new JButton("Delete subject");
 		searchBtn.add(subjectCreateBtn, BorderLayout.WEST);
 		searchBtn.add(subjectEditBtn, BorderLayout.CENTER);
 		searchBtn.add(subjectDeleteBtn, BorderLayout.EAST);
 		searchPanel.add(this.subjectSearchField, BorderLayout.CENTER);
-		searchPanel.add(subjectSearchField, BorderLayout.EAST);
+		searchPanel.add(searchBtn, BorderLayout.EAST);
 		this.subjectTable = new MSTable(new String[]{"ID", "Subject name", "Prerequisites", "Credits", "Require"}, 
 				List.<Class<?>>of(String.class, String[].class, Short.class, String.class), Collections.EMPTY_LIST);
 		this.subjectTable.setRowHeight(42);

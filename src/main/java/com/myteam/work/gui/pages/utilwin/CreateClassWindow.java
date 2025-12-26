@@ -10,7 +10,7 @@ public class CreateClassWindow extends JFrame {
 	public CreateClassWindow() {
 		this.setTitle("Create class");
 		this.setSize(new Dimension(800, 600));
-this.setDefaultCloseOperation(JFRAME.DISPOSE_ON_CLOSE);
+this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		this.setResizable(false);
 		this.setLocationRelativeTo(null);
 

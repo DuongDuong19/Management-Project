@@ -10,10 +10,10 @@ import javax.swing.JCheckBox;
 import javax.swing.JTextField;
 
 public class CreateSubjectWindow extends JFrame {
-	public CreateClassWindow() {
+	public CreateSubjectWindow() {
 		this.setTitle("Create class");
 		this.setSize(new Dimension(800, 600));
-this.setDefaultCloseOperation(JFRAME.DISPOSE_ON_CLOSE);
+this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		this.setResizable(false);
 		this.setLocationRelativeTo(null);
 

@@ -21,7 +21,7 @@ import com.myteam.work.controller.PageController;
 public class MenuPanel extends JPanel {
 	private static final Color background = new Color(15, 23, 42);
 	private static final JButton[] teacherBtns = new JButton[2];
-	private static final JButton[] managerBtns = new JButton[4];
+	private static final JButton[] managerBtns = new JButton[5];
 	private static MenuPanel mp;
 	private Boolean current;
 	@Getter

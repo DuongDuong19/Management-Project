@@ -43,7 +43,7 @@ public class LoginController {
 	}
 
 	public void logout() {
-		log.info("Logout as" + this.currentUser.getInfo().getName());
+		log.info("Logout as " + this.currentUser.getInfo().getName());
 		if(this.currentUser.isRole()) ((TeacherPage) TeacherPage.getPage()).logout();
 		else ((ManagerPage) ManagerPage.getPage()).logout();
 		this.currentUser = null;

@@ -28,7 +28,7 @@ public class MSTable {
 	private JScrollPane sp;
 	private JTable stickyTable;
 	private JTable contentTable;
-	private List<Triple<Integer, String, ?>> dest;
+	private List<Triple<Integer, String, Object>> dest;
 
 	public MSTable(String[] columnName, List<Class<?>> contentTypes, List<Integer> contentEditableColumn) {
 		var stickyColumnName = new String[] {columnName[0]};
@@ -94,18 +94,18 @@ public class MSTable {
 		for(var i = 0; i < this.contentTable.getColumnCount(); i++) this.contentTable.getColumnModel().getColumn(i).setCellRenderer(mlr);
 
 		this.contentTable.getModel().addTableModelListener(e -> {
-			if(dest == null) {
-				log.error("Missing fired destination");
-
-				return;
-			}
-
 			if(e.getType() == TableModelEvent.UPDATE) {
+				if(dest == null) {
+					log.error("Missing fired destination");
+	
+					return;
+				}
+
 				var column = e.getColumn();
 				var row = e.getFirstRow();
 				
-				List<Triple> result = new LinkedList<>();
-				result.add(new Triple<Integer, String, ?>(stickyTable.getValueAt(row, 0), contentTable.getColumnName(column), contentTable.getValueAt(row, column)));
+				dest.add(new Triple<Integer, String, Object>((Integer) stickyTable.getValueAt(row, 0), contentTable.getColumnName(column), contentTable.getValueAt(row, column)));
+				log.info(dest.toString());
 			}
 		});
 
@@ -174,7 +174,7 @@ public class MSTable {
 		}
 	}
 
-	public void setDestination(List<Triple<Integer, String, ?>> destination) {
+	public void setDestination(List<Triple<Integer, String, Object>> destination) {
 		this.dest = destination;
 	}
 }

@@ -1,5 +1,8 @@
 package com.myteam.work.controller;
 
+import java.util.List;
+import java.util.LinkedList;
+
 import com.myteam.work.gui.pages.TeacherPage;
 import com.myteam.work.management.data.DataTableParser;
 import com.myteam.work.management.data.Semester;
@@ -10,6 +13,7 @@ import com.myteam.work.management.handler.StudentHandler;
 import com.myteam.work.management.handler.SubjectHandler;
 import com.myteam.work.management.handler.TeachClassHandler;
 import com.myteam.work.management.handler.TeacherHandler;
+import com.myteam.work.management.data.Triple;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -23,6 +27,7 @@ public class TeacherPageEventController {
 	private TeachClassHandler tch;
 	private SemesterHandler seh;
 	private DataTableParser parser;
+	private List<Triple<Integer, String, Object>> changeRecorder;
 
 	private TeacherPageEventController() {
 		this.sh = new SubjectHandler();
@@ -31,6 +36,7 @@ public class TeacherPageEventController {
 		this.tch = new TeachClassHandler();
 		this.seh = new SemesterHandler();
 		this.parser = new DataTableParser();
+		this.changeRecorder = new LinkedList<>();
 	}
 
 	public static TeacherPageEventController getController() {
@@ -111,5 +117,9 @@ public class TeacherPageEventController {
 		if(data == null) return;
 
 		studentTable.addData(data);
-	}	
+	}
+
+	public List<Triple<Integer, String, Object>> getRecorder() {
+		return this.changeRecorder;
+	}
 }

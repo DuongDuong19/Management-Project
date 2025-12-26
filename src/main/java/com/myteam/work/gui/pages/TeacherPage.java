@@ -106,6 +106,7 @@ public class TeacherPage extends JPanel {
 		this.studentTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		this.studentTable.setReorderingColumn(false);
 		this.studentTable.setResizingColumn(false);
+		this.studentTable.setDestination(this.tpec.getRecorder());
 		contentPanel.add(searchPanel, BorderLayout.NORTH);
 		contentPanel.add(this.studentTable.getDisplayer(), BorderLayout.CENTER);
 
