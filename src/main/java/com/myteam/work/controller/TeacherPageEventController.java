@@ -1,10 +1,12 @@
 package com.myteam.work.controller;
 
-import java.util.List;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 
 import com.myteam.work.gui.pages.TeacherPage;
 import com.myteam.work.management.data.DataTableParser;
+import com.myteam.work.management.data.Pair;
 import com.myteam.work.management.data.Semester;
 import com.myteam.work.management.data.Subject;
 import com.myteam.work.management.data.TeachClass;
@@ -13,7 +15,6 @@ import com.myteam.work.management.handler.StudentHandler;
 import com.myteam.work.management.handler.SubjectHandler;
 import com.myteam.work.management.handler.TeachClassHandler;
 import com.myteam.work.management.handler.TeacherHandler;
-import com.myteam.work.management.data.Triple;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -27,7 +28,7 @@ public class TeacherPageEventController {
 	private TeachClassHandler tch;
 	private SemesterHandler seh;
 	private DataTableParser parser;
-	private List<Triple<Integer, String, Object>> changeRecorder;
+	private List<HashMap<Pair<Integer, String>, Object>> changeRecorder;
 
 	private TeacherPageEventController() {
 		this.sh = new SubjectHandler();
@@ -119,7 +120,32 @@ public class TeacherPageEventController {
 		studentTable.addData(data);
 	}
 
-	public List<Triple<Integer, String, Object>> getRecorder() {
+	public List<HashMap<Pair<Integer, String>, Object>> getRecorder() {
 		return this.changeRecorder;
+	}
+
+	public void loadSubmit(double test1, double test2, double endtest, int student, int classes) {
+		// Simplest behavior: submit provided scores for the given student and class.
+		// Use 0 for test1 (not provided here).
+		int res = this.th.submit(test1, test2, endtest, student, classes);
+
+		if(res == 1) {
+			log.info("Submitted scores for student {}", student);
+			if(this.changeRecorder != null) this.changeRecorder.clear();
+			var selectedClass = (TeachClass) ((TeacherPage) TeacherPage.getPage()).getClassSelector().getSelectedItem();
+			if(selectedClass != null) loadStudentInTeachClass(selectedClass);
+		} else {
+			log.error("Submit failed for student {}", student);
+		}
+	}
+
+	private double toDouble(Object o) {
+		if(o == null) return 0D;
+		if(o instanceof Number) return ((Number) o).doubleValue();
+		try {
+			return Double.parseDouble(o.toString());
+		} catch(Exception ex) {
+			return 0D;
+		}
 	}
 }

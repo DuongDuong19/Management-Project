@@ -4,7 +4,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.util.Arrays;
-import java.util.LinkedList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.swing.DefaultListCellRenderer;
@@ -19,7 +19,7 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
-import com.myteam.work.management.data.Triple;
+import com.myteam.work.management.data.Pair;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -28,7 +28,7 @@ public class MSTable {
 	private JScrollPane sp;
 	private JTable stickyTable;
 	private JTable contentTable;
-	private List<Triple<Integer, String, Object>> dest;
+	private List<HashMap<Pair<Integer, String>, Object>> dest;
 
 	public MSTable(String[] columnName, List<Class<?>> contentTypes, List<Integer> contentEditableColumn) {
 		var stickyColumnName = new String[] {columnName[0]};
@@ -51,7 +51,10 @@ public class MSTable {
 			}
 
 			public boolean isCellEditable(int row, int column) {
-				return contentEditableColumn.contains(column);
+				// Allow callers to specify editable columns either as content-table indices
+				// (0-based for the content table) or as original column indices
+				// (including the sticky ID column) — originalIndex = column + 1.
+				return contentEditableColumn.contains(column) || contentEditableColumn.contains(column + 1);
 			}
 		};
 		var mlr = new DefaultTableCellRenderer() {
@@ -103,8 +106,14 @@ public class MSTable {
 
 				var column = e.getColumn();
 				var row = e.getFirstRow();
-				
-				dest.add(new Triple<Integer, String, Object>((Integer) stickyTable.getValueAt(row, 0), contentTable.getColumnName(column), contentTable.getValueAt(row, column)));
+
+				var key = new Pair<Integer, String>((Integer) stickyTable.getValueAt(row, 0), contentTable.getColumnName(column));
+				var value = contentTable.getValueAt(row, column);
+
+				var map = new HashMap<Pair<Integer, String>, Object>();
+				map.put(key, value);
+				dest.add(map);
+
 				log.info(dest.toString());
 			}
 		});
@@ -174,7 +183,7 @@ public class MSTable {
 		}
 	}
 
-	public void setDestination(List<Triple<Integer, String, Object>> destination) {
+	public void setDestination(List<HashMap<Pair<Integer, String>, Object>> destination) {
 		this.dest = destination;
 	}
 }
