@@ -133,7 +133,8 @@ public class TeacherPageEventController {
 			var key = (Pair<Integer, Integer>) entry.getKey();
 			var value = (Float) entry.getValue();
 
-			if((key.second() == 3) {
+			if(key.second() == 3) {
+
 			} else if(key.second() == 4) {
 
 			} else if(key.second() == 5) {
