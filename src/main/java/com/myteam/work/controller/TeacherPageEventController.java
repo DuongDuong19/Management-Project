@@ -3,6 +3,7 @@ package com.myteam.work.controller;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import com.myteam.work.gui.pages.TeacherPage;
 import com.myteam.work.management.data.DataTableParser;
@@ -28,7 +29,7 @@ public class TeacherPageEventController {
 	private TeachClassHandler tch;
 	private SemesterHandler seh;
 	private DataTableParser parser;
-	private List<HashMap<Pair<Integer, String>, Object>> changeRecorder;
+	private HashMap<Pair<Integer, Integer>, Object> changeRecorder;
 
 	private TeacherPageEventController() {
 		this.sh = new SubjectHandler();
@@ -37,7 +38,7 @@ public class TeacherPageEventController {
 		this.tch = new TeachClassHandler();
 		this.seh = new SemesterHandler();
 		this.parser = new DataTableParser();
-		this.changeRecorder = new LinkedList<>();
+		this.changeRecorder = new HashMap<>();
 	}
 
 	public static TeacherPageEventController getController() {
@@ -120,21 +121,35 @@ public class TeacherPageEventController {
 		studentTable.addData(data);
 	}
 
-	public List<HashMap<Pair<Integer, String>, Object>> getRecorder() {
+	public HashMap<Pair<Integer, Integer>, Object> getRecorder() {
 		return this.changeRecorder;
-	}
+	}	
 
-	public void loadSubmit(double test1, double test2, double endtest, int student, int classes) {
-		if(test1 < 0 || test2 < 0 ||endtest < 0)	return;
-		
-		var submitChange = this.th.submit(test1, test2, endtest, student, classes);
+	public void submit(TeachClass tc) {
+		var iterator = this.changeRecorder.entrySet().iterator();
 
-		if(submitChange == null)	return;
+		while(iterator.hasNext()) {
+			var entry = (Map.Entry) iterator.next();
+			var key = (Pair<Integer, Integer>) entry.getKey();
+			var value = (Float) entry.getValue();
 
-		var scoreTable = ((TeacherPage) TeacherPage.getPage()).getSubjectSelector();
-		scoreTable.removeAllItems();
+			switch(key.second()) {
+				case 3 -> {
+					//test 1
+				}
+				case 4 -> {
+					//test 2
+				}
+				case 5 -> {
+					//endTest
+				}
+				default: {
+					log.error("System has a breach");
+					System.exit(0)
+				}
+			}
+		}
 
-	}
-
-	
+		loadStudentInTeachClass(tc);
+	}	
 }

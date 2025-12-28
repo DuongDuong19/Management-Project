@@ -28,7 +28,7 @@ public class MSTable {
 	private JScrollPane sp;
 	private JTable stickyTable;
 	private JTable contentTable;
-	private List<HashMap<Pair<Integer, String>, Object>> dest;
+	private HashMap<Pair<Integer, Integer>, Object> dest;
 
 	public MSTable(String[] columnName, List<Class<?>> contentTypes, List<Integer> contentEditableColumn) {
 		var stickyColumnName = new String[] {columnName[0]};
@@ -52,10 +52,7 @@ public class MSTable {
 
 			@Override
 			public boolean isCellEditable(int row, int column) {
-				// Allow callers to specify editable columns either as content-table indices
-				// (0-based for the content table) or as original column indices
-				// (including the sticky ID column) — originalIndex = column + 1.
-				return contentEditableColumn.contains(column) || contentEditableColumn.contains(column + 1);
+				return contentEditableColumn.contains(column);
 			}
 		};
 		var mlr = new DefaultTableCellRenderer() {
@@ -107,15 +104,11 @@ public class MSTable {
 
 				var column = e.getColumn();
 				var row = e.getFirstRow();
+				var key = new Pair<Integer, Integer>((Integer) stickyTable.getValueAt(row, 0), column);
+				
+				if(dest.containsKey(key)) dest.remove(key);
 
-				var key = new Pair<Integer, String>((Integer) stickyTable.getValueAt(row, 0), contentTable.getColumnName(column));
-				var value = contentTable.getValueAt(row, column);
-
-				var map = new HashMap<Pair<Integer, String>, Object>();
-				map.put(key, value);
-				dest.add(map);
-
-				log.info(dest.toString());
+				dest.put(key, contentTable.getValueAt(row, column));
 			}
 		});
 
@@ -184,7 +177,7 @@ public class MSTable {
 		}
 	}
 
-	public void setDestination(List<HashMap<Pair<Integer, String>, Object>> destination) {
+	public void setDestination(HashMap<Pair<Integer, Integer>, Object> destination) {
 		this.dest = destination;
 	}
 }

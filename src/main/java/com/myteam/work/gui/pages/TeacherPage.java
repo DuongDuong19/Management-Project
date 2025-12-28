@@ -85,6 +85,7 @@ public class TeacherPage extends JPanel {
 		this.subjectSelector.setPreferredSize(new Dimension(500, 0));
 		this.subjectSelector.setRenderer(config.getComboBoxRenderer());
 		var submitBtn = new JButton("Submit Change");
+		submitBtn.addActionListener(e -> tpec.submit());
 		selectorPanel.add(this.semesterSelector, BorderLayout.WEST);
 		selectorPanel.add(this.subjectSelector, BorderLayout.CENTER);
 		selectorPanel.add(this.classSelector, BorderLayout.EAST);
@@ -92,7 +93,7 @@ public class TeacherPage extends JPanel {
 		searchPanel.add(submitBtn, BorderLayout.EAST);
 		this.studentTable = new MSTable(new String[]{"ID", "Student Name", "Sex", "Generation", "Test 1", "Test 2", "End test", "Total Score", "Normalized Score", "Rate"},
 				List.<Class<?>>of(Integer.class, String.class, String.class, Short.class, Float.class, Float.class, Float.class, Float.class, Float.class, String.class),
-				List.of(4, 5));
+				List.of(3, 4, 5));
 		this.studentTable.setRowHeight(42);
 		this.studentTable.setShowGrid(true);
 		this.studentTable.setPreferredWidth(0, 100);
