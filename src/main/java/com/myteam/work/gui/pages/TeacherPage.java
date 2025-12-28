@@ -85,7 +85,7 @@ public class TeacherPage extends JPanel {
 		this.subjectSelector.setPreferredSize(new Dimension(500, 0));
 		this.subjectSelector.setRenderer(config.getComboBoxRenderer());
 		var submitBtn = new JButton("Submit Change");
-		submitBtn.addActionListener(e -> tpec.submit());
+		submitBtn.addActionListener(e -> tpec.submit((TeachClass) classSelector.getSelectedItem()));
 		selectorPanel.add(this.semesterSelector, BorderLayout.WEST);
 		selectorPanel.add(this.subjectSelector, BorderLayout.CENTER);
 		selectorPanel.add(this.classSelector, BorderLayout.EAST);

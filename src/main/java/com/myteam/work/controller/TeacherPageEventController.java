@@ -133,20 +133,14 @@ public class TeacherPageEventController {
 			var key = (Pair<Integer, Integer>) entry.getKey();
 			var value = (Float) entry.getValue();
 
-			switch(key.second()) {
-				case 3 -> {
-					//test 1
-				}
-				case 4 -> {
-					//test 2
-				}
-				case 5 -> {
-					//endTest
-				}
-				default: {
-					log.error("System has a breach");
-					System.exit(0)
-				}
+			if((key.second() == 3) {
+			} else if(key.second() == 4) {
+
+			} else if(key.second() == 5) {
+
+			} else {
+				log.error("System has a breach");
+				System.exit(0);
 			}
 		}
 
