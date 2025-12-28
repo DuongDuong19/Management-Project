@@ -14,6 +14,8 @@ import com.myteam.work.management.data.Subject;
 @Slf4j
 public class SubjectHandler {
 	private Connection connection;
+	private int student;
+	private int classes; 
 
 	public SubjectHandler() {
 		this.connection = SQLHandler.getConnection();
@@ -187,4 +189,70 @@ public class SubjectHandler {
 			log.error(e.toString());
 		}
 	}
+
+    public Subject submit1(double test1) {
+        try {
+
+            var submitInformation = this.connection.prepareStatement("""
+                update studentlistteachclass
+                set test1 = ?
+                where student = ? and classes = ?
+            """);
+
+            submitInformation.setDouble(1, test1);
+            submitInformation.setInt(2, student);
+            submitInformation.setInt(3, classes);
+
+            int result = submitInformation.executeUpdate();
+
+            } catch (SQLException e) {
+            log.error(e.toString());
+        }
+
+        return null;
+    }
+
+	public Subject submit2(double test2) {
+        try {
+
+            var submitInformation = this.connection.prepareStatement("""
+                update studentlistteachclass
+                set test2 = ?
+                where student = ? and classes = ?
+            """);
+
+            submitInformation.setDouble(1, test2);
+            submitInformation.setInt(2, student);
+            submitInformation.setInt(3, classes);
+
+            int result = submitInformation.executeUpdate();
+
+            } catch (SQLException e) {
+            log.error(e.toString());
+        }
+
+        return null;
+    }
+
+	public Subject endtest(double endtest) {
+        try {
+
+            var submitInformation = this.connection.prepareStatement("""
+                update studentlistteachclass
+                set test1 = ?
+                where student = ? and classes = ?
+            """);
+
+            submitInformation.setDouble(1, endtest);
+            submitInformation.setInt(2, student);
+            submitInformation.setInt(3, classes);
+
+            int result = submitInformation.executeUpdate();
+
+            } catch (SQLException e) {
+            log.error(e.toString());
+        }
+
+        return null;
+    }
 }

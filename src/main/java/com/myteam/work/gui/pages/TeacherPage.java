@@ -19,10 +19,10 @@ import javax.swing.event.DocumentListener;
 import com.myteam.work.Configuration;
 import com.myteam.work.controller.ManagerPageEventController;
 import com.myteam.work.controller.TeacherPageEventController;
+import com.myteam.work.gui.pages.utilwin.SubmitWindow;
 import com.myteam.work.management.data.Semester;
 import com.myteam.work.management.data.Subject;
 import com.myteam.work.management.data.TeachClass;
-import com.myteam.work.gui.pages.utilwin.SubmitWindow;
 
 import lombok.Getter;
 
@@ -30,6 +30,7 @@ public class TeacherPage extends JPanel {
 	private static final Configuration config = Configuration.getConfiguration();
 	private static final String defaultText = "Search by subject name or subject id";
 	private static TeacherPage tp;
+	private static TeachClass tc;
 	private CardLayout pager;
 	private JPanel contentPanel;
 	@Getter
@@ -93,7 +94,7 @@ public class TeacherPage extends JPanel {
 		searchPanel.add(selectorPanel, BorderLayout.CENTER);
 		searchPanel.add(submitBtn, BorderLayout.EAST);
 		this.studentTable = new MSTable(new String[]{"ID", "Student Name", "Sex", "Generation", "Test 1", "Test 2", "End test", "Total Score", "Normalized Score", "Rate"},
-				List.<Class<?>>of(Integer.class, String.class, String.class, Short.class, Float.class, Float.class, Float.class, Float.class, Float.class, String.class),
+				List.<Class<?>>of(String.class, String.class, Short.class, Float.class, Float.class, Float.class, Float.class, Float.class, String.class),
 				List.of(3, 4, 5));
 		this.studentTable.setRowHeight(42);
 		this.studentTable.setShowGrid(true);
