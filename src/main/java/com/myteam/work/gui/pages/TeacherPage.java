@@ -22,6 +22,7 @@ import com.myteam.work.controller.TeacherPageEventController;
 import com.myteam.work.management.data.Semester;
 import com.myteam.work.management.data.Subject;
 import com.myteam.work.management.data.TeachClass;
+import com.myteam.work.gui.pages.utilwin.SubmitWindow;
 
 import lombok.Getter;
 
@@ -85,7 +86,7 @@ public class TeacherPage extends JPanel {
 		this.subjectSelector.setPreferredSize(new Dimension(500, 0));
 		this.subjectSelector.setRenderer(config.getComboBoxRenderer());
 		var submitBtn = new JButton("Submit Change");
-		submitBtn.addActionListener(e -> tpec.submit((TeachClass) classSelector.getSelectedItem()));
+		submitBtn.addActionListener(e -> createSubmitWindow());
 		selectorPanel.add(this.semesterSelector, BorderLayout.WEST);
 		selectorPanel.add(this.subjectSelector, BorderLayout.CENTER);
 		selectorPanel.add(this.classSelector, BorderLayout.EAST);
@@ -176,5 +177,18 @@ public class TeacherPage extends JPanel {
 
 	private void loadTeachClass() {
 		tpec.loadTeachClass((Semester) this.semesterSelector.getSelectedItem(), (Subject) this.subjectSelector.getSelectedItem());	
+	}
+
+	private void createSubmitWindow() {
+		var submitWin = new SubmitWindow();
+		submitWin.setSubmitAction(e -> {
+			tpec.submit((TeachClass) this.classSelector.getSelectedItem());
+			submitWin.dispose();
+		});
+		submitWin.setRevokeAction(e -> {
+			tpec.loadStudentInTeachClass((TeachClass) this.classSelector.getSelectedItem());
+			submitWin.dispose();
+		});
+		submitWin.setCancelAction(e -> submitWin.dispose());
 	}
 }
