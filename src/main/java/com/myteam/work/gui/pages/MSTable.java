@@ -50,7 +50,6 @@ public class MSTable {
 				return contentTypes.get(column);
 			}
 
-			@Override
 			public boolean isCellEditable(int row, int column) {
 				return contentEditableColumn.contains(column);
 			}

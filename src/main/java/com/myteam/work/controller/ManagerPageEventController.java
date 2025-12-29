@@ -1,7 +1,10 @@
 package com.myteam.work.controller;
 
+import java.util.HashMap;
+
 import com.myteam.work.gui.pages.ManagerPage;
 import com.myteam.work.management.data.DataTableParser;
+import com.myteam.work.management.data.Pair;
 import com.myteam.work.management.data.Semester;
 import com.myteam.work.management.data.Subject;
 import com.myteam.work.management.data.TeachClass;
@@ -22,6 +25,11 @@ public class ManagerPageEventController {
 	private TeachClassHandler tch;
 	private SemesterHandler seh;
 	private DataTableParser parser;
+	private HashMap<Pair<Integer, Integer>, Object> changeRecorder;
+	private int id;
+	private short credits;
+	private boolean required;
+	private String subjectName;
 
     private ManagerPageEventController() {
 		this.sh = new SubjectHandler();
@@ -77,7 +85,7 @@ public class ManagerPageEventController {
 		var semesters = this.seh.getAllSemester();
 		var selector = ((ManagerPage) ManagerPage.getPage()).getClassSemesterSelector();
 		selector.removeAllItems();
-selector.addItem(null);
+		selector.addItem(null);
 
 		if(semesters == null) return;
 
@@ -149,4 +157,12 @@ selector.addItem(null);
 
 		for(TeachClass tc : clazz) selector.addItem(tc);
 	}
+
+	public void newSubject(Subject s) {
+		var subject = this.sh.createSubject(s.getCredits(), s.isRequired(), s.getSubjectName());
+
+		if(subject == )
+	}
+
+	
 }

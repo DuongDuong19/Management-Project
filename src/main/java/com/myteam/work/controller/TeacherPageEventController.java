@@ -1,8 +1,6 @@
 package com.myteam.work.controller;
 
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 import com.myteam.work.gui.pages.TeacherPage;
@@ -30,6 +28,7 @@ public class TeacherPageEventController {
 	private SemesterHandler seh;
 	private DataTableParser parser;
 	private HashMap<Pair<Integer, Integer>, Object> changeRecorder;
+	private int test1, test2, endtest;
 
 	private TeacherPageEventController() {
 		this.sh = new SubjectHandler();
@@ -131,14 +130,14 @@ public class TeacherPageEventController {
 		while(iterator.hasNext()) {
 			var entry = (Map.Entry) iterator.next();
 			var key = (Pair<Integer, Integer>) entry.getKey();
-			var value = (Float) entry.getValue();
+			var value = entry.getValue();
 
 			if(key.second() == 3) {
-
+				this.sh.submit1(test1);
 			} else if(key.second() == 4) {
-
+				this.sh.submit2(test2);
 			} else if(key.second() == 5) {
-
+				this.sh.endtest(endtest);
 			} else {
 				log.error("System has a breach");
 				System.exit(0);
@@ -146,5 +145,5 @@ public class TeacherPageEventController {
 		}
 
 		loadStudentInTeachClass(tc);
-	}	
+	}
 }

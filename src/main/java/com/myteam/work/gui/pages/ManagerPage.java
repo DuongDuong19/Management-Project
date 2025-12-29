@@ -20,11 +20,10 @@ import javax.swing.event.DocumentListener;
 
 import com.myteam.work.Configuration;
 import com.myteam.work.controller.ManagerPageEventController;
+import com.myteam.work.gui.pages.utilwin.CreateSubjectWindow;
 import com.myteam.work.management.data.Semester;
 import com.myteam.work.management.data.Subject;
 import com.myteam.work.management.data.TeachClass;
-
-import com.myteam.work.gui.pages.utilwin.CreateSubjectWindow;
 
 import lombok.Getter;
 
@@ -170,6 +169,7 @@ public class ManagerPage extends JPanel {
 		this.classSemesterSelector = new JComboBox<>();
 		var classSearchField = new JTextField();
 		var classCreateBtn = new JButton("Create class");
+		classCreateBtn.addActionListener(e -> );
 		var classEditBtn = new JButton("Edit class");
 		var classDeleteBtn = new JButton("Delete class");
 		classSearchBtn.add(classCreateBtn, BorderLayout.WEST);
