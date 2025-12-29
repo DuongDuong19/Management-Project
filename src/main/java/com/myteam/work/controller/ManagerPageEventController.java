@@ -159,9 +159,6 @@ public class ManagerPageEventController {
 	}
 
 	public void newSubject(Subject s) {
-		var subject = this.sh.createSubject(s.getCredits(), s.isRequired(), s.getSubjectName());
-
-		if(subject == )
 	}
 
 	

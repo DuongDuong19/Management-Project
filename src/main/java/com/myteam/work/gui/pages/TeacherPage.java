@@ -94,7 +94,7 @@ public class TeacherPage extends JPanel {
 		searchPanel.add(selectorPanel, BorderLayout.CENTER);
 		searchPanel.add(submitBtn, BorderLayout.EAST);
 		this.studentTable = new MSTable(new String[]{"ID", "Student Name", "Sex", "Generation", "Test 1", "Test 2", "End test", "Total Score", "Normalized Score", "Rate"},
-				List.<Class<?>>of(String.class, String.class, Short.class, Float.class, Float.class, Float.class, Float.class, Float.class, String.class),
+				List.<Class<?>>of(Integer.class, String.class, String.class, Short.class, Float.class, Float.class, Float.class, Float.class, Float.class, String.class),
 				List.of(3, 4, 5));
 		this.studentTable.setRowHeight(42);
 		this.studentTable.setShowGrid(true);
@@ -181,7 +181,7 @@ public class TeacherPage extends JPanel {
 	}
 
 	private void createSubmitWindow() {
-		var submitWin = new SubmitWindow();
+		var submitWin = new SubmitWindow(true);
 		submitWin.setSubmitAction(e -> {
 			tpec.submit((TeachClass) this.classSelector.getSelectedItem());
 			submitWin.dispose();

@@ -14,7 +14,7 @@ public class SubmitWindow extends JFrame {
 	private JButton cancel;
 	private JButton submit;
 
-	public SubmitWindow() {
+	public SubmitWindow(boolean isRevoke) {
 		this.setTitle("Submit ?");
 		this.setSize(new Dimension(800, 600));
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -29,7 +29,7 @@ public class SubmitWindow extends JFrame {
 		this.revoke = new JButton("Revoke");
 		this.cancel = new JButton("Cancel");
 		this.submit = new JButton("Submit");
-		btn.add(revoke, BorderLayout.WEST);
+		if(isRevoke) btn.add(revoke, BorderLayout.WEST);
 		btn.add(cancel, BorderLayout.CENTER);
 		btn.add(submit, BorderLayout.EAST);
 		mainPanel.add(question, BorderLayout.CENTER);

@@ -169,7 +169,6 @@ public class ManagerPage extends JPanel {
 		this.classSemesterSelector = new JComboBox<>();
 		var classSearchField = new JTextField();
 		var classCreateBtn = new JButton("Create class");
-		classCreateBtn.addActionListener(e -> );
 		var classEditBtn = new JButton("Edit class");
 		var classDeleteBtn = new JButton("Delete class");
 		classSearchBtn.add(classCreateBtn, BorderLayout.WEST);
