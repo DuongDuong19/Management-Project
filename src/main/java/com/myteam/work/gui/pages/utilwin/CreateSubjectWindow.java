@@ -7,7 +7,6 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.Collections;
 import java.util.List;
 
@@ -20,12 +19,15 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
+import org.w3c.dom.events.MouseEvent;
+
 import com.myteam.work.Configuration;
 import com.myteam.work.gui.pages.DefaultTextDisplayer;
 import com.myteam.work.gui.pages.MSTable;
 
 public class CreateSubjectWindow extends JFrame {
-	private static final Configuration config = Configuration.getConfiguration();
+
+    private static final Configuration config = Configuration.getConfiguration();
 	private static final String defaultSubjectText = "Please enter subject name here";
     private static final String defaultSubjectCredits = "0";
     private static final String defaultSearchText = "Search by subject name or subject id";
@@ -85,8 +87,19 @@ public class CreateSubjectWindow extends JFrame {
             Collections.EMPTY_LIST
         );
         
+        // Tạo panel chứa 2 nút cho Selected Prerequisites
+        var prerequisitesBtnPanel = new JPanel(new GridLayout(2, 1, 5, 10));
+        prerequisitesBtnPanel.setBackground(Color.WHITE);
+        
+        var addPrerequisitesBtn = createStyledButton("Add Prerequisite", PRIMARY_COLOR);
+        var removePrerequisitesBtn = createStyledButton("Remove Prerequisite", new Color(231, 76, 60));
+        
+        prerequisitesBtnPanel.add(addPrerequisitesBtn);
+        prerequisitesBtnPanel.add(removePrerequisitesBtn);
+        
         choosenPanel.add(choosenLabel, BorderLayout.NORTH);
         choosenPanel.add(choosenPrerequisitesTable.getDisplayer(), BorderLayout.CENTER);
+        choosenPanel.add(prerequisitesBtnPanel, BorderLayout.SOUTH);
         
         var prerequisitesPanel = new JPanel(new BorderLayout(10, 10));
         prerequisitesPanel.setBackground(Color.WHITE);
@@ -121,17 +134,7 @@ public class CreateSubjectWindow extends JFrame {
         subjectSearchPanel.add(topSearchPanel, BorderLayout.NORTH);
         subjectSearchPanel.add(subjectTable.getDisplayer(), BorderLayout.CENTER);
         
-        var prerequisitesBtnPanel = new JPanel(new GridLayout(2, 1, 5, 10));
-        prerequisitesBtnPanel.setBackground(Color.WHITE);
-        
-        var addPrerequisitesBtn = createStyledButton("Add Prerequisite", PRIMARY_COLOR);
-        var removePrerequisitesBtn = createStyledButton("Remove Prerequisite", new Color(231, 76, 60));
-        
-        prerequisitesBtnPanel.add(addPrerequisitesBtn);
-        prerequisitesBtnPanel.add(removePrerequisitesBtn);
-        
         prerequisitesPanel.add(subjectSearchPanel, BorderLayout.CENTER);
-        prerequisitesPanel.add(prerequisitesBtnPanel, BorderLayout.SOUTH);
         
         centerPanel.add(choosenPanel);
         centerPanel.add(prerequisitesPanel);
