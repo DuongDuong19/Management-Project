@@ -21,24 +21,22 @@ public class DataTableParser {
 	public Object[][] parseSubjectFetchPrerequisites(List<Subject> subjects) {
 		List<Object[]> data = new LinkedList<Object[]>();
 
+		for(Subject subject : subjects) data.add(parseSubjectWithPrerequisite(subject));
+
+		return data.toArray(Object[][]::new);
+	}
+
+	public Object[][] parseSubjectFetchPrerequisites(List<Subject> subjects, List<Integer> excludes) {
+		List<Object[]> data = new LinkedList<Object[]>();
+
 		for(Subject subject : subjects) {
-			var id = subject.getId();
+			if(excludes.contains(subject.getId())) continue;
 
-			var prerequisites = this.sh.getPrerequistes(id);
-			var prerequisitesName = new String[prerequisites == null ? 0 : prerequisites.size()];
-
-			for(var i = 0; i < prerequisitesName.length; i++) prerequisitesName[i] = sh.getName(prerequisites.get(i));
-
-			var subjectRow = new Object[5];
-			subjectRow[0] = id;
-			subjectRow[1] = subject.getSubjectName();
-			subjectRow[2] = prerequisitesName;
-			subjectRow[3] = subject.getCredits();
-			subjectRow[4] = subject.isRequired() ? "yes" : "no";
-			data.add(subjectRow);
+			data.add(parseSubjectWithPrerequisite(subject));
 		}
 
 		return data.toArray(Object[][]::new);
+
 	}
 
 	public Object[][] parseInfoFetchData(List<List<Object>> studentList) {
@@ -65,5 +63,22 @@ public class DataTableParser {
 		}
 
 		return studentRows.toArray(Object[][]::new);
+	}
+
+	private Object[] parseSubjectWithPrerequisite(Subject subject) {
+		var id = subject.getId();
+		var prerequisites = this.sh.getPrerequistes(id);
+		var prerequisitesName = new String[prerequisites == null ? 0 : prerequisites.size()];
+
+		for(var i = 0; i < prerequisitesName.length; i++) prerequisitesName[i] = sh.getName(prerequisites.get(i));
+
+		var subjectRow = new Object[5];
+		subjectRow[0] = id;
+		subjectRow[1] = subject.getSubjectName();
+		subjectRow[2] = prerequisitesName;
+		subjectRow[3] = subject.getCredits();
+		subjectRow[4] = subject.isRequired() ? "yes" : "no";
+			
+		return subjectRow;
 	}
 }

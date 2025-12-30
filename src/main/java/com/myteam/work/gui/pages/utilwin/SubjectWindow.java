@@ -7,6 +7,7 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.Collections;
 import java.util.List;
 
@@ -16,27 +17,38 @@ import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.Timer;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
-import org.w3c.dom.events.MouseEvent;
+import lombok.Getter;
 
 import com.myteam.work.Configuration;
 import com.myteam.work.gui.pages.DefaultTextDisplayer;
 import com.myteam.work.gui.pages.MSTable;
+import com.myteam.work.controller.SubjectWinController;
 
-public class CreateSubjectWindow extends JFrame {
-
+public class SubjectWindow extends JFrame {
+	public static final int CREATE = 1;
+	public static final int EDIT = 2;
     private static final Configuration config = Configuration.getConfiguration();
 	private static final String defaultSubjectText = "Please enter subject name here";
     private static final String defaultSubjectCredits = "0";
     private static final String defaultSearchText = "Search by subject name or subject id";
     private static final Color PRIMARY_COLOR = new Color(41, 128, 185);
     private static final Color BACKGROUND_COLOR = new Color(236, 240, 241);
-    private MSTable subjectTable; 
+	@Getter
+    private MSTable subjectTable;
+	@Getter
+	private MSTable choosenPrerequisitesTable;
+	@Getter
+	private int operation;
+	private SubjectWinController swc;
     
-    public CreateSubjectWindow() {
-        this.setTitle("Create class");
+    public SubjectWindow(int creationType) {
+        this.setTitle("Class");
         this.setSize(new Dimension(900, 500));
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.setResizable(false);
@@ -47,7 +59,6 @@ public class CreateSubjectWindow extends JFrame {
         mainPanel.setBackground(BACKGROUND_COLOR);
         mainPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
         
-        // Top Panel
         var topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 10));
         topPanel.setBackground(Color.WHITE);
         topPanel.setBorder(BorderFactory.createCompoundBorder(
@@ -87,7 +98,6 @@ public class CreateSubjectWindow extends JFrame {
             Collections.EMPTY_LIST
         );
         
-        // Tạo panel chứa 2 nút cho Selected Prerequisites
         var prerequisitesBtnPanel = new JPanel(new GridLayout(2, 1, 5, 10));
         prerequisitesBtnPanel.setBackground(Color.WHITE);
         
@@ -115,8 +125,7 @@ public class CreateSubjectWindow extends JFrame {
         var subjectSearchPanel = new JPanel(new BorderLayout(10, 10));
         subjectSearchPanel.setBackground(Color.WHITE);
         
-        var subjectSearch = createStyledTextField(defaultSearchText, 0);
-        
+        var subjectSearch = createStyledTextField(defaultSearchText, 0); 
         this.subjectTable = new MSTable(
             new String[]{"ID", "Subject name", "Prerequisites", "Credits", "Require"}, 
             List.<Class<?>>of(String.class, String.class, String[].class, Short.class, String.class), 
@@ -156,7 +165,31 @@ public class CreateSubjectWindow extends JFrame {
 		subjectName.addFocusListener(new DefaultTextDisplayer(defaultSubjectText));
 		credits.addFocusListener(new DefaultTextDisplayer(defaultSubjectCredits));
 		subjectSearch.addFocusListener(new DefaultTextDisplayer(defaultSearchText));
-        
+		this.operation = creationType;
+		this.swc = new SubjectWinController();
+		this.swc.loadAllSubject(this);
+		subjectSearch.getDocument().addDocumentListener(new DocumentListener() {
+			private Timer updater = new Timer(125, e -> {
+				if(subjectSearch.getText().equals(defaultSearchText)) swc.loadAllSubject(SubjectWindow.this);
+				else swc.searchSubject(SubjectWindow.this, subjectSearch.getText());
+			});
+
+			public void changedUpdate(DocumentEvent e) {
+				updater.setRepeats(false);
+				updater.restart();
+			}
+
+			public void insertUpdate(DocumentEvent e) {
+				updater.setRepeats(false);
+				updater.restart();
+			}
+
+			public void removeUpdate(DocumentEvent e) {
+				updater.setRepeats(false);
+				updater.restart();
+			}
+		});
+
         this.setVisible(true);
     }
     
