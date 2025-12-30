@@ -7,6 +7,8 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.Collections;
 import java.util.List;
 
@@ -19,17 +21,16 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
+import com.myteam.work.gui.pages.DefaultTextDisplayer;
 import com.myteam.work.gui.pages.MSTable;
+import com.myteam.work.Configuration;
 
 public class CreateSubjectWindow extends JFrame {
-
-	private static String defaultSubjectText = "Please enter subject name here";
-    private static String defaultSubjectCredits = "0";
-    private static String defaultSearchText = "Search by subject name or subject id";
-    
-    // Color scheme
+	private static final Configuration config = Configuration.getConfiguration();
+	private static final String defaultSubjectText = "Please enter subject name here";
+    private static final String defaultSubjectCredits = "0";
+    private static final String defaultSearchText = "Search by subject name or subject id";
     private static final Color PRIMARY_COLOR = new Color(41, 128, 185);
-    private static final Color PANEL_BACKGROUND = Color.WHITE;
     private static final Color BACKGROUND_COLOR = new Color(236, 240, 241);
     
     public CreateSubjectWindow() {
@@ -46,7 +47,7 @@ public class CreateSubjectWindow extends JFrame {
         
         // Top Panel
         var topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 10));
-        topPanel.setBackground(PANEL_BACKGROUND);
+        topPanel.setBackground(Color.WHITE);
         topPanel.setBorder(BorderFactory.createCompoundBorder(
             BorderFactory.createLineBorder(new Color(189, 195, 199), 1),
             new EmptyBorder(15, 15, 15, 15)
@@ -56,7 +57,7 @@ public class CreateSubjectWindow extends JFrame {
         var credits = createStyledTextField(defaultSubjectCredits, 80);
         var required = new JCheckBox("Required");
         required.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        required.setBackground(PANEL_BACKGROUND);
+        required.setBackground(Color.WHITE);
         
         topPanel.add(new JLabel("Subject:"));
         topPanel.add(subjectName);
@@ -64,13 +65,11 @@ public class CreateSubjectWindow extends JFrame {
         topPanel.add(credits);
         topPanel.add(required);
         
-        // Center Panel
         var centerPanel = new JPanel(new GridLayout(1, 2, 15, 0));
         centerPanel.setBackground(BACKGROUND_COLOR);
         
-        // Chosen Panel
         var choosenPanel = new JPanel(new BorderLayout(10, 10));
-        choosenPanel.setBackground(PANEL_BACKGROUND);
+        choosenPanel.setBackground(Color.WHITE);
         choosenPanel.setBorder(BorderFactory.createCompoundBorder(
             BorderFactory.createLineBorder(new Color(189, 195, 199), 1),
             new EmptyBorder(15, 15, 15, 15)
@@ -89,9 +88,8 @@ public class CreateSubjectWindow extends JFrame {
         choosenPanel.add(choosenLabel, BorderLayout.NORTH);
         choosenPanel.add(choosenPrerequisitesTable.getDisplayer(), BorderLayout.CENTER);
         
-        // Prerequisites Panel
         var prerequisitesPanel = new JPanel(new BorderLayout(10, 10));
-        prerequisitesPanel.setBackground(PANEL_BACKGROUND);
+        prerequisitesPanel.setBackground(Color.WHITE);
         prerequisitesPanel.setBorder(BorderFactory.createCompoundBorder(
             BorderFactory.createLineBorder(new Color(189, 195, 199), 1),
             new EmptyBorder(15, 15, 15, 15)
@@ -102,7 +100,7 @@ public class CreateSubjectWindow extends JFrame {
         prereqLabel.setForeground(PRIMARY_COLOR);
         
         var subjectSearchPanel = new JPanel(new BorderLayout(10, 10));
-        subjectSearchPanel.setBackground(PANEL_BACKGROUND);
+        subjectSearchPanel.setBackground(Color.WHITE);
         
         var subjectSearch = createStyledTextField(defaultSearchText, 0);
         
@@ -113,7 +111,7 @@ public class CreateSubjectWindow extends JFrame {
         );
         
         var topSearchPanel = new JPanel(new BorderLayout(10, 10));
-        topSearchPanel.setBackground(PANEL_BACKGROUND);
+        topSearchPanel.setBackground(Color.WHITE);
         topSearchPanel.add(prereqLabel, BorderLayout.NORTH);
         topSearchPanel.add(subjectSearch, BorderLayout.CENTER);
         
@@ -121,7 +119,7 @@ public class CreateSubjectWindow extends JFrame {
         subjectSearchPanel.add(subjectTable.getDisplayer(), BorderLayout.CENTER);
         
         var prerequisitesBtnPanel = new JPanel(new GridLayout(2, 1, 5, 10));
-        prerequisitesBtnPanel.setBackground(PANEL_BACKGROUND);
+        prerequisitesBtnPanel.setBackground(Color.WHITE);
         
         var addPrerequisitesBtn = createStyledButton("Add Prerequisite", PRIMARY_COLOR);
         var removePrerequisitesBtn = createStyledButton("Remove Prerequisite", new Color(231, 76, 60));
@@ -135,7 +133,6 @@ public class CreateSubjectWindow extends JFrame {
         centerPanel.add(choosenPanel);
         centerPanel.add(prerequisitesPanel);
         
-        // Bottom Panel
         var bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         bottomPanel.setBackground(BACKGROUND_COLOR);
         
@@ -149,19 +146,17 @@ public class CreateSubjectWindow extends JFrame {
         mainPanel.add(bottomPanel, BorderLayout.SOUTH);
         
         this.add(mainPanel);
-        
-        // Add placeholder behavior
-        addPlaceholderBehavior(subjectName, defaultSubjectText);
-        addPlaceholderBehavior(credits, defaultSubjectCredits);
-        addPlaceholderBehavior(subjectSearch, defaultSearchText);
+       
+		subjectName.addFocusListener(new DefaultTextDisplayer(defaultSubjectText));
+		credits.addFocusListener(new DefaultTextDisplayer(defaultSubjectCredits));
+		subjectSearch.addFocusListener(new DefaultTextDisplayer(defaultSearchText));
         
         this.setVisible(true);
     }
     
     private JTextField createStyledTextField(String text, int width) {
         var textField = new JTextField(text);
-        textField.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        textField.setForeground(Color.GRAY);
+        textField.setForeground(Configuration.getConfiguration().getFieldColor());
         if (width > 0) {
             textField.setPreferredSize(new Dimension(width, 35));
         } else {
@@ -176,42 +171,22 @@ public class CreateSubjectWindow extends JFrame {
     
     private JButton createStyledButton(String text, Color bgColor) {
         var button = new JButton(text);
-        button.setFont(new Font("Segoe UI", Font.BOLD, 13));
         button.setForeground(Color.WHITE);
         button.setBackground(bgColor);
         button.setFocusPainted(false);
         button.setBorderPainted(false);
-        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        button.setCursor(config.getHandCursor());
         button.setPreferredSize(new Dimension(180, 35));
         
-        button.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
+        button.addMouseListener(new MouseAdapter() {
+            public void mouseEntered(MouseEvent evt) {
                 button.setBackground(bgColor.brighter());
             }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
+            public void mouseExited(MouseEvent evt) {
                 button.setBackground(bgColor);
             }
         });
         
         return button;
     }
-    
-    private void addPlaceholderBehavior(JTextField textField, String placeholder) {
-        textField.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                if (textField.getText().equals(placeholder)) {
-                    textField.setText("");
-                    textField.setForeground(Color.BLACK);
-                }
-            }
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                if (textField.getText().isEmpty()) {
-                    textField.setText(placeholder);
-                    textField.setForeground(Color.GRAY);
-                }
-            }
-        });
-    }
-
-
 }

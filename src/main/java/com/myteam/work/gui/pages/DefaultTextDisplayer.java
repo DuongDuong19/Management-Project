@@ -8,7 +8,7 @@ import javax.swing.JTextField;
 
 import com.myteam.work.Configuration;
 
-class DefaultTextDisplayer extends FocusAdapter {
+public class DefaultTextDisplayer extends FocusAdapter {
 	private String defaultText;
 
 		public DefaultTextDisplayer(String defaultText) {
