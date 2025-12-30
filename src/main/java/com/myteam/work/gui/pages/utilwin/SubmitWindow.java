@@ -1,13 +1,13 @@
 package com.myteam.work.gui.pages.utilwin;
 
-import java.awt.Dimension;
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.event.ActionListener;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JLabel;
 import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 public class SubmitWindow extends JFrame {
 	private JButton revoke;
@@ -16,7 +16,7 @@ public class SubmitWindow extends JFrame {
 
 	public SubmitWindow(boolean isRevoke) {
 		this.setTitle("Submit ?");
-		this.setSize(new Dimension(800, 600));
+		this.setSize(new Dimension(400, 200));
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		this.setResizable(false);
 		this.setLocationRelativeTo(null);
