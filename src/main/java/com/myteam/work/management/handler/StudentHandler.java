@@ -111,7 +111,7 @@ public class StudentHandler {
 		return null;
 	}
 
-	public int updateStudentGpa(int id) {
+	public void updateStudentGpa(int id) {
 		try {
 			var prepareStatement = this.connection.prepareStatement("""
 				UPDATE Student st
@@ -144,16 +144,15 @@ public class StudentHandler {
 			prepareStatement.setInt(1, id);
 			prepareStatement.setInt(2, id);
 
-			return prepareStatement.executeUpdate();
+			prepareStatement.executeUpdate();
 
 		} catch (SQLException e) {
 			log.error(e.toString());
 		}
 
-		return 0;
 	}
 
-	public int updateClassGpa(int classes) {
+	public void updateClassGpa(int classes) {
 		try(var prepareStatement = this.connection.prepareStatement("""
 				UPDATE SubjectClass sc
 				SET gpa = sub.class_gpa
@@ -170,12 +169,11 @@ public class StudentHandler {
 
 			prepareStatement.setInt(1, classes);
 
-			return prepareStatement.executeUpdate();
+			prepareStatement.executeUpdate();
 
 		} catch (SQLException e) {
 			log.error(e.toString());
 		}
 
-		return 0;
 	}
 }
