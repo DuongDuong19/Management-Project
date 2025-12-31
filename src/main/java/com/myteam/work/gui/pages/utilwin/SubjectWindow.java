@@ -17,18 +17,18 @@ import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.Timer;
 import javax.swing.JTextField;
+import javax.swing.Timer;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import lombok.Getter;
-
 import com.myteam.work.Configuration;
+import com.myteam.work.controller.SubjectWinController;
 import com.myteam.work.gui.pages.DefaultTextDisplayer;
 import com.myteam.work.gui.pages.MSTable;
-import com.myteam.work.controller.SubjectWinController;
+
+import lombok.Getter;
 
 public class SubjectWindow extends JFrame {
 	public static final int CREATE = 1;
@@ -92,7 +92,7 @@ public class SubjectWindow extends JFrame {
         choosenLabel.setFont(new Font("Segoe UI", Font.BOLD, 14));
         choosenLabel.setForeground(PRIMARY_COLOR);
         
-        var choosenPrerequisitesTable = new MSTable(
+        this.choosenPrerequisitesTable = new MSTable(
             new String[]{"Id", "Subject name"}, 
             List.<Class<?>>of(Integer.class, String.class), 
             Collections.EMPTY_LIST
@@ -108,7 +108,7 @@ public class SubjectWindow extends JFrame {
         prerequisitesBtnPanel.add(removePrerequisitesBtn);
         
         choosenPanel.add(choosenLabel, BorderLayout.NORTH);
-        choosenPanel.add(choosenPrerequisitesTable.getDisplayer(), BorderLayout.CENTER);
+        choosenPanel.add(this.choosenPrerequisitesTable.getDisplayer(), BorderLayout.CENTER);
         choosenPanel.add(prerequisitesBtnPanel, BorderLayout.SOUTH);
         
         var prerequisitesPanel = new JPanel(new BorderLayout(10, 10));
