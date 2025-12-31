@@ -232,6 +232,8 @@ public class ManagerPage extends JPanel {
 				List.<Class<?>>of(Integer.class, String.class, String.class, Short.class, Float.class, Float.class, Float.class, Float.class, Float.class, String.class), Collections.EMPTY_LIST);
 		contentPanel.add(searchPanel, BorderLayout.NORTH);
 		contentPanel.add(this.studentClassTable.getDisplayer(), BorderLayout.CENTER);
+		this.studentClassTable.setReorderingColumn(false);
+		this.studentClassTable.setResizingColumn(false);
 
 		return contentPanel;
 	}

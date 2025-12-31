@@ -1,6 +1,7 @@
 package com.myteam.work.management.handler;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
@@ -103,6 +104,77 @@ public class StudentHandler {
 							)));
 
 			if(!result.isEmpty()) return result;
+		} catch (SQLException e) {
+			log.error(e.toString());
+		}
+
+		return null;
+	}
+
+	public Student updateStudentGpa(double gpa) {
+		try {
+			var prepareStatement = this.connection.prepareStatement("""
+				UPDATE Student st
+				SET gpa = sub.gpa_cumulative
+				FROM (
+					SELECT
+						sl.student,
+						SUM(sl.normalizedScore * sb.credits)/SUM(sb.credits) AS gpa_cumulative
+					FROM StudentListTeachClass sl
+					JOIN SubjectClass sc ON sc.classes = sl.classes
+					JOIN Semester se ON se.id = sc.semester
+					JOIN Subject sb ON sb.id = sc.subject
+					WHERE sl.student = ?
+					AND (sc.subject, se.years, se.semester) IN (
+							SELECT
+								sc2.subject,
+								se2.years,
+								se2.semester
+							FROM StudentListTeachClass sl2
+							JOIN SubjectClass sc2 ON sc2.classes = sl2.classes
+							JOIN Semester se2 ON se2.id = sc2.semester
+							WHERE sl2.student = ?
+							ORDER BY se2.years DESC, se2.semester DESC
+					)
+					GROUP BY sl.student
+				) sub
+				WHERE st.id = sub.student;
+			""");
+
+			prepareStatement.setDouble(1, gpa);
+
+			var result = prepareStatement.executeUpdate();
+
+		} catch (SQLException e) {
+			log.error(e.toString());
+		}
+
+		return null;
+	}
+
+	public Student updateClassGpa(double gpa) {
+		try {
+			var prepareStatement = this.connection.prepareStatement("""
+				UPDATE Student st
+				SET gpa = sub.gpa_cumulative
+				FROM (
+					UPDATE SubjectClass sc
+					SET gpa = sub.class_gpa
+					FROM (
+						SELECT
+							classes,
+							AVG(normalizedScore) AS class_gpa
+						FROM StudentListTeachClass
+						WHERE classes = ?
+						GROUP BY classes
+					) sub
+				WHERE sc.classes = sub.classes;
+			""");
+
+			prepareStatement.setDouble(1, gpa);
+
+			var result = prepareStatement.executeUpdate();
+
 		} catch (SQLException e) {
 			log.error(e.toString());
 		}
