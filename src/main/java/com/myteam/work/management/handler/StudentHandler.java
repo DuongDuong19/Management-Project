@@ -111,7 +111,7 @@ public class StudentHandler {
 		return null;
 	}
 
-	public Student updateStudentGpa(double gpa) {
+	public void updateStudentGpa(int id) {
 		try {
 			var prepareStatement = this.connection.prepareStatement("""
 				UPDATE Student st
@@ -141,44 +141,39 @@ public class StudentHandler {
 				WHERE st.id = sub.student;
 			""");
 
-			prepareStatement.setDouble(1, gpa);
+			prepareStatement.setInt(1, id);
+			prepareStatement.setInt(2, id);
 
-			var result = prepareStatement.executeUpdate();
+			prepareStatement.executeUpdate();
 
 		} catch (SQLException e) {
 			log.error(e.toString());
 		}
 
-		return null;
 	}
 
-	public Student updateClassGpa(double gpa) {
-		try {
-			var prepareStatement = this.connection.prepareStatement("""
-				UPDATE Student st
-				SET gpa = sub.gpa_cumulative
+	public void updateClassGpa(int classes) {
+		try(var prepareStatement = this.connection.prepareStatement("""
+				UPDATE SubjectClass sc
+				SET gpa = sub.class_gpa
 				FROM (
-					UPDATE SubjectClass sc
-					SET gpa = sub.class_gpa
-					FROM (
-						SELECT
-							classes,
-							AVG(normalizedScore) AS class_gpa
-						FROM StudentListTeachClass
-						WHERE classes = ?
-						GROUP BY classes
-					) sub
+					SELECT
+						classes,
+						AVG(normalizedScore) AS class_gpa
+					FROM StudentListTeachClass
+					WHERE classes = ?
+					GROUP BY classes
+				) sub
 				WHERE sc.classes = sub.classes;
-			""");
+			""")) {
 
-			prepareStatement.setDouble(1, gpa);
+			prepareStatement.setInt(1, classes);
 
-			var result = prepareStatement.executeUpdate();
+			prepareStatement.executeUpdate();
 
 		} catch (SQLException e) {
 			log.error(e.toString());
 		}
 
-		return null;
 	}
 }
