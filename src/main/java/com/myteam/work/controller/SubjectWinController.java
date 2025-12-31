@@ -24,11 +24,9 @@ public class SubjectWinController {
 		if(subjects == null) return;
 
 		var existedTableModel = sw.getChoosenPrerequisitesTable().getIDModel();
-
-		var rowCount = existedTableModel.getRowCount();
 		List<Integer> existedPrerequisite = new LinkedList<>();
 
-		for(var i = 0; i < rowCount; i++) existedPrerequisite.add((Integer) existedTableModel.getValueAt(i, 0));
+		for(var i = 0; i < existedTableModel.getRowCount(); i++) existedPrerequisite.add((Integer) existedTableModel.getValueAt(i, 0));
 
 		table.addData(this.parser.parseSubjectFetchPrerequisites(subjects, existedPrerequisite));
 	}
@@ -41,11 +39,22 @@ public class SubjectWinController {
 		if(subjects == null) return;
 
 		var existedTableModel = sw.getChoosenPrerequisitesTable().getIDModel();
-		var rowCount = existedTableModel.getRowCount();
 		List<Integer> existedPrerequisite = new LinkedList<>();
 
-		for(var i = 0; i < rowCount; i++) existedPrerequisite.add((Integer) existedTableModel.getValueAt(i, 0));
+		for(var i = 0; i < existedTableModel.getRowCount(); i++) existedPrerequisite.add((Integer) existedTableModel.getValueAt(i, 0));
 
 		table.addData(this.parser.parseSubjectFetchPrerequisites(subjects, existedPrerequisite));
+	}
+
+	public void loadTarget(Subject target) {
+
+	}
+
+	public void createSubject(String subjectName, String credits, boolean required, List<Integer> prerequisites) {
+
+	}
+
+	public void updateSubject(Subject target, String subjectName, String credits, boolean required, List<Integer> prerequistes) {
+
 	}
 }

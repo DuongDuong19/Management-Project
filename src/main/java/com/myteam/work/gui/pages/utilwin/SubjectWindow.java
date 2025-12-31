@@ -44,10 +44,10 @@ public class SubjectWindow extends JFrame {
 	@Getter
 	private MSTable choosenPrerequisitesTable;
 	@Getter
-	private int operation;
+	private Subject target;
 	private SubjectWinController swc;
     
-    public SubjectWindow(int creationType) {
+    public SubjectWindow(Subject target) {
         this.setTitle("Class");
         this.setSize(new Dimension(900, 500));
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -101,7 +101,7 @@ public class SubjectWindow extends JFrame {
         var prerequisitesBtnPanel = new JPanel(new GridLayout(2, 1, 5, 10));
         prerequisitesBtnPanel.setBackground(Color.WHITE);
         
-        var addPrerequisitesBtn = createStyledButton("Add Prerequisite", PRIMARY_COLOR);
+        var addPrerequisitesBtn = createStyledButton("Add Prerequisite", PRIMARY_COLOR);	
         var removePrerequisitesBtn = createStyledButton("Remove Prerequisite", new Color(231, 76, 60));
         
         prerequisitesBtnPanel.add(addPrerequisitesBtn);
@@ -165,8 +165,13 @@ public class SubjectWindow extends JFrame {
 		subjectName.addFocusListener(new DefaultTextDisplayer(defaultSubjectText));
 		credits.addFocusListener(new DefaultTextDisplayer(defaultSubjectCredits));
 		subjectSearch.addFocusListener(new DefaultTextDisplayer(defaultSearchText));
-		this.operation = creationType;
+		this.target = target;
 		this.swc = new SubjectWinController();
+		
+		if(this.target != null) {
+			this.swc.loadTarget(this.target);
+		}
+
 		this.swc.loadAllSubject(this);
 		subjectSearch.getDocument().addDocumentListener(new DocumentListener() {
 			private Timer updater = new Timer(125, e -> {
@@ -187,9 +192,36 @@ public class SubjectWindow extends JFrame {
 			public void removeUpdate(DocumentEvent e) {
 				updater.setRepeats(false);
 				updater.restart();
-			}
+	}
 		});
+		addPrerequisitesBtn.addActionListener(e -> {
+			var selectedRow = subjectTable.getSelectedId();
 
+if(selectedRow == -1) return;
+
+			choosenPrerequisitesTable.addData(new Object[][]{new Object[]{
+				subjectTable.getIDModel().getValueAt(selectedRow, 0),
+				subjectTable.getContentModel().getValueAt(selectedRow, 0)
+			}});
+			swc.loadAllSubject(SubjectWindow.this);
+		});
+		removePrerequisitesBtn.addActionListener(e -> {
+			var selectedRow = choosenPrerequisitesTable.getSelectedId();
+
+			if(selectedRow == -1) return;
+
+			choosenPrerequisitesTable.removeRow(selectedRow);
+			swc.loadAllSubject(SubjectWindow.this);
+		});
+		submitBtn.addActionListener(e -> {
+			var prerequisitesModel = choosenPrerequisitesTable.getIDModel();
+			List<Integer> prerequisites = new LinkedList<>();
+
+			for(var i = 0; i < prerequisitesModel.getRowCount(); i++) prerequisites.add((Integer) prerequisitesModel.getValueAt(i, 0));
+
+			if(target == null) swc.createSubject(subjectName.getText(), credits.getText(), required.isChecked(), prerequistes);
+			else swc.updateSubject(target, subjectName.getText(), credits.getText(), required.isChecked(), prerequisites);
+		});
         this.setVisible(true);
     }
     
