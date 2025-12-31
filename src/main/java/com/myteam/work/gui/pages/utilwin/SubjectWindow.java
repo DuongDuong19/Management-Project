@@ -9,6 +9,7 @@ import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -27,6 +28,7 @@ import com.myteam.work.Configuration;
 import com.myteam.work.controller.SubjectWinController;
 import com.myteam.work.gui.pages.DefaultTextDisplayer;
 import com.myteam.work.gui.pages.MSTable;
+import com.myteam.work.management.data.Subject;
 
 import lombok.Getter;
 
@@ -219,8 +221,8 @@ if(selectedRow == -1) return;
 
 			for(var i = 0; i < prerequisitesModel.getRowCount(); i++) prerequisites.add((Integer) prerequisitesModel.getValueAt(i, 0));
 
-			if(target == null) swc.createSubject(subjectName.getText(), credits.getText(), required.isChecked(), prerequistes);
-			else swc.updateSubject(target, subjectName.getText(), credits.getText(), required.isChecked(), prerequisites);
+			if(target == null) swc.createSubject(subjectName.getText(), credits.getText(), required.isBorderPaintedFlat(), prerequisites);
+			else swc.updateSubject(target, subjectName.getText(), credits.getText(), required.isBorderPaintedFlat(), prerequisites);
 		});
         this.setVisible(true);
     }

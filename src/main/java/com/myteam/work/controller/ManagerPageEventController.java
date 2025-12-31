@@ -161,5 +161,8 @@ public class ManagerPageEventController {
 	public void newSubject(Subject s) {
 	}
 
+	public void deleteSubject(String s) {
+		
+	}
 	
 }

@@ -197,4 +197,8 @@ public class MSTable {
 		((DefaultTableModel) this.stickyTable.getModel()).removeRow(i);
 		((DefaultTableModel) this.contentTable.getModel()).removeRow(i);
 	}
+
+    public int getSelectedRow() {
+        return this.stickyTable.getSelectedRow();
+    }
 }

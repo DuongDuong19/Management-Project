@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.myteam.work.gui.pages.utilwin.SubjectWindow;
 import com.myteam.work.management.data.DataTableParser;
+import com.myteam.work.management.data.Subject;
 import com.myteam.work.management.handler.SubjectHandler;
 
 public class SubjectWinController {
