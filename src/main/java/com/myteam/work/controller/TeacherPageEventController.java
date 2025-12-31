@@ -59,7 +59,6 @@ public class TeacherPageEventController {
 	}
 
 	public void searchSubject(String s) {
-		log.info("Search subject: " + s);
 		var table = ((TeacherPage) TeacherPage.getPage()).getSubjectTable();
 		table.clearData();
 		var subjects = this.sh.getSubject(s);
@@ -67,7 +66,7 @@ public class TeacherPageEventController {
 		if(subjects == null) return;
 
 		table.addData(this.parser.parseSubjectFetchPrerequisites(subjects));
-}
+	}
 
 	public void loadTeacherSubject() {
 		var subjects = this.sh.loadTeacherSubject(LoginController.getController().getCurrentUser().getId());

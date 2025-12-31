@@ -23,6 +23,7 @@ import com.myteam.work.gui.pages.utilwin.SubmitWindow;
 import com.myteam.work.management.data.Semester;
 import com.myteam.work.management.data.Subject;
 import com.myteam.work.management.data.TeachClass;
+import com.myteam.work.controller.SubjectWinController;
 
 import lombok.Getter;
 

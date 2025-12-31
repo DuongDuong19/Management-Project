@@ -20,7 +20,7 @@ import javax.swing.event.DocumentListener;
 
 import com.myteam.work.Configuration;
 import com.myteam.work.controller.ManagerPageEventController;
-import com.myteam.work.gui.pages.utilwin.CreateSubjectWindow;
+import com.myteam.work.gui.pages.utilwin.SubjectWindow;
 import com.myteam.work.management.data.Semester;
 import com.myteam.work.management.data.Subject;
 import com.myteam.work.management.data.TeachClass;
@@ -124,7 +124,7 @@ public class ManagerPage extends JPanel {
 			}
 		});
 		var subjectCreateBtn = new JButton("Create subject");
-		subjectCreateBtn.addActionListener(e -> new CreateSubjectWindow());
+		subjectCreateBtn.addActionListener(e -> new SubjectWindow(SubjectWindow.CREATE));
 		var subjectEditBtn = new JButton("Edit subject");
 		var subjectDeleteBtn = new JButton("Delete subject");
 		searchBtn.add(subjectCreateBtn, BorderLayout.WEST);

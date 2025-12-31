@@ -12,6 +12,7 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.table.TableModel;
 import javax.swing.JViewport;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
@@ -178,5 +179,9 @@ public class MSTable {
 
 	public void setDestination(HashMap<Pair<Integer, Integer>, Object> destination) {
 		this.dest = destination;
+	}
+
+	public TableModel getIDModel() {
+		return this.stickyTable.getModel();
 	}
 }
