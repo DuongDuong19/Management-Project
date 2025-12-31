@@ -124,8 +124,9 @@ public class ManagerPage extends JPanel {
 			}
 		});
 		var subjectCreateBtn = new JButton("Create subject");
-		subjectCreateBtn.addActionListener(e -> new SubjectWindow(SubjectWindow.CREATE));
+		subjectCreateBtn.addActionListener(e -> new SubjectWindow(null));
 		var subjectEditBtn = new JButton("Edit subject");
+		subjectEditBtn.addActionListener(e -> new SubjectWindow(new Subject()));
 		var subjectDeleteBtn = new JButton("Delete subject");
 		searchBtn.add(subjectCreateBtn, BorderLayout.WEST);
 		searchBtn.add(subjectEditBtn, BorderLayout.CENTER);
@@ -145,6 +146,13 @@ public class ManagerPage extends JPanel {
 		this.subjectTable.setResizingColumn(false);
 		contentPanel.add(searchPanel, BorderLayout.NORTH);
 		contentPanel.add(this.subjectTable.getDisplayer(), BorderLayout.CENTER);
+		subjectDeleteBtn.addActionListener(e -> {
+			mpec.deleteSubject((String) subjectTable.getIDModel().getValueAt(subjectTable.getSelectedRow(), 0));
+
+			if(subjectSearchField.getText().equals(subjectTableDefaultText)) mpec.loadAllSubject();
+			else mpec.searchSubject(subjectSearchField.getText());
+		});
+
 
 		return contentPanel;
 	}

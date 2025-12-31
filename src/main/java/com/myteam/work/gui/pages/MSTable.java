@@ -184,4 +184,17 @@ public class MSTable {
 	public TableModel getIDModel() {
 		return this.stickyTable.getModel();
 	}
+
+	public TableModel getContentModel() {
+		return this.contentTable.getModel();
+	}
+
+	public int getSelectedId() {
+		return this.stickyTable.getSelectedRow();
+	}
+
+	public void removeRow(int i) {
+		((DefaultTableModel) this.stickyTable.getModel()).removeRow(i);
+		((DefaultTableModel) this.contentTable.getModel()).removeRow(i);
+	}
 }
