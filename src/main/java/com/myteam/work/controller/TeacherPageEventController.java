@@ -7,6 +7,7 @@ import com.myteam.work.gui.pages.TeacherPage;
 import com.myteam.work.management.data.DataTableParser;
 import com.myteam.work.management.data.Pair;
 import com.myteam.work.management.data.Semester;
+import com.myteam.work.management.data.Student;
 import com.myteam.work.management.data.Subject;
 import com.myteam.work.management.data.TeachClass;
 import com.myteam.work.management.handler.SemesterHandler;
@@ -144,5 +145,9 @@ public class TeacherPageEventController {
 		}
 
 		loadStudentInTeachClass(tc);
+	}
+
+	public void updateGpa(Student s) {
+		
 	}
 }

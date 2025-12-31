@@ -1,11 +1,11 @@
 package com.myteam.work.controller;
 
-import java.util.List;
 import java.util.LinkedList;
+import java.util.List;
 
 import com.myteam.work.gui.pages.utilwin.SubjectWindow;
-import com.myteam.work.management.handler.SubjectHandler;
 import com.myteam.work.management.data.DataTableParser;
+import com.myteam.work.management.handler.SubjectHandler;
 
 public class SubjectWinController {
 	private SubjectHandler sh;
@@ -24,6 +24,7 @@ public class SubjectWinController {
 		if(subjects == null) return;
 
 		var existedTableModel = sw.getChoosenPrerequisitesTable().getIDModel();
+
 		var rowCount = existedTableModel.getRowCount();
 		List<Integer> existedPrerequisite = new LinkedList<>();
 
