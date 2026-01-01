@@ -8,6 +8,7 @@ import com.myteam.work.management.data.Pair;
 import com.myteam.work.management.data.Semester;
 import com.myteam.work.management.data.Subject;
 import com.myteam.work.management.data.TeachClass;
+import com.myteam.work.management.data.User;
 import com.myteam.work.management.handler.SemesterHandler;
 import com.myteam.work.management.handler.StudentHandler;
 import com.myteam.work.management.handler.SubjectHandler;
@@ -74,12 +75,34 @@ public class ManagerPageEventController {
         log.info("Search subject: " + s);
 		var table = ((ManagerPage) ManagerPage.getPage()).getSubjectTable();
 		table.clearData();
-		var subjects = this.sh.getSubject(s);
+		var teachers = this.sh.getSubject(s);
 
-		if(subjects == null) return;
+		if(teachers == null) return;
 
-		table.addData(this.parser.parseSubjectFetchPrerequisites(subjects));
+		table.addData(this.parser.parseSubjectFetchPrerequisites(teachers));
     }
+
+	public void loadTeacherSubject() {
+		var teachers = this.th.loadTeacher(String.valueOf(LoginController.getController().getCurrentUser().getId()));
+		var selector = ((ManagerPage) ManagerPage.getPage()).getTeacherSelector();
+		selector.removeAllItems();
+		selector.addItem(null);
+
+		if(teachers == null) return;
+
+		for(User teacher : teachers) selector.addItem(teacher);
+	}
+
+	public void searchTeacher(String s) {
+		log.info("Search teacher: " + s);
+		var table = ((ManagerPage) ManagerPage.getPage()).getSubjectTable();
+		table.clearData();
+		var teachers = this.th.loadTeacher(s);
+
+		if(teachers == null) return;
+
+		table.addData(this.parser.parseTeacherFetch(teachers));
+	}
 
 	public void loadClassSemester() {
 		var semesters = this.seh.getAllSemester();

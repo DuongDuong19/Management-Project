@@ -82,6 +82,27 @@ public class SubjectHandler {
 		return result;
 	}
 	
+	public List<Integer> getSubject(int id) {
+		try {
+			List<Integer> result = new LinkedList<Integer>();
+			var prepareStatement = this.connection.prepareStatement("""
+					select subjectname from subject
+					where id = ?
+					""");
+			prepareStatement.setInt(1, id);
+			var requiredInfo = prepareStatement.executeQuery();
+
+			while(requiredInfo.next()) result.add(requiredInfo.getInt("subjectname"));
+
+			if(!result.isEmpty()) return result;
+		} catch(SQLException e) {
+			log.error(e.toString());
+		}
+
+		return null;
+	}
+	
+
 	public List<Subject> getSubject(String s) {
 		try {
 			List<Subject> results = new LinkedList<>();
@@ -190,7 +211,7 @@ public class SubjectHandler {
 		}
 	}
 
-    public Subject submit1(double test1) {
+    public void submit1(double test1) {
         try {
 
             var submitInformation = this.connection.prepareStatement("""
@@ -209,10 +230,9 @@ public class SubjectHandler {
             log.error(e.toString());
         }
 
-        return null;
     }
 
-	public Subject submit2(double test2) {
+	public void submit2(double test2) {
         try {
 
             var submitInformation = this.connection.prepareStatement("""
@@ -231,10 +251,9 @@ public class SubjectHandler {
             log.error(e.toString());
         }
 
-        return null;
     }
 
-	public Subject endtest(double endtest) {
+	public void endtest(double endtest) {
         try {
 
             var submitInformation = this.connection.prepareStatement("""
@@ -253,6 +272,5 @@ public class SubjectHandler {
             log.error(e.toString());
         }
 
-        return null;
     }
 }
