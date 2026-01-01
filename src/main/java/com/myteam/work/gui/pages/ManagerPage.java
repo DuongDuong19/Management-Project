@@ -32,6 +32,7 @@ public class ManagerPage extends JPanel {
 	private static final Configuration config = Configuration.getConfiguration();
 	private static ManagerPageEventController mpec;
 	private static ManagerPage mp;
+	private static Subject subject;
 	private CardLayout pager;
 	private JPanel contentPanel;
 	@Getter
@@ -126,7 +127,7 @@ public class ManagerPage extends JPanel {
 		var subjectCreateBtn = new JButton("Create subject");
 		subjectCreateBtn.addActionListener(e -> new SubjectWindow(null));
 		var subjectEditBtn = new JButton("Edit subject");
-		subjectEditBtn.addActionListener(e -> new SubjectWindow(new Subject()));
+		subjectEditBtn.addActionListener(e -> new SubjectWindow(new Subject(subject.getId(), subject.getCredits(), subject.isRequired(), subject.getSubjectName())));
 		var subjectDeleteBtn = new JButton("Delete subject");
 		searchBtn.add(subjectCreateBtn, BorderLayout.WEST);
 		searchBtn.add(subjectEditBtn, BorderLayout.CENTER);
