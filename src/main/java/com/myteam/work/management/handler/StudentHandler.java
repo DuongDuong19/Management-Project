@@ -1,12 +1,14 @@
 package com.myteam.work.management.handler;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 
 import com.myteam.work.management.data.Student;
+import com.myteam.work.management.data.User;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -176,4 +178,112 @@ public class StudentHandler {
 		}
 
 	}
+
+	public List<Integer> getStudentName(int id) {
+		try {
+			List<Student> result = new LinkedList<>();
+			var prepareStatement = SQLHandler.getConnection().prepareStatement("""
+                SELECT
+					st.id,
+					st.urName AS student_name
+				FROM Student st;
+			""");
+            prepareStatement.setInt(1, id);
+            var studentNameInfo = prepareStatement.executeQuery();
+
+			while(studentNameInfo.next())
+				result.add(new Student(
+					studentNameInfo.getInt("id"),
+					studentNameInfo.getShort("generation"),
+					studentNameInfo.getFloat("gpa"),
+					studentNameInfo.getString("urName"),
+					studentNameInfo.getString("birth"),
+					studentNameInfo.getString("placeOfBirth"),
+					studentNameInfo.getBoolean("sex")));
+
+		} catch (SQLException e) {
+			log.error(e.toString());
+		}
+
+		return null;
+	}
+
+	public String getStudentUrName(int id) {
+		try {
+			List<Student> result = new LinkedList<>();
+			var prepareStatement = SQLHandler.getConnection().prepareStatement("""
+                select urName from student
+					where id = ?
+			""");
+            prepareStatement.setInt(1, id);
+            var studentNameInfo = prepareStatement.executeQuery();
+
+			while(studentNameInfo.next())
+				result.add(new Student(
+					studentNameInfo.getInt("id"),
+					studentNameInfo.getShort("generation"),
+					studentNameInfo.getFloat("gpa"),
+					studentNameInfo.getString("urName"),
+					studentNameInfo.getString("birth"),
+					studentNameInfo.getString("placeOfBirth"),
+					studentNameInfo.getBoolean("sex")));
+
+		} catch (SQLException e) {
+			log.error(e.toString());
+		}
+
+		return null;
+	}
+
+	public List<Student> loadStudent(String s) {
+		try {
+			List<Student> results = new LinkedList<>();
+
+			PreparedStatement statement;
+
+			try {
+				statement = this.connection.prepareStatement("""
+							select * from student
+							where id = ?
+						""");
+				statement.setInt(1, Integer.parseInt(s));
+			} catch(NumberFormatException _) {
+				statement = this.connection.prepareStatement("""
+							SELECT
+								st.id,
+								st.urName AS student_name,
+								st.birth,
+								st.placeOfBirth,
+								st.sex,
+								st.generation,
+								st.gpa
+							FROM Student st
+							WHERE st.id = ?;
+						""");
+				statement.setString(1, "%" + s + "%");
+			}
+
+			var studentInformation = statement.executeQuery();
+
+			while(studentInformation.next()) {
+				results.add(new Student(
+					studentInformation.getInt("id"),
+					studentInformation.getShort("generation"),
+					studentInformation.getFloat("gpa"),
+					studentInformation.getString("student_name"),
+					studentInformation.getString("birth"),
+					studentInformation.getString("placeOfBirth"),
+					studentInformation.getBoolean("sex")
+				));
+			}
+
+			if(!results.isEmpty()) return results;
+		} catch(SQLException e) {
+			log.error(e.toString());
+		}
+
+		return null;
+	}
+
+
 }

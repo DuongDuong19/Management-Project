@@ -1,6 +1,7 @@
 package com.myteam.work.controller;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import com.myteam.work.gui.pages.ManagerPage;
 import com.myteam.work.management.data.DataTableParser;
@@ -83,7 +84,7 @@ public class ManagerPageEventController {
     }
 
 	public void loadTeacherSubject() {
-		var teachers = this.th.loadTeacher(String.valueOf(LoginController.getController().getCurrentUser().getId()));
+		var teachers = this.th.loadTeacher("");
 		var selector = ((ManagerPage) ManagerPage.getPage()).getTeacherSelector();
 		selector.removeAllItems();
 		selector.addItem(null);
@@ -95,13 +96,24 @@ public class ManagerPageEventController {
 
 	public void searchTeacher(String s) {
 		log.info("Search teacher: " + s);
-		var table = ((ManagerPage) ManagerPage.getPage()).getSubjectTable();
+		var table = ((ManagerPage) ManagerPage.getPage()).getTeacherTable();
 		table.clearData();
 		var teachers = this.th.loadTeacher(s);
 
 		if(teachers == null) return;
 
 		table.addData(this.parser.parseTeacherFetch(teachers));
+	}
+
+	public void searchStudent(String s) {
+		log.info("Search student: " + id);
+		var table = ((ManagerPage) ManagerPage.getPage()).getStudentTable();
+		table.clearData();
+		var students = this.sth.loadStudent(s);
+
+		if(students == null) return;
+
+		table.addData(this.parser.parseStudentFetch(students));
 	}
 
 	public void loadClassSemester() {
@@ -179,6 +191,29 @@ public class ManagerPageEventController {
 		if(clazz == null) return;
 
 		for(TeachClass tc : clazz) selector.addItem(tc);
+	}
+
+	public void submit(TeachClass tc) {
+		var iterator = this.changeRecorder.entrySet().iterator();
+
+		while(iterator.hasNext()) {
+			var entry = (Map.Entry) iterator.next();
+			var key = (Pair<Integer, Integer>) entry.getKey();
+			var value = entry.getValue();
+
+			if(key.second() == 3) {
+
+			} else if(key.second() == 4) {
+				
+			} else if(key.second() == 5) {
+				
+			} else {
+				log.error("System has a breach");
+				System.exit(0);
+			}
+		}
+
+		loadStudentInTeachClass(tc);
 	}
 
 	public void newSubject(Subject s) {
