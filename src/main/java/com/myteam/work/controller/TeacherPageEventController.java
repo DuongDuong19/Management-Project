@@ -133,11 +133,11 @@ public class TeacherPageEventController {
 			var value = entry.getValue();
 
 			if(key.second() == 3) {
-				this.sh.submit1(test1);
+
 			} else if(key.second() == 4) {
-				this.sh.submit2(test2);
+				
 			} else if(key.second() == 5) {
-				this.sh.endtest(endtest);
+				
 			} else {
 				log.error("System has a breach");
 				System.exit(0);

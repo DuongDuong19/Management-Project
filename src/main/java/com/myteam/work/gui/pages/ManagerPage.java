@@ -22,17 +22,21 @@ import com.myteam.work.Configuration;
 import com.myteam.work.controller.ManagerPageEventController;
 import com.myteam.work.gui.pages.utilwin.SubjectWindow;
 import com.myteam.work.management.data.Semester;
+import com.myteam.work.management.data.Student;
 import com.myteam.work.management.data.Subject;
 import com.myteam.work.management.data.TeachClass;
+import com.myteam.work.management.data.User;
 
 import lombok.Getter;
 
 public class ManagerPage extends JPanel {
 	private static final String subjectTableDefaultText = "Search by subject name or subject id";
+	private static final String teacherTableDefaultText = "Search by teacher name or teacher id";
+	private static final String studentTableDefaultText = "Search by student name or student id";
 	private static final Configuration config = Configuration.getConfiguration();
 	private static ManagerPageEventController mpec;
 	private static ManagerPage mp;
-	private static Subject subject;
+	private Subject subject = null;
 	private CardLayout pager;
 	private JPanel contentPanel;
 	@Getter
@@ -55,7 +59,15 @@ public class ManagerPage extends JPanel {
 	private JComboBox<Subject> classManagementSubjectSelector;
 	@Getter
 	private JComboBox<TeachClass> classManagementClassSelector;
+	@Getter
+	private JComboBox<User> classManagementTeacherSelector;
+	@Getter
+	private JComboBox<User> teacherSelector;
+	@Getter
+	private JComboBox<Student> studentSelector;
 	private JTextField subjectSearchField;
+	private JTextField teacherSearchField;
+	private JTextField studentSearchField;
 
 	private ManagerPage() {
 		this.mpec = ManagerPageEventController.getController();
@@ -81,12 +93,63 @@ public class ManagerPage extends JPanel {
 	}
 
 	private JPanel studentManagementPage() {
-		var contentPanel = new JPanel();
+		var contentPanel = new JPanel(new BorderLayout(15, 15));
 		contentPanel.add(new JLabel("student"));
+		contentPanel.setBorder(new EmptyBorder(20, 25, 20, 25));
+		var searchPanel = new JPanel(new BorderLayout(15, 0));
+		var selectorPanel = new JPanel(new BorderLayout(12, 0));
+		var searchBtn = new JPanel(new BorderLayout());
+		searchPanel.setOpaque(false);
+		
+		this.studentSelector = new JComboBox<>();
+		this.studentSelector.setRenderer(config.getComboBoxRenderer());
+		this.studentSelector.addActionListener(e -> loadManagementTeachClass());
+
+		this.studentSearchField = new JTextField(studentTableDefaultText);
+		this.studentSearchField.setBorder(null);
+		this.studentSearchField.setForeground(config.getFieldColor());
+		this.studentSearchField.addFocusListener(new DefaultTextDisplayer(studentTableDefaultText));
+		this.studentSearchField.getDocument().addDocumentListener(new DocumentListener() {
+			private Timer updater = new Timer(125, e -> {
+				if(studentSearchField.getText().equals(studentTableDefaultText)) mpec.loadTeacherSubject();
+				else mpec.searchTeacher(studentSearchField.getText());
+			});
+
+			public void changedUpdate(DocumentEvent e) {
+				updater.setRepeats(false);
+				updater.restart();
+			}
+
+			public void insertUpdate(DocumentEvent e) {
+				updater.setRepeats(false);
+				updater.restart();
+			}
+
+			public void removeUpdate(DocumentEvent e) {
+				updater.setRepeats(false);
+				updater.restart();
+			}
+		});
+
+		var addStudentBtn = new JButton("Add student");
+		var removeStudentBtn = new JButton("Remove student");
+		searchBtn.add(addStudentBtn, BorderLayout.WEST);
+		searchBtn.add(removeStudentBtn, BorderLayout.CENTER);
+		
+		selectorPanel.add(this.studentSearchField, BorderLayout.CENTER);
+		selectorPanel.add(this.studentSelector, BorderLayout.EAST);
+
+		searchPanel.add(selectorPanel, BorderLayout.CENTER);
+		searchPanel.add(searchBtn, BorderLayout.EAST);
 
 		this.studentTable = new MSTable(new String[]{"ID", "Student Name", "Birth", "Place of birth", "Sex", "Generation", "Gpa"},
 				List.<Class<?>>of(Integer.class, String.class, String.class, String.class, String.class, Short.class, Float.class), Collections.EMPTY_LIST);
 
+		contentPanel.add(searchPanel, BorderLayout.NORTH);
+		contentPanel.add(this.studentTable.getDisplayer(), BorderLayout.CENTER);
+
+		this.studentTable.setReorderingColumn(false);
+		this.studentTable.setResizingColumn(false);
 		return contentPanel;
 	}
 
@@ -127,15 +190,18 @@ public class ManagerPage extends JPanel {
 		var subjectCreateBtn = new JButton("Create subject");
 		subjectCreateBtn.addActionListener(e -> new SubjectWindow(null));
 		var subjectEditBtn = new JButton("Edit subject");
-		subjectEditBtn.addActionListener(e -> new SubjectWindow(new Subject(subject.getId(), subject.getCredits(), subject.isRequired(), subject.getSubjectName())));
+		// subjectEditBtn.addActionListener(e -> new SubjectWindow(new Subject(subject.getId(), subject.getCredits(), subject.isRequired(), subject.getSubjectName())));
+		subjectEditBtn.addActionListener(e -> new SubjectWindow(subject));
 		var subjectDeleteBtn = new JButton("Delete subject");
+		//===============================
+		subjectDeleteBtn.addActionListener(e -> new SubjectWindow(subject));
 		searchBtn.add(subjectCreateBtn, BorderLayout.WEST);
 		searchBtn.add(subjectEditBtn, BorderLayout.CENTER);
 		searchBtn.add(subjectDeleteBtn, BorderLayout.EAST);
 		searchPanel.add(this.subjectSearchField, BorderLayout.CENTER);
 		searchPanel.add(searchBtn, BorderLayout.EAST);
 		this.subjectTable = new MSTable(new String[]{"ID", "Subject name", "Prerequisites", "Credits", "Require"}, 
-				List.<Class<?>>of(String.class, String[].class, Short.class, String.class), Collections.EMPTY_LIST);
+				List.<Class<?>>of(Integer.class, String.class, String[].class, Short.class, String.class), Collections.EMPTY_LIST);
 		this.subjectTable.setRowHeight(42);
 		this.subjectTable.setShowGrid(true);
 		this.subjectTable.setPreferredWidth(0, 191);
@@ -158,12 +224,136 @@ public class ManagerPage extends JPanel {
 		return contentPanel;
 	}
 
+	// private JPanel teacherManagementPage() {
+	// 	var contentPanel = new JPanel(new BorderLayout(15, 15));
+	// 	contentPanel.add(new JLabel("teacher"));
+	// 	contentPanel.setBorder(new EmptyBorder(20, 25, 20, 25));
+	// 	var searchPanel = new JPanel(new BorderLayout(15, 0));
+	// 	var selectorPanel = new JPanel(new BorderLayout(12, 0));
+	// 	var searchBtn = new JPanel(new BorderLayout());
+	// 	searchPanel.setOpaque(false);
+
+		
+
+	// 	this.classManagementTeacherSelector = new JComboBox<>();
+	// 	this.classManagementTeacherSelector.setRenderer(config.getComboBoxRenderer());
+	// 	this.classManagementTeacherSelector.addActionListener(e -> loadManagementTeachClass());
+	// 	this.classManagementTeacherSelector = new JComboBox<>();
+	// 	this.classManagementTeacherSelector.setRenderer(config.getComboBoxRenderer());
+	// 	this.classManagementTeacherSelector.addActionListener(e -> loadManagementTeachClass());
+	// 	this.classManagementTeacherSelector = new JComboBox<>();
+
+	// 	var searchField = new JTextField();
+	// 	var addTeacherBtn = new JButton("Add teacher");
+	// 	var removeTeacherBtn = new JButton("Remove teacher");
+	// 	searchBtn.add(addTeacherBtn, BorderLayout.WEST);
+	// 	searchBtn.add(removeTeacherBtn, BorderLayout.CENTER);
+	// 	selectorPanel.add(this.classManagementTeacherSelector, BorderLayout.WEST);
+	// 	selectorPanel.add(this.classManagementTeacherSelector, BorderLayout.CENTER);
+	// 	selectorPanel.add(this.classManagementTeacherSelector, BorderLayout.EAST);
+
+	// 	searchPanel.add(selectorPanel, BorderLayout.CENTER);
+	// 	searchPanel.add(searchBtn, BorderLayout.EAST);
+
+
+	// 	this.teacherSearchField = new JTextField(teacherTableDefaultText);
+	// 	this.teacherSearchField.setBorder(null);
+	// 	this.teacherSearchField.setForeground(config.getFieldColor());
+	// 	this.teacherSearchField.addFocusListener(new DefaultTextDisplayer(teacherTableDefaultText));
+	// 	this.teacherSearchField.getDocument().addDocumentListener(new DocumentListener() {
+	// 		private Timer updater = new Timer(125, e -> {
+	// 			if(teacherSearchField.getText().equals(teacherTableDefaultText)) mpec.loadTeacherSubject();
+	// 			else mpec.searchSubject(teacherSearchField.getText());
+	// 		});
+
+	// 		public void changedUpdate(DocumentEvent e) {
+	// 			updater.setRepeats(false);
+	// 			updater.restart();
+	// 		}
+
+	// 		public void insertUpdate(DocumentEvent e) {
+	// 			updater.setRepeats(false);
+	// 			updater.restart();
+	// 		}
+
+	// 		public void removeUpdate(DocumentEvent e) {
+	// 			updater.setRepeats(false);
+	// 			updater.restart();
+	// 		}
+	// 	});
+
+	// 	this.teacherTable = new MSTable(new String[]{"ID", "Teacher name", "Username", "Password", "Birth", "Place of birth", "Sex", "Subject", "Teach class"},
+	// 			List.<Class<?>>of(Integer.class, String.class, String.class, String.class, String.class, String.class, String.class, String[].class, String[].class), Collections.EMPTY_LIST);
+
+	// 	contentPanel.add(searchPanel, BorderLayout.NORTH);
+	// 	contentPanel.add(this.teacherTable.getDisplayer(), BorderLayout.CENTER);
+
+	// 	this.teacherTable.setReorderingColumn(false);
+	// 	this.teacherTable.setResizingColumn(false);
+
+	// 	return contentPanel;
+
+		
+	// }
+
 	private JPanel teacherManagementPage() {
-		var contentPanel = new JPanel();
+		var contentPanel = new JPanel(new BorderLayout(15, 15));
 		contentPanel.add(new JLabel("teacher"));
+		contentPanel.setBorder(new EmptyBorder(20, 25, 20, 25));
+		var searchPanel = new JPanel(new BorderLayout(15, 0));
+		var selectorPanel = new JPanel(new BorderLayout(12, 0));
+		var searchBtn = new JPanel(new BorderLayout());
+		searchPanel.setOpaque(false);
+
+		this.teacherSelector = new JComboBox<>();
+		this.teacherSelector.setRenderer(config.getComboBoxRenderer());
+		this.teacherSelector.addActionListener(e -> loadManagementTeachClass());
+
+		this.teacherSearchField = new JTextField(teacherTableDefaultText);
+		this.teacherSearchField.setBorder(null);
+		this.teacherSearchField.setForeground(config.getFieldColor());
+		this.teacherSearchField.addFocusListener(new DefaultTextDisplayer(teacherTableDefaultText));
+		this.teacherSearchField.getDocument().addDocumentListener(new DocumentListener() {
+			private Timer updater = new Timer(125, e -> {
+				if(teacherSearchField.getText().equals(teacherTableDefaultText)) mpec.loadTeacherSubject();
+				else mpec.searchTeacher(teacherSearchField.getText());
+			});
+
+			public void changedUpdate(DocumentEvent e) {
+				updater.setRepeats(false);
+				updater.restart();
+			}
+
+			public void insertUpdate(DocumentEvent e) {
+				updater.setRepeats(false);
+				updater.restart();
+			}
+
+			public void removeUpdate(DocumentEvent e) {
+				updater.setRepeats(false);
+				updater.restart();
+			}
+		});
+
+		var addTeacherBtn = new JButton("Add teacher");
+		var removeTeacherBtn = new JButton("Remove teacher");
+		searchBtn.add(addTeacherBtn, BorderLayout.WEST);
+		searchBtn.add(removeTeacherBtn, BorderLayout.CENTER);
+		
+		selectorPanel.add(this.teacherSearchField, BorderLayout.CENTER);
+		selectorPanel.add(this.teacherSelector, BorderLayout.EAST);
+
+		searchPanel.add(selectorPanel, BorderLayout.CENTER);
+		searchPanel.add(searchBtn, BorderLayout.EAST);
 
 		this.teacherTable = new MSTable(new String[]{"ID", "Teacher name", "Username", "Password", "Birth", "Place of birth", "Sex", "Subject", "Teach class"},
 				List.<Class<?>>of(Integer.class, String.class, String.class, String.class, String.class, String.class, String.class, String[].class, String[].class), Collections.EMPTY_LIST);
+
+		contentPanel.add(searchPanel, BorderLayout.NORTH);
+		contentPanel.add(this.teacherTable.getDisplayer(), BorderLayout.CENTER);
+
+		this.teacherTable.setReorderingColumn(false);
+		this.teacherTable.setResizingColumn(false);
 
 		return contentPanel;
 	}

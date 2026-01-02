@@ -58,4 +58,8 @@ public class SubjectWinController {
 	public void updateSubject(Subject target, String subjectName, String credits, boolean required, List<Integer> prerequistes) {
 
 	}
+
+	public boolean deleteSubject(Object targert, Object subjectName) {
+		return false;
+	}
 }
