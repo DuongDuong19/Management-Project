@@ -215,8 +215,6 @@ public class ManagerPage extends JPanel {
 			else mpec.searchSubject(subjectSearchField.getText());
 		});*/
 
-
-
 		searchBtn.add(subjectCreateBtn, BorderLayout.WEST);
 		searchBtn.add(subjectEditBtn, BorderLayout.CENTER);
 		searchBtn.add(subjectDeleteBtn, BorderLayout.EAST);
@@ -242,6 +240,17 @@ public class ManagerPage extends JPanel {
 			if(subjectSearchField.getText().equals(subjectTableDefaultText)) mpec.loadAllSubject();
 			else mpec.searchSubject(subjectSearchField.getText());
 		});*/
+
+		subjectDeleteBtn.addActionListener(e -> {
+			var submitWin = new SubmitWindow(false);
+			submitWin.setSubmitAction(a -> {
+				mpec.deleteSubject((Integer) subjectTable.getIDModel().getValueAt(subjectTable.getSelectedRow(), 0));
+
+				if(subjectSearchField.getText().equals(subjectTableDefaultText)) mpec.loadAllSubject();
+				else mpec.searchSubject(subjectSearchField.getText());
+			});
+			submitWin.setCancelAction(a -> submitWin.dispose());
+		});
 
 		return contentPanel;
 	}
@@ -303,6 +312,9 @@ public class ManagerPage extends JPanel {
 
 		this.teacherTable.setReorderingColumn(false);
 		this.teacherTable.setResizingColumn(false);
+		this.teacherTable.setRowHeight(42);
+		this.teacherTable.setShowGrid(true);
+		this.teacherTable.setIntercellSpacing(new Dimension(1, 1));
 
 		return contentPanel;
 	}

@@ -51,4 +51,28 @@ public class TeachClassHandler {
 
 		return null;
 	}
+
+	public void updateClassGpa(int classes) {
+		try(var prepareStatement = this.connection.prepareStatement("""
+				UPDATE SubjectClass sc
+				SET gpa = sub.class_gpa
+				FROM (
+					SELECT
+						classes,
+						AVG(normalizedScore) AS class_gpa
+					FROM StudentListTeachClass
+					WHERE classes = ?
+					GROUP BY classes
+				) sub
+				WHERE sc.classes = sub.classes;
+			""")) {
+
+			prepareStatement.setInt(1, classes);
+
+			prepareStatement.executeUpdate();
+
+		} catch (SQLException e) {
+			log.error(e.toString());
+		}
+	}
 }

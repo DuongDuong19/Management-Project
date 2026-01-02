@@ -15,8 +15,6 @@ public class DataTableParser {
 	private SubjectHandler sh;
 	private StudentHandler sth;
 	private TeacherHandler th;
-	private static Subject subject;
-	private static TeachClass tc;
 
 	public DataTableParser() {
 		this.sh = new SubjectHandler();
@@ -35,8 +33,6 @@ public class DataTableParser {
 	public Object[][] parseTeacherFetch(List<User> users) {
 		List<Object[]> data = new LinkedList<Object[]>();
 
-		// Deduplicate users by id to avoid repeated rows when SQL joins return multiple
-		// result rows for the same teacher (one per subject/class).
 		var unique = new LinkedHashMap<Integer, User>();
 		for (User user : users) {
 			if (!unique.containsKey(user.getId())) unique.put(user.getId(), user);

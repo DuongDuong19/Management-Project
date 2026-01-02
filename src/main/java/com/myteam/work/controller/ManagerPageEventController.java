@@ -28,10 +28,6 @@ public class ManagerPageEventController {
 	private SemesterHandler seh;
 	private DataTableParser parser;
 	private HashMap<Pair<Integer, Integer>, Object> changeRecorder;
-	private int id;
-	private short credits;
-	private boolean required;
-	private String subjectName;
 
     private ManagerPageEventController() {
 		this.sh = new SubjectHandler();
@@ -106,7 +102,6 @@ public class ManagerPageEventController {
 	}
 
 	public void searchStudent(String s) {
-		log.info("Search student: " + id);
 		var table = ((ManagerPage) ManagerPage.getPage()).getStudentTable();
 		table.clearData();
 		var students = this.sth.loadStudent(s);
@@ -216,11 +211,7 @@ public class ManagerPageEventController {
 		loadStudentInTeachClass(tc);
 	}
 
-	public void newSubject(Subject s) {
-	}
-
-	public void deleteSubject(String s) {
-		
-	}
-	
+	public void deleteSubject(int id) {
+		this.sh.deleteSubject(id);
+	}	
 }

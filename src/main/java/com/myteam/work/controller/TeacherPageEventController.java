@@ -142,12 +142,11 @@ public class TeacherPageEventController {
 				log.error("System has a breach");
 				System.exit(0);
 			}
+
+			this.sth.updateStudentGpa(key.first());
 		}
 
+		this.tch.updateClassGpa(tc.getId());
 		loadStudentInTeachClass(tc);
-	}
-
-	public void updateGpa(Student s) {
-		
-	}
+	}		
 }
