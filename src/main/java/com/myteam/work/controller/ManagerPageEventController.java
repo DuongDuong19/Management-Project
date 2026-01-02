@@ -181,34 +181,11 @@ public class ManagerPageEventController {
 
 		if(semester == null || subject == null) return;
 
-		var clazz = this.tch.getClass(semester.getId(), LoginController.getController().getCurrentUser().getId(), subject.getId());
+		var clazz = this.tch.getClass(semester.getId(), subject.getId());
 
 		if(clazz == null) return;
 
 		for(TeachClass tc : clazz) selector.addItem(tc);
-	}
-
-	public void submit(TeachClass tc) {
-		var iterator = this.changeRecorder.entrySet().iterator();
-
-		while(iterator.hasNext()) {
-			var entry = (Map.Entry) iterator.next();
-			var key = (Pair<Integer, Integer>) entry.getKey();
-			var value = entry.getValue();
-
-			if(key.second() == 3) {
-
-			} else if(key.second() == 4) {
-				
-			} else if(key.second() == 5) {
-				
-			} else {
-				log.error("System has a breach");
-				System.exit(0);
-			}
-		}
-
-		loadStudentInTeachClass(tc);
 	}
 
 	public void deleteSubject(int id) {

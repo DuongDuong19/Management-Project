@@ -5,6 +5,7 @@ import java.awt.CardLayout;
 import java.awt.Dimension;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Consumer;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -205,21 +206,7 @@ public class ManagerPage extends JPanel {
 		this.subjectTable.setResizingColumn(false);
 		contentPanel.add(searchPanel, BorderLayout.NORTH);
 		contentPanel.add(this.subjectTable.getDisplayer(), BorderLayout.CENTER);
-
-		subjectDeleteBtn.addActionListener(e -> {
-			var submitWin = new SubmitWindow(false);
-			submitWin.setSubmitAction(a -> {
-				var selectedRow = subjectTable.getSelectedRow();
-
-				if(selectedRow == -1) return;
-
-				mpec.deleteSubject((Integer) subjectTable.getIDModel().getValueAt(selectedRow, 0));
-
-				if(subjectSearchField.getText().equals(subjectTableDefaultText)) mpec.loadAllSubject();
-				else mpec.searchSubject(subjectSearchField.getText());
-			});
-			submitWin.setCancelAction(a -> submitWin.dispose());
-		});
+		subjectDeleteBtn.addActionListener(_ -> createDeleteWindow(subjectTable, mpec::deleteSubject, subjectSearchField, subjectTableDefaultText, mpec::loadAllSubject, mpec::searchSubject));
 
 		return contentPanel;
 	}
@@ -373,5 +360,20 @@ public class ManagerPage extends JPanel {
 
 	private void loadManagementTeachClass() {
 		mpec.loadTeachClass((Semester) this.classManagementSemesterSelector.getSelectedItem(), (Subject) this.classManagementSubjectSelector.getSelectedItem());
+	}
+
+	private void createDeleteWindow(MSTable table, Consumer<Integer> deleteFunc, JTextField searchBar, String defaultText, Runnable loadAll, Consumer<String> search) {
+		var submitWin = new SubmitWindow(false);
+		submitWin.setSubmitAction(_ -> {
+			var selectedRow = table.getSelectedRow();
+
+			if(selectedRow == -1) return;
+
+			deleteFunc.accept(selectedRow);
+			
+			if(searchBar.getText().equals(defaultText)) loadAll.run();
+			else search.accept(searchBar.getText());
+		});
+		submitWin.setCancelAction(_ -> submitWin.dispose());
 	}
 }
