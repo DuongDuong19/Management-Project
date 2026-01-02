@@ -338,7 +338,9 @@ public class ManagerPage extends JPanel {
 		this.classManagementClassSelector.addActionListener(e -> mpec.loadStudentInTeachClass((TeachClass) ((JComboBox) e.getSource()).getSelectedItem()));
 		var searchField = new JTextField();
 		var addStudentBtn = new JButton("Add student");
+		addStudentBtn.addActionListener(e -> mpec.AddStudent());
 		var removeStudentBtn = new JButton("Remove student");
+		removeStudentBtn.addActionListener(e -> mpec.RemoveStudent());
 		searchBtn.add(addStudentBtn, BorderLayout.WEST);
 		searchBtn.add(removeStudentBtn, BorderLayout.CENTER);
 		selectorPanel.add(this.classManagementSemesterSelector, BorderLayout.WEST);

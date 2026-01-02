@@ -18,53 +18,6 @@ public class TeacherHandler {
     public TeacherHandler() {
         this.connection = SQLHandler.getConnection();
     }
-/*
-    public List<User> loadTeacher(String s) {
-        try {
-            List<User> result = new LinkedList<>();
-
-            var prepareStatement = SQLHandler.getConnection().prepareStatement("""
-					SELECT
-                        u.id AS teacher_id,
-                        u.urName AS teacher_name,
-                        (u.auth).authName AS username,
-                        (u.auth).authPass AS password,
-                        u.birth,
-                        u.placeOfBirth,
-                        u.sex,
-                        sb.subjectName AS subject,
-                        tc.className AS teach_class
-                    FROM Users u
-                    JOIN TeacherTeachClass ttc ON ttc.teacher = u.id
-                    JOIN TeachClass tc ON tc.id = ttc.classes
-                    JOIN SubjectClass sc ON sc.classes = tc.id
-                    JOIN Subject sb ON sb.id = sc.subject
-                    JOIN TeachSubject ts ON ts.teacher = u.id AND ts.subject = sb.id
-                    WHERE u.ur = true AND u.id = ?;
-					""");
-
-            prepareStatement.setString(1, s);
-			var teacherInformation = prepareStatement.executeQuery();
-
-            while(teacherInformation.next())
-                result.add(new User(
-                    teacherInformation.getInt("teacher_id"),
-                    teacherInformation.getString("username"),
-                    teacherInformation.getString("password"),
-                    teacherInformation.getBoolean("role"),
-                    teacherInformation.getString("teacher_name"),
-                    teacherInformation.getString("birth"),
-                    teacherInformation.getString("placeOfBirth"),
-                    teacherInformation.getBoolean("sex")));
-                
-            if(!result.isEmpty()) return result;
-        } catch (SQLException e) {
-            log.error(e.toString());
-        }
-
-        return null;
-    }
-*/
 
     public List<User> loadTeacher(String s) {
 		try {
@@ -169,5 +122,36 @@ public class TeacherHandler {
 
         return null;
     }
+
+    public void addTeacher(User user, String birth) {
+		try {
+			PreparedStatement statement = this.connection.prepareStatement("""
+				INSERT INTO Users (urName, birth, placeOfBirth, sex, auth, ur)
+                VALUES (?, ?, ?, ?, ?, ?);""");
+			
+			statement.setString(1, user.getInfo().getName());
+			statement.setString(2, birth);
+			statement.setString(3, user.getInfo().getPlaceOfBirth());
+			statement.setBoolean(4, user.getInfo().isSex());
+			statement.setString(5, user.getAuthName());
+			statement.setBoolean(6, user.isRole());
+
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			log.error(e.toString());
+		}
+	}
+
+	public void removeTeacher(User user) {
+		try {
+			PreparedStatement statement = this.connection.prepareStatement("DELETE FROM Users WHERE id = ? AND ur = true;");
+
+			statement.setInt(1, user.getId());
+
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			log.error(e.toString());
+		}
+	}
 
 }
