@@ -15,8 +15,6 @@ public class DataTableParser {
 	private SubjectHandler sh;
 	private StudentHandler sth;
 	private TeacherHandler th;
-	private static Subject subject;
-	private static TeachClass tc;
 
 	public DataTableParser() {
 		this.sh = new SubjectHandler();

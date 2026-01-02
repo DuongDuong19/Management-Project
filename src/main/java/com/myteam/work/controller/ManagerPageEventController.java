@@ -29,10 +29,6 @@ public class ManagerPageEventController {
 	private SemesterHandler seh;
 	private DataTableParser parser;
 	private HashMap<Pair<Integer, Integer>, Object> changeRecorder;
-	private int id;
-	private short credits;
-	private boolean required;
-	private String subjectName;
 
     private ManagerPageEventController() {
 		this.sh = new SubjectHandler();
@@ -118,7 +114,6 @@ public class ManagerPageEventController {
 	}
 
 	public void searchStudent(String s) {
-		log.info("Search student: " + s);
 		var table = ((ManagerPage) ManagerPage.getPage()).getStudentTable();
 		table.clearData();
 		var students = this.sth.loadStudent(s);
@@ -198,41 +193,14 @@ public class ManagerPageEventController {
 
 		if(semester == null || subject == null) return;
 
-		var clazz = this.tch.getClass(semester.getId(), LoginController.getController().getCurrentUser().getId(), subject.getId());
+		var clazz = this.tch.getClass(semester.getId(), subject.getId());
 
 		if(clazz == null) return;
 
 		for(TeachClass tc : clazz) selector.addItem(tc);
 	}
 
-	public void submit(TeachClass tc) {
-		var iterator = this.changeRecorder.entrySet().iterator();
-
-		while(iterator.hasNext()) {
-			var entry = (Map.Entry) iterator.next();
-			var key = (Pair<Integer, Integer>) entry.getKey();
-			var value = entry.getValue();
-
-			if(key.second() == 3) {
-
-			} else if(key.second() == 4) {
-				
-			} else if(key.second() == 5) {
-				
-			} else {
-				log.error("System has a breach");
-				System.exit(0);
-			}
-		}
-
-		loadStudentInTeachClass(tc);
-	}
-
-	public void newSubject(Subject s) {
-	}
-
-	public void deleteSubject(String s) {
-		
-	}
-	
+	public void deleteSubject(int id) {
+		this.sh.deleteSubject(id);
+	}	
 }
