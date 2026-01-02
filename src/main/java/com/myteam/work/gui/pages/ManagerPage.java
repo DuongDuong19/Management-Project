@@ -64,8 +64,6 @@ public class ManagerPage extends JPanel {
 	private JComboBox<User> classManagementTeacherSelector;
 	@Getter
 	private JComboBox<User> teacherSelector;
-	@Getter
-	private JComboBox<Student> studentSelector;
 	private JTextField subjectSearchField;
 	private JTextField teacherSearchField;
 	private JTextField studentSearchField;
@@ -102,10 +100,6 @@ public class ManagerPage extends JPanel {
 		var searchBtn = new JPanel(new BorderLayout());
 		searchPanel.setOpaque(false);
 		
-		this.studentSelector = new JComboBox<>();
-		this.studentSelector.setRenderer(config.getComboBoxRenderer());
-		this.studentSelector.addActionListener(e -> loadManagementTeachClass());
-
 		this.studentSearchField = new JTextField(studentTableDefaultText);
 		this.studentSearchField.setBorder(null);
 		this.studentSearchField.setForeground(config.getFieldColor());
@@ -190,30 +184,8 @@ public class ManagerPage extends JPanel {
 		var subjectCreateBtn = new JButton("Create subject");
 		subjectCreateBtn.addActionListener(e -> new SubjectWindow(null));
 		var subjectEditBtn = new JButton("Edit subject");
-		// subjectEditBtn.addActionListener(e -> new SubjectWindow(new Subject(subject.getId(), subject.getCredits(), subject.isRequired(), subject.getSubjectName())));
 		subjectEditBtn.addActionListener(e -> new SubjectWindow(subject));
 		var subjectDeleteBtn = new JButton("Delete subject");
-		subjectDeleteBtn.addActionListener(e -> createSubmitWindow());
-		//===============================
-		/*subjectDeleteBtn.addActionListener(e -> {
-			var submitWin = new SubmitWindow(true);
-			submitWin.setSubmitAction(ev -> {
-				mpec.deleteSubject((String) subjectTable.getIDModel().getValueAt(subjectTable.getSelectedRow(), 0));
-				submitWin.dispose();
-			});
-			submitWin.setRevokeAction(ev -> submitWin.dispose());
-			submitWin.setCancelAction(ev -> submitWin.dispose());
-		});*/
-		/*
-		subjectDeleteBtn.addActionListener(e -> {
-			int sel = subjectTable.getSelectedRow();
-			if (sel == -1) return;
-
-			mpec.deleteSubject((String) subjectTable.getIDModel().getValueAt(sel, 0));
-
-			if(subjectSearchField.getText().equals(subjectTableDefaultText)) mpec.loadAllSubject();
-			else mpec.searchSubject(subjectSearchField.getText());
-		});*/
 
 		searchBtn.add(subjectCreateBtn, BorderLayout.WEST);
 		searchBtn.add(subjectEditBtn, BorderLayout.CENTER);
@@ -233,18 +205,15 @@ public class ManagerPage extends JPanel {
 		this.subjectTable.setResizingColumn(false);
 		contentPanel.add(searchPanel, BorderLayout.NORTH);
 		contentPanel.add(this.subjectTable.getDisplayer(), BorderLayout.CENTER);
-		/*
-		subjectDeleteBtn.addActionListener(e -> {
-			mpec.deleteSubject((String) subjectTable.getIDModel().getValueAt(subjectTable.getSelectedRow(), 0));
-
-			if(subjectSearchField.getText().equals(subjectTableDefaultText)) mpec.loadAllSubject();
-			else mpec.searchSubject(subjectSearchField.getText());
-		});*/
 
 		subjectDeleteBtn.addActionListener(e -> {
 			var submitWin = new SubmitWindow(false);
 			submitWin.setSubmitAction(a -> {
-				mpec.deleteSubject((Integer) subjectTable.getIDModel().getValueAt(subjectTable.getSelectedRow(), 0));
+				var selectedRow = subjectTable.getSelectedRow();
+
+				if(selectedRow == -1) return;
+
+				mpec.deleteSubject((Integer) subjectTable.getIDModel().getValueAt(selectedRow, 0));
 
 				if(subjectSearchField.getText().equals(subjectTableDefaultText)) mpec.loadAllSubject();
 				else mpec.searchSubject(subjectSearchField.getText());
@@ -404,18 +373,5 @@ public class ManagerPage extends JPanel {
 
 	private void loadManagementTeachClass() {
 		mpec.loadTeachClass((Semester) this.classManagementSemesterSelector.getSelectedItem(), (Subject) this.classManagementSubjectSelector.getSelectedItem());
-	}
-
-	private void createSubmitWindow() {
-		var submitWin = new SubmitWindow(true);
-		submitWin.setSubmitAction(e -> {
-			mpec.submit((TeachClass) this.classManagementClassSelector.getSelectedItem());
-			submitWin.dispose();
-		});
-		submitWin.setRevokeAction(e -> {
-			mpec.loadStudentInTeachClass((TeachClass) this.classManagementClassSelector.getSelectedItem());
-			submitWin.dispose();
-		});
-		submitWin.setCancelAction(e -> submitWin.dispose());
 	}
 }

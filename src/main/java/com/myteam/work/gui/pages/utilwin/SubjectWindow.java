@@ -197,9 +197,9 @@ public class SubjectWindow extends JFrame {
 	}
 		});
 		addPrerequisitesBtn.addActionListener(e -> {
-			var selectedRow = subjectTable.getSelectedId();
+			var selectedRow = subjectTable.getSelectedRow();
 
-if(selectedRow == -1) return;
+			if(selectedRow == -1) return;
 
 			choosenPrerequisitesTable.addData(new Object[][]{new Object[]{
 				subjectTable.getIDModel().getValueAt(selectedRow, 0),
@@ -208,7 +208,7 @@ if(selectedRow == -1) return;
 			swc.loadAllSubject(SubjectWindow.this);
 		});
 		removePrerequisitesBtn.addActionListener(e -> {
-			var selectedRow = choosenPrerequisitesTable.getSelectedId();
+			var selectedRow = choosenPrerequisitesTable.getSelectedRow();
 
 			if(selectedRow == -1) return;
 
