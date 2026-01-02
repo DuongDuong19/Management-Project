@@ -107,8 +107,8 @@ public class ManagerPage extends JPanel {
 		this.studentSearchField.addFocusListener(new DefaultTextDisplayer(studentTableDefaultText));
 		this.studentSearchField.getDocument().addDocumentListener(new DocumentListener() {
 			private Timer updater = new Timer(125, e -> {
-				if(studentSearchField.getText().equals(studentTableDefaultText)) mpec.loadTeacherSubject();
-				else mpec.searchTeacher(studentSearchField.getText());
+				if(studentSearchField.getText().equals(studentTableDefaultText)) mpec.loadStudent();
+				else mpec.searchStudent(studentSearchField.getText());
 			});
 
 			public void changedUpdate(DocumentEvent e) {
@@ -128,7 +128,9 @@ public class ManagerPage extends JPanel {
 		});
 
 		var addStudentBtn = new JButton("Add student");
+		addStudentBtn.addActionListener(e -> createSubmitWindow());
 		var removeStudentBtn = new JButton("Remove student");
+		removeStudentBtn.addActionListener(e -> createSubmitWindow());
 		searchBtn.add(addStudentBtn, BorderLayout.WEST);
 		searchBtn.add(removeStudentBtn, BorderLayout.CENTER);
 		

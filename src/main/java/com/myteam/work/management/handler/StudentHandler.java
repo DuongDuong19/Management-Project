@@ -233,7 +233,7 @@ public class StudentHandler {
 								st.generation,
 								st.gpa
 							FROM Student st
-							WHERE st.id = ?;
+							WHERE st.urName ILIKE ?
 						""");
 				statement.setString(1, "%" + s + "%");
 			}
