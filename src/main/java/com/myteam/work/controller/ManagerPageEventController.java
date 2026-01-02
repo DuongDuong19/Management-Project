@@ -7,6 +7,7 @@ import com.myteam.work.gui.pages.ManagerPage;
 import com.myteam.work.management.data.DataTableParser;
 import com.myteam.work.management.data.Pair;
 import com.myteam.work.management.data.Semester;
+import com.myteam.work.management.data.Student;
 import com.myteam.work.management.data.Subject;
 import com.myteam.work.management.data.TeachClass;
 import com.myteam.work.management.data.User;
@@ -94,6 +95,17 @@ public class ManagerPageEventController {
 		for(User teacher : teachers) selector.addItem(teacher);
 	}
 
+	public void loadStudent() {
+		var students = this.sth.loadStudent("");
+		var selector = ((ManagerPage) ManagerPage.getPage()).getStudentSelector();
+		selector.removeAllItems();
+		selector.addItem(null);
+
+		if(students == null) return;
+
+		for(Student student : students) selector.addItem(student);
+	}
+
 	public void searchTeacher(String s) {
 		log.info("Search teacher: " + s);
 		var table = ((ManagerPage) ManagerPage.getPage()).getTeacherTable();
@@ -106,7 +118,7 @@ public class ManagerPageEventController {
 	}
 
 	public void searchStudent(String s) {
-		log.info("Search student: " + id);
+		log.info("Search student: " + s);
 		var table = ((ManagerPage) ManagerPage.getPage()).getStudentTable();
 		table.clearData();
 		var students = this.sth.loadStudent(s);

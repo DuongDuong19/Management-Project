@@ -1,6 +1,6 @@
 package com.myteam.work.management.data;
 
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -37,7 +37,7 @@ public class DataTableParser {
 
 		// Deduplicate users by id to avoid repeated rows when SQL joins return multiple
 		// result rows for the same teacher (one per subject/class).
-		var unique = new LinkedHashMap<Integer, User>();
+		var unique = new HashMap<Integer, User>();
 		for (User user : users) {
 			if (!unique.containsKey(user.getId())) unique.put(user.getId(), user);
 		}
@@ -48,9 +48,21 @@ public class DataTableParser {
 	}
 
 	public Object[][] parseStudentFetch(List<Student> students) {
+		// List<Object[]> data = new LinkedList<Object[]>();
+
+		// for(Student student : students) data.add(parseStudentWithInformation(student));
+
+		// return data.toArray(Object[][]::new);
 		List<Object[]> data = new LinkedList<Object[]>();
 
-		for(Student student : students) data.add(parseStudentWithInformation(student));
+		// Deduplicate users by id to avoid repeated rows when SQL joins return multiple
+		// result rows for the same teacher (one per subject/class).
+		var unique = new HashMap<Integer, Student>();
+		for (Student student : students) {
+			if (!unique.containsKey(student.getId())) unique.put(student.getId(), student);
+		}
+
+		for (Student student : unique.values()) data.add(parseStudentWithInformation(student));
 
 		return data.toArray(Object[][]::new);
 	}

@@ -112,8 +112,8 @@ public class ManagerPage extends JPanel {
 		this.studentSearchField.addFocusListener(new DefaultTextDisplayer(studentTableDefaultText));
 		this.studentSearchField.getDocument().addDocumentListener(new DocumentListener() {
 			private Timer updater = new Timer(125, e -> {
-				if(studentSearchField.getText().equals(studentTableDefaultText)) mpec.loadTeacherSubject();
-				else mpec.searchTeacher(studentSearchField.getText());
+				if(studentSearchField.getText().equals(studentTableDefaultText)) mpec.loadStudent();
+				else mpec.searchStudent(studentSearchField.getText());
 			});
 
 			public void changedUpdate(DocumentEvent e) {
@@ -133,7 +133,9 @@ public class ManagerPage extends JPanel {
 		});
 
 		var addStudentBtn = new JButton("Add student");
+		addStudentBtn.addActionListener(e -> createSubmitWindow());
 		var removeStudentBtn = new JButton("Remove student");
+		removeStudentBtn.addActionListener(e -> createSubmitWindow());
 		searchBtn.add(addStudentBtn, BorderLayout.WEST);
 		searchBtn.add(removeStudentBtn, BorderLayout.CENTER);
 		
@@ -194,29 +196,6 @@ public class ManagerPage extends JPanel {
 		subjectEditBtn.addActionListener(e -> new SubjectWindow(subject));
 		var subjectDeleteBtn = new JButton("Delete subject");
 		subjectDeleteBtn.addActionListener(e -> createSubmitWindow());
-		//===============================
-		/*subjectDeleteBtn.addActionListener(e -> {
-			var submitWin = new SubmitWindow(true);
-			submitWin.setSubmitAction(ev -> {
-				mpec.deleteSubject((String) subjectTable.getIDModel().getValueAt(subjectTable.getSelectedRow(), 0));
-				submitWin.dispose();
-			});
-			submitWin.setRevokeAction(ev -> submitWin.dispose());
-			submitWin.setCancelAction(ev -> submitWin.dispose());
-		});*/
-		/*
-		subjectDeleteBtn.addActionListener(e -> {
-			int sel = subjectTable.getSelectedRow();
-			if (sel == -1) return;
-
-			mpec.deleteSubject((String) subjectTable.getIDModel().getValueAt(sel, 0));
-
-			if(subjectSearchField.getText().equals(subjectTableDefaultText)) mpec.loadAllSubject();
-			else mpec.searchSubject(subjectSearchField.getText());
-		});*/
-
-
-
 		searchBtn.add(subjectCreateBtn, BorderLayout.WEST);
 		searchBtn.add(subjectEditBtn, BorderLayout.CENTER);
 		searchBtn.add(subjectDeleteBtn, BorderLayout.EAST);
