@@ -188,6 +188,7 @@ public class TeacherPage extends JPanel {
 			submitWin.dispose();
 		});
 		submitWin.setRevokeAction(e -> {
+			tpec.getRecorder().clear();
 			tpec.loadStudentInTeachClass((TeachClass) this.classSelector.getSelectedItem());
 			submitWin.dispose();
 		});
