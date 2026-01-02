@@ -1,5 +1,6 @@
 package com.myteam.work.management.data;
 
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -20,6 +21,7 @@ public class DataTableParser {
 	public DataTableParser() {
 		this.sh = new SubjectHandler();
 		this.sth = new StudentHandler();
+		this.th = new TeacherHandler();
 	}
 
 	public Object[][] parseSubjectFetchPrerequisites(List<Subject> subjects) {
@@ -33,7 +35,22 @@ public class DataTableParser {
 	public Object[][] parseTeacherFetch(List<User> users) {
 		List<Object[]> data = new LinkedList<Object[]>();
 
-		for(User user : users) data.add(parseTeacherWithInformation(user));
+		// Deduplicate users by id to avoid repeated rows when SQL joins return multiple
+		// result rows for the same teacher (one per subject/class).
+		var unique = new LinkedHashMap<Integer, User>();
+		for (User user : users) {
+			if (!unique.containsKey(user.getId())) unique.put(user.getId(), user);
+		}
+
+		for (User user : unique.values()) data.add(parseTeacherWithInformation(user));
+
+		return data.toArray(Object[][]::new);
+	}
+
+	public Object[][] parseStudentFetch(List<Student> students) {
+		List<Object[]> data = new LinkedList<Object[]>();
+
+		for(Student student : students) data.add(parseStudentWithInformation(student));
 
 		return data.toArray(Object[][]::new);
 	}
@@ -96,10 +113,10 @@ public class DataTableParser {
 
 	private Object[] parseTeacherWithInformation(User user) {
 		var id = user.getId();
-		var subjects = this.sh.getSubject(id);
+		var subjects = this.sh.loadTeacherSubject(id);
 		var teacherName = new String[subjects == null ? 0 : subjects.size()];
 
-		for(var i = 0; i < teacherName.length; i++) teacherName[i] = th.getTeacherName(subjects.get(i));
+		for(var i = 0; i < teacherName.length; i++) teacherName[i] = subjects.get(i).getSubjectName();
 
 		var teacherRow = new Object[9];
 		teacherRow[0] = id;
@@ -109,9 +126,28 @@ public class DataTableParser {
 		teacherRow[4] = user.getInfo().getBirth();
 		teacherRow[5] = user.getInfo().getPlaceOfBirth();
 		teacherRow[6] = user.getInfo().isSex() ? "Male" : "Female";
-		teacherRow[7] = subject.getSubjectName();
-		teacherRow[8] = tc.getClassName();
+		teacherRow[7] = teacherName;
+		teacherRow[8] = new String[0];
 			
 		return teacherRow;
+	}
+
+	private Object[] parseStudentWithInformation(Student student) {
+		var id = student.getId();
+		var students = this.sth.getStudentName(id);
+		var studentName = new String[students == null ? 0 : students.size()];
+
+		for(var i = 0; i < studentName.length; i++) studentName[i] = sth.getStudentUrName(students.get(i));
+
+		var studentRow = new Object[7];
+		studentRow[0] = id;
+		studentRow[1] = studentName;
+		studentRow[2] = student.getInfo().getBirth();
+		studentRow[3] = student.getInfo().getPlaceOfBirth();
+		studentRow[4] = student.getInfo().isSex() ? "Male" : "Female";
+		studentRow[5] = student.getGeneration();
+		studentRow[6] = student.getGpa();
+			
+		return studentRow;
 	}
 }

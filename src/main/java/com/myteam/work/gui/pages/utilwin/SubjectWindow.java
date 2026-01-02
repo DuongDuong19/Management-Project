@@ -17,7 +17,6 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.Timer;
@@ -32,7 +31,7 @@ import com.myteam.work.gui.pages.MSTable;
 import com.myteam.work.management.data.Subject;
 
 import lombok.Getter;
-/*
+
 public class SubjectWindow extends JFrame {
 	public static final int CREATE = 1;
 	public static final int EDIT = 2;
@@ -264,8 +263,8 @@ if(selectedRow == -1) return;
         return button;
     }
 }
-*/
 
+/*
 public class SubjectWindow extends JFrame {
 	public static final int CREATE = 1;
 	public static final int EDIT = 2;
@@ -573,4 +572,4 @@ public class SubjectWindow extends JFrame {
         
         return button;
     }
-}
+}*/
