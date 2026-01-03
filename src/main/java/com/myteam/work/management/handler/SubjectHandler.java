@@ -272,5 +272,42 @@ public class SubjectHandler {
             } catch (SQLException e) {
             log.error(e.toString());
         }
+    }
+
+    public int countExisted(String subjectName, short credits, boolean required) {
+        try {
+			var prepareStatement = SQLHandler.getConnection().prepareStatement("""
+					SELECT COUNT(*) 
+					FROM Subject
+					WHERE subjectName = ?
+					AND credits = ?
+					AND required = true; 
+					""");
+			prepareStatement.setString(1, subjectName);
+			prepareStatement.setShort(2, credits);
+			prepareStatement.setBoolean(3, required);
+			var countSubject = prepareStatement.executeQuery();
+
+			if(countSubject.next())  return countSubject.getInt(1);
+		} catch (SQLException e) {
+			log.error(e.toString());
+		}
+
+		return -1;
+    }
+
+	public Object searchLatestSubjectId(String subjectName, short credits, boolean required) {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Unimplemented method 'searchLatestSubjectId'");
+	}
+
+    public void addPrerequisite(Object createdSubjectId, Integer id) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'addPrerequisite'");
+    }
+
+    public void removePrerequisites(int id, Integer id2) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'removePrerequisites'");
     }	
 }
