@@ -174,7 +174,8 @@ public class SubjectWindow extends JFrame {
 			subjectName.setText(this.target.getSubjectName());
 			credits.setText("" + this.target.getCredits());
 			required.setSelected(this.target.isRequired());
-			this.swc.loadPrerequisites(this.target);
+			//this.swc.loadPrerequisites(this.target, null);
+			this.swc.loadPrerequisites(this.target, this);
 		}
 
 		this.swc.loadAllSubject(this);

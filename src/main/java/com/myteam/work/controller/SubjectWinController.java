@@ -49,11 +49,20 @@ public class SubjectWinController {
 
 	public void loadPrerequisites(Subject s, SubjectWindow sw) {
 		var existedPrerequisiteTable = sw.getChoosenPrerequisitesTable();
-		var prerequisites = this.sh.getPrerequisites(s.getId());
+		var prerequisites = this.sh.getPrerequistes(s.getId());
 
-		if(prerequistes == null) return;
+		if(prerequisites == null) return;
 
-		table.addData(this.parser.parsePrerequisite(prerequisites));
+		//existedPrerequisiteTable.addData(this.parser.parseSubjectFetchPrerequisites(prerequisites));
+		var data = new Object[prerequisites.size()][2];
+
+		for(var i = 0; i < prerequisites.size(); i++) {
+			var id = prerequisites.get(i);
+			data[i][0] = id;
+			data[i][1] = this.sh.getName(id);
+		}
+
+		existedPrerequisiteTable.addData(data);
 	}
 
 

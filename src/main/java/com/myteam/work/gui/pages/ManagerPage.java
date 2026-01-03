@@ -21,9 +21,12 @@ import javax.swing.event.DocumentListener;
 
 import com.myteam.work.Configuration;
 import com.myteam.work.controller.ManagerPageEventController;
+import com.myteam.work.gui.pages.utilwin.ClassWindow;
+import com.myteam.work.gui.pages.utilwin.SemesterWindow;
 import com.myteam.work.gui.pages.utilwin.StudentWindow;
 import com.myteam.work.gui.pages.utilwin.SubjectWindow;
 import com.myteam.work.gui.pages.utilwin.SubmitWindow;
+import com.myteam.work.gui.pages.utilwin.TeacherWindow;
 import com.myteam.work.management.data.Semester;
 import com.myteam.work.management.data.Student;
 import com.myteam.work.management.data.Subject;
@@ -158,167 +161,6 @@ public class ManagerPage extends JPanel {
 		return contentPanel;
 	}
 
-	/*
-	 * private JPanel studentManagementPage() {
-	 * var contentPanel = new JPanel(new BorderLayout(15, 15));
-	 * contentPanel.add(new JLabel("student"));
-	 * contentPanel.setBorder(new EmptyBorder(20, 25, 20, 25));
-	 * 
-	 * var searchPanel = new JPanel(new BorderLayout(15, 0));
-	 * var selectorPanel = new JPanel(new BorderLayout(12, 0));
-	 * var searchBtn = new JPanel(new BorderLayout());
-	 * searchPanel.setOpaque(false);
-	 * 
-	 * // Panel chứa 2 search fields
-	 * var fieldsPanel = new JPanel(new GridLayout(2, 1, 0, 8));
-	 * fieldsPanel.setOpaque(false);
-	 * 
-	 * // Search field cho ID và Name
-	 * this.studentSearchField = new JTextField(studentTableDefaultText);
-	 * this.studentSearchField.setBorder(BorderFactory.createCompoundBorder(
-	 * BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1),
-	 * BorderFactory.createEmptyBorder(5, 10, 5, 10)));
-	 * this.studentSearchField.setForeground(config.getFieldColor());
-	 * this.studentSearchField.addFocusListener(new
-	 * DefaultTextDisplayer(studentTableDefaultText));
-	 * 
-	 * // Panel cho Place of Birth filter
-	 * var placePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
-	 * placePanel.setOpaque(false);
-	 * placePanel.add(new JLabel("Place of Birth:"));
-	 * 
-	 * var placeField = new JTextField("Filter by place...");
-	 * placeField.setPreferredSize(new Dimension(200, 30));
-	 * placeField.setBorder(BorderFactory.createCompoundBorder(
-	 * BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1),
-	 * BorderFactory.createEmptyBorder(5, 10, 5, 10)));
-	 * placeField.setForeground(config.getFieldColor());
-	 * placeField.addFocusListener(new DefaultTextDisplayer("Filter by place..."));
-	 * placePanel.add(placeField);
-	 * 
-	 * var clearBtn = new JButton("Clear");
-	 * clearBtn.addActionListener(e -> {
-	 * this.studentSearchField.setText(studentTableDefaultText);
-	 * placeField.setText("Filter by place...");
-	 * mpec.searchStudentPlace();
-	 * });
-	 * placePanel.add(clearBtn);
-	 * 
-	 * fieldsPanel.add(this.studentSearchField);
-	 * fieldsPanel.add(placePanel);
-	 * 
-	 * this.studentSearchField.getDocument().addDocumentListener(new
-	 * DocumentListener() {
-	 * private Timer updater = new Timer(125, e -> {
-	 * String searchText = studentSearchField.getText();
-	 * String placeText = placeField.getText();
-	 * 
-	 * boolean isSearchEmpty = searchText.equals(studentTableDefaultText) ||
-	 * searchText.trim().isEmpty();
-	 * boolean isPlaceEmpty = placeText.equals("Filter by place...") ||
-	 * placeText.trim().isEmpty();
-	 * 
-	 * if (isSearchEmpty && isPlaceEmpty) {
-	 * mpec.loadStudent();
-	 * } else {
-	 * StringBuilder query = new StringBuilder();
-	 * if (!isSearchEmpty)
-	 * query.append(searchText.trim());
-	 * if (!isPlaceEmpty) {
-	 * if (query.length() > 0)
-	 * query.append(" ");
-	 * query.append("place:").append(placeText.trim());
-	 * }
-	 * mpec.searchStudent(query.toString());
-	 * }
-	 * });
-	 * 
-	 * public void changedUpdate(DocumentEvent e) {
-	 * updater.setRepeats(false);
-	 * updater.restart();
-	 * }
-	 * 
-	 * public void insertUpdate(DocumentEvent e) {
-	 * updater.setRepeats(false);
-	 * updater.restart();
-	 * }
-	 * 
-	 * public void removeUpdate(DocumentEvent e) {
-	 * updater.setRepeats(false);
-	 * updater.restart();
-	 * }
-	 * });
-	 * 
-	 * placeField.getDocument().addDocumentListener(new DocumentListener() {
-	 * private Timer updater = new Timer(125, e -> {
-	 * String searchText = studentSearchField.getText();
-	 * String placeText = placeField.getText();
-	 * 
-	 * boolean isSearchEmpty = searchText.equals(studentTableDefaultText) ||
-	 * searchText.trim().isEmpty();
-	 * boolean isPlaceEmpty = placeText.equals("Filter by place...") ||
-	 * placeText.trim().isEmpty();
-	 * 
-	 * if (isSearchEmpty && isPlaceEmpty) {
-	 * mpec.loadStudent();
-	 * } else {
-	 * StringBuilder query = new StringBuilder();
-	 * if (!isSearchEmpty)
-	 * query.append(searchText.trim());
-	 * if (!isPlaceEmpty) {
-	 * if (query.length() > 0)
-	 * query.append(" ");
-	 * query.append("place:").append(placeText.trim());
-	 * }
-	 * mpec.searchStudent(query.toString());
-	 * }
-	 * });
-	 * 
-	 * public void changedUpdate(DocumentEvent e) {
-	 * updater.setRepeats(false);
-	 * updater.restart();
-	 * }
-	 * 
-	 * public void insertUpdate(DocumentEvent e) {
-	 * updater.setRepeats(false);
-	 * updater.restart();
-	 * }
-	 * 
-	 * public void removeUpdate(DocumentEvent e) {
-	 * updater.setRepeats(false);
-	 * updater.restart();
-	 * }
-	 * });
-	 * 
-	 * var addStudentBtn = new JButton("Add student");
-	 * addStudentBtn.addActionListener(e -> new StudentWindow(null));
-	 * var removeStudentBtn = new JButton("Remove student");
-	 * removeStudentBtn.addActionListener(e -> new StudentWindow(null));
-	 * searchBtn.add(addStudentBtn, BorderLayout.WEST);
-	 * searchBtn.add(removeStudentBtn, BorderLayout.CENTER);
-	 * 
-	 * selectorPanel.add(fieldsPanel, BorderLayout.CENTER);
-	 * 
-	 * searchPanel.add(selectorPanel, BorderLayout.CENTER);
-	 * searchPanel.add(searchBtn, BorderLayout.EAST);
-	 * 
-	 * this.studentTable = new MSTable(
-	 * new String[] { "ID", "Student Name", "Birth", "Place of birth", "Sex",
-	 * "Generation", "Gpa" },
-	 * List.<Class<?>>of(Integer.class, String.class, String.class, String.class,
-	 * String.class, Short.class,
-	 * Float.class),
-	 * Collections.EMPTY_LIST);
-	 * 
-	 * contentPanel.add(searchPanel, BorderLayout.NORTH);
-	 * contentPanel.add(this.studentTable.getDisplayer(), BorderLayout.CENTER);
-	 * 
-	 * this.studentTable.setReorderingColumn(false);
-	 * this.studentTable.setResizingColumn(false);
-	 * return contentPanel;
-	 * }
-	 */
-
 	private JPanel subjectManagementPage() {
 		var contentPanel = new JPanel(new BorderLayout(15, 15));
 		contentPanel.setBorder(new EmptyBorder(20, 25, 20, 25));
@@ -440,9 +282,9 @@ public class ManagerPage extends JPanel {
 		});
 
 		var addTeacherBtn = new JButton("Add teacher");
-		// addTeacherBtn.addActionListener(e -> );
+		addTeacherBtn.addActionListener(e -> new TeacherWindow());
 		var removeTeacherBtn = new JButton("Remove teacher");
-		// removeTeacherBtn.addActionListener(e -> );
+		removeTeacherBtn.addActionListener(e -> new TeacherWindow());
 		searchBtn.add(addTeacherBtn, BorderLayout.WEST);
 		searchBtn.add(removeTeacherBtn, BorderLayout.CENTER);
 
@@ -480,8 +322,11 @@ public class ManagerPage extends JPanel {
 		this.classSemesterSelector = new JComboBox<>();
 		var classSearchField = new JTextField();
 		var classCreateBtn = new JButton("Create class");
+		classCreateBtn.addActionListener(e -> new ClassWindow());
 		var classEditBtn = new JButton("Edit class");
+		classEditBtn.addActionListener(e -> new ClassWindow());
 		var classDeleteBtn = new JButton("Delete class");
+		classDeleteBtn.addActionListener(e -> new ClassWindow());
 		classSearchBtn.add(classCreateBtn, BorderLayout.WEST);
 		classSearchBtn.add(classEditBtn, BorderLayout.CENTER);
 		classSearchBtn.add(classDeleteBtn, BorderLayout.EAST);
@@ -498,8 +343,11 @@ public class ManagerPage extends JPanel {
 		var semesterSearchBtn = new JPanel(new BorderLayout());
 		var semesterSearchField = new JTextField();
 		var semesterCreateBtn = new JButton("Create semester");
+		semesterCreateBtn.addActionListener(e -> new SemesterWindow());
 		var semesterEditBtn = new JButton("Edit semester");
+		semesterEditBtn.addActionListener(e -> new SemesterWindow());
 		var semesterDeleteBtn = new JButton("Delete semester");
+		semesterDeleteBtn.addActionListener(e -> new SemesterWindow());
 		semesterSearchBtn.add(semesterCreateBtn, BorderLayout.WEST);
 		semesterSearchBtn.add(semesterEditBtn, BorderLayout.CENTER);
 		semesterSearchBtn.add(semesterDeleteBtn, BorderLayout.EAST);
