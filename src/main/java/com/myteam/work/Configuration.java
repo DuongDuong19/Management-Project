@@ -3,11 +3,11 @@ package com.myteam.work;
 import java.awt.Color;
 import java.awt.Cursor;
 
+import com.myteam.work.gui.pages.ComboBoxNullNameRenderer;
+
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
-
-import com.myteam.work.gui.pages.ComboBoxNullNameRenderer;
 
 public class Configuration {
 	private static Configuration config;
@@ -33,7 +33,7 @@ public class Configuration {
 	static {
 		sqlURL = "jdbc:postgresql://localhost:5432/doanoop";
 		sqlUsername = "postgres";
-		sqlPassword = "";
+		sqlPassword = "12345678";
 		handCursor = new Cursor(Cursor.HAND_CURSOR);
 		fieldColor = new Color(150, 150, 150);
 		comboBoxRenderer = new ComboBoxNullNameRenderer();

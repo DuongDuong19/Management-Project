@@ -253,6 +253,19 @@ public class ManagerPageEventController {
 	public void RemoveStudent() {
 
 	}
+
+    public void createSemester(String semester, String year) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public void createSemester(String semester, String year) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public void createSemester(String semester, String year) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'createSemester'");
+    }
 	
 
 }
