@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import lombok.extern.slf4j.Slf4j;
 
 import com.myteam.work.management.data.Subject;
+import com.myteam.work.management.data.Pair;
 
 @Slf4j
 public class SubjectHandler {
@@ -43,7 +44,7 @@ public class SubjectHandler {
 		return null;
 	}
 
-	public List<Integer> getPrerequistes(int id) {
+	public List<Integer> getPrerequisites(int id) {
 		try {
 			List<Integer> result = new LinkedList<Integer>();
 			var prepareStatement = this.connection.prepareStatement("""
@@ -271,6 +272,5 @@ public class SubjectHandler {
             } catch (SQLException e) {
             log.error(e.toString());
         }
-
-    }
+    }	
 }

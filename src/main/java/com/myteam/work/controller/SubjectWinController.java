@@ -51,14 +51,14 @@ public class SubjectWinController {
 		var existedPrerequisiteTable = sw.getChoosenPrerequisitesTable();
 		var prerequisites = this.sh.getPrerequisites(s.getId());
 
-		if(prerequistes == null) return;
+		if(prerequisites == null) return;
 
-		table.addData(this.parser.parsePrerequisite(prerequisites));
+		existedPrerequisiteTable.addData(this.parser.parsePrerequisiteFetchName(prerequisites));
 	}
 
 
 	public void createSubject(String subjectName, String credits, boolean required, List<Integer> prerequisites) {
-
+		
 	}
 
 	public void updateSubject(Subject target, String subjectName, String credits, boolean required, List<Integer> prerequistes) {

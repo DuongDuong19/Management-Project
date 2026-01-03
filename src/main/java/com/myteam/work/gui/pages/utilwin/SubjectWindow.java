@@ -174,7 +174,7 @@ public class SubjectWindow extends JFrame {
 			subjectName.setText(this.target.getSubjectName());
 			credits.setText("" + this.target.getCredits());
 			required.setSelected(this.target.isRequired());
-			this.swc.loadPrerequisites(this.target);
+			this.swc.loadPrerequisites(this.target, this);
 		}
 
 		this.swc.loadAllSubject(this);
@@ -218,14 +218,18 @@ public class SubjectWindow extends JFrame {
 			choosenPrerequisitesTable.removeRow(selectedRow);
 			swc.loadAllSubject(SubjectWindow.this);
 		});
-		submitBtn.addActionListener(e -> {
+		submitBtn.addActionListener(_ -> {
 			var prerequisitesModel = choosenPrerequisitesTable.getIDModel();
 			List<Integer> prerequisites = new LinkedList<>();
 
 			for(var i = 0; i < prerequisitesModel.getRowCount(); i++) prerequisites.add((Integer) prerequisitesModel.getValueAt(i, 0));
 
-			if(target == null) swc.createSubject(subjectName.getText(), credits.getText(), required.isValidateRoot(), prerequisites);
-			else swc.updateSubject(target, subjectName.getText(), credits.getText(), required.isValidateRoot(), prerequisites);
+			var submit = new SubmitWindow(false);
+			submit.setCancelAction(_ -> submit.dispose());
+			submit.setSubmitAction(_ -> {
+				if(target == null) swc.createSubject(subjectName.getText(), credits.getText(), required.isValidateRoot(), prerequisites);
+				else swc.updateSubject(target, subjectName.getText(), credits.getText(), required.isValidateRoot(), prerequisites);
+			});
 		});
 
         this.setVisible(true);
