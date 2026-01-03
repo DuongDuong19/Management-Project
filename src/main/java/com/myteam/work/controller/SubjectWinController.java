@@ -49,7 +49,7 @@ public class SubjectWinController {
 
 	public void loadPrerequisites(Subject s, SubjectWindow sw) {
 		var existedPrerequisiteTable = sw.getChoosenPrerequisitesTable();
-		var prerequisites = this.sh.getPrerequistes(s.getId());
+		var prerequisites = this.sh.getPrerequisites(s.getId());
 
 		if(prerequisites == null) return;
 
@@ -63,11 +63,11 @@ public class SubjectWinController {
 		}
 
 		existedPrerequisiteTable.addData(data);
-		existedPrerequisiteTable.addData(this.parser.parsePrerequisiteFetchName(prerequisites));
+		//existedPrerequisiteTable.addData(this.parser.parsePrerequisiteFetchName(prerequisites));
 	}
 
 
-	public void createSubject(String subjectName, String credits, boolean required, List<Integer> prerequisites) {
+	public void createSubject(String subjectName, short credits, boolean required, List<Integer> prerequisites) {
 		var beforeExecute = this.sh.countExisted(subjectName, credits, required);
 		this.sh.createSubject(credits, required, subjectName);
 		
@@ -82,7 +82,7 @@ public class SubjectWinController {
 		var currentPrerequisites = this.sh.getPrerequisites(target.getId());
 
 		for(var id : prerequisites) if(currentPrerequisites.contains(id)) {
-			prerequisites.remove(prerequisite.indexOf(id));
+			prerequisites.remove(prerequisites.indexOf(id));
 			currentPrerequisites.remove(currentPrerequisites.indexOf(id));
 		}
 
