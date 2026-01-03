@@ -41,4 +41,8 @@ public class Student {
 
 		this.gpa = gpa;
 	}
+
+	public String toString() {
+		return this.info.getName();
+	}
 }

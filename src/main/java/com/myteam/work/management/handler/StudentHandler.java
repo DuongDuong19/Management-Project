@@ -251,14 +251,7 @@ public class StudentHandler {
 				statement.setInt(1, Integer.parseInt(s));
 			} catch(NumberFormatException _) {
 				statement = this.connection.prepareStatement("""
-							SELECT
-								st.id,
-								st.urName,
-								st.birth,
-								st.placeOfBirth,
-								st.sex,
-								st.generation,
-								st.gpa
+							SELECT *
 							FROM Student st
 							WHERE st.urName ILIKE ?
 						""");
@@ -272,7 +265,7 @@ public class StudentHandler {
 					studentInformation.getInt("id"),
 					studentInformation.getShort("generation"),
 					studentInformation.getFloat("gpa"),
-					studentInformation.getString("urName"),
+					studentInformation.getString("urname"),
 					studentInformation.getString("birth"),
 					studentInformation.getString("placeOfBirth"),
 					studentInformation.getBoolean("sex")

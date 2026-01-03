@@ -132,7 +132,7 @@ public class ManagerPageEventController {
 
 		if(students == null) return;
 
-		table.addData(this.parser.parseStudentFetch(students));
+		table.addData(this.parser.parseStudent(students));
 	}
 
 	public void loadClassSemester() {
