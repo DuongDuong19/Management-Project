@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -260,5 +261,34 @@ public class StudentHandler {
 		return null;
 	}
 
+	public void addStudent(Student student, String birth) {
+		try {
+			PreparedStatement statement = this.connection.prepareStatement("""
+				INSERT INTO Student (urName, birth, placeOfBirth, sex, generation, gpa)
+				VALUES (?, ?, ?, ?, ?, ?);""");
+			
+			statement.setString(1, student.getInfo().getName());
+			statement.setString(2, birth);
+			statement.setString(3, student.getInfo().getPlaceOfBirth());
+			statement.setBoolean(4, student.getInfo().isSex());
+			statement.setShort(5, student.getGeneration());
+			statement.setFloat(6, student.getGpa());
 
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			log.error(e.toString());
+		}
+	}
+
+	public void removeStudent(Student student) {
+		try {
+			PreparedStatement statement = this.connection.prepareStatement("DELETE FROM Student WHERE id = ?;");
+
+			statement.setInt(1, student.getId());
+
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			log.error(e.toString());
+		}
+	}
 }
