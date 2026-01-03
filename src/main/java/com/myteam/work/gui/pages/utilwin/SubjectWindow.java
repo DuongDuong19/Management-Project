@@ -229,6 +229,8 @@ public class SubjectWindow extends JFrame {
 			submit.setSubmitAction(_ -> {
 				if(target == null) swc.createSubject(subjectName.getText(), credits.getText(), required.isValidateRoot(), prerequisites);
 				else swc.updateSubject(target, subjectName.getText(), credits.getText(), required.isValidateRoot(), prerequisites);
+
+				submit.dispose();
 			});
 		});
 

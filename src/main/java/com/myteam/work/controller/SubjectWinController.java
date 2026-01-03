@@ -58,10 +58,25 @@ public class SubjectWinController {
 
 
 	public void createSubject(String subjectName, String credits, boolean required, List<Integer> prerequisites) {
+		var beforeExecute = this.sh.countExisted(subjectName, credits, required);
+		this.sh.createSubject(credits, required, subjectName);
 		
+		if(this.sh.countExisted(subjectName, credits, required) > beforeExecute) {
+			var createdSubjectId = this.sh.searchLatestSubjectId(subjectName, credits, required);
+			for(var id : prerequisites) this.sh.addPrerequisite(createdSubjectId, id);
+		}
 	}
 
-	public void updateSubject(Subject target, String subjectName, String credits, boolean required, List<Integer> prerequistes) {
+	public void updateSubject(Subject target, String subjectName, String credits, boolean required, List<Integer> prerequisites) {
+		this.sh.editSubject(target.getId(), Short.parseShort(credits), required, subjectName);
+		var currentPrerequisites = this.sh.getPrerequisites(target.getId());
 
+		for(var id : prerequisites) if(currentPrerequisites.contains(id)) {
+			prerequisites.remove(prerequisite.indexOf(id));
+			currentPrerequisites.remove(currentPrerequisites.indexOf(id));
+		}
+
+		for(var id : prerequisites) this.sh.addPrerequisite(target.getId(), id);
+		for(var id : currentPrerequisites) this.sh.removePrerequisites(target.getId(), id);
 	}
 }
