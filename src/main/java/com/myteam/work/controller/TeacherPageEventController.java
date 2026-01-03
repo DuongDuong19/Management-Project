@@ -130,14 +130,13 @@ public class TeacherPageEventController {
 		while(iterator.hasNext()) {
 			var entry = (Map.Entry) iterator.next();
 			var key = (Pair<Integer, Integer>) entry.getKey();
-			var value = entry.getValue();
 
 			if(key.second() == 3) {
-
+				this.tch.submit1((Float) entry.getValue(), key.first(), tc.getId());
 			} else if(key.second() == 4) {
-				
+				this.tch.submit2((Float) entry.getValue(), key.first(), tc.getId());
 			} else if(key.second() == 5) {
-				
+				this.tch.endtest((Float) entry.getValue(), key.first(), tc.getId());
 			} else {
 				log.error("System has a breach");
 				System.exit(0);

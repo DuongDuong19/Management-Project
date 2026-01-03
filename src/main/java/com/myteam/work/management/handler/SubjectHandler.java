@@ -210,69 +210,7 @@ public class SubjectHandler {
 		} catch (SQLException e) {
 			log.error(e.toString());
 		}
-	}
-
-    public void submit1(double test1) {
-        try {
-
-            var submitInformation = this.connection.prepareStatement("""
-                update studentlistteachclass
-                set test1 = ?
-                where student = ? and classes = ?
-            """);
-
-            submitInformation.setDouble(1, test1);
-            submitInformation.setInt(2, student);
-            submitInformation.setInt(3, classes);
-
-            int result = submitInformation.executeUpdate();
-
-            } catch (SQLException e) {
-            log.error(e.toString());
-        }
-
-    }
-
-	public void submit2(double test2) {
-        try {
-
-            var submitInformation = this.connection.prepareStatement("""
-                update studentlistteachclass
-                set test2 = ?
-                where student = ? and classes = ?
-            """);
-
-            submitInformation.setDouble(1, test2);
-            submitInformation.setInt(2, student);
-            submitInformation.setInt(3, classes);
-
-            int result = submitInformation.executeUpdate();
-
-            } catch (SQLException e) {
-            log.error(e.toString());
-        }
-
-    }
-
-	public void endtest(double endtest) {
-        try {
-
-            var submitInformation = this.connection.prepareStatement("""
-                update studentlistteachclass
-                set test1 = ?
-                where student = ? and classes = ?
-            """);
-
-            submitInformation.setDouble(1, endtest);
-            submitInformation.setInt(2, student);
-            submitInformation.setInt(3, classes);
-
-            int result = submitInformation.executeUpdate();
-
-            } catch (SQLException e) {
-            log.error(e.toString());
-        }
-    }
+	} 
 
     public int countExisted(String subjectName, short credits, boolean required) {
         try {

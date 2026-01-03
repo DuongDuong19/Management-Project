@@ -108,4 +108,64 @@ public class TeachClassHandler {
 			log.error(e.toString());
 		}
 	}
+
+     public void submit1(float test1, int student, int classes) {
+        try {
+
+            var submitInformation = this.connection.prepareStatement("""
+                update studentlistteachclass
+                set test1 = ?
+                where student = ? and classes = ?
+            """);
+
+            submitInformation.setFloat(1, test1);
+            submitInformation.setInt(2, student);
+            submitInformation.setInt(3, classes);
+
+            int result = submitInformation.executeUpdate();
+
+            } catch (SQLException e) {
+            log.error(e.toString());
+        }
+    }
+
+	public void submit2(float test2, int student, int classes) {
+        try {
+
+            var submitInformation = this.connection.prepareStatement("""
+                update studentlistteachclass
+                set test2 = ?
+                where student = ? and classes = ?
+            """);
+
+            submitInformation.setFloat(1, test2);
+            submitInformation.setInt(2, student);
+            submitInformation.setInt(3, classes);
+
+            int result = submitInformation.executeUpdate();
+
+            } catch (SQLException e) {
+            log.error(e.toString());
+        }
+    }
+
+	public void endtest(float endtest, int student, int classes) {
+        try {
+
+            var submitInformation = this.connection.prepareStatement("""
+                update studentlistteachclass
+                set endtest = ?
+                where student = ? and classes = ?
+            """);
+
+            submitInformation.setFloat(1, endtest);
+            submitInformation.setInt(2, student);
+            submitInformation.setInt(3, classes);
+
+            int result = submitInformation.executeUpdate();
+
+            } catch (SQLException e) {
+            log.error(e.toString());
+        }
+    }
 }
