@@ -253,7 +253,7 @@ public class StudentHandler {
 				statement = this.connection.prepareStatement("""
 							SELECT
 								st.id,
-								st.urName AS student_name,
+								st.urName,
 								st.birth,
 								st.placeOfBirth,
 								st.sex,
@@ -272,7 +272,7 @@ public class StudentHandler {
 					studentInformation.getInt("id"),
 					studentInformation.getShort("generation"),
 					studentInformation.getFloat("gpa"),
-					studentInformation.getString("student_name"),
+					studentInformation.getString("urName"),
 					studentInformation.getString("birth"),
 					studentInformation.getString("placeOfBirth"),
 					studentInformation.getBoolean("sex")
@@ -317,4 +317,38 @@ public class StudentHandler {
 			log.error(e.toString());
 		}
 	}
+/*
+	public List<Student> filterStudentByPlace(String place) {
+		try {
+			List<Student> result = new LinkedList<>();
+			var prepareStatement = SQLHandler.getConnection().prepareStatement("""
+                SELECT
+					st.id,
+					st.urName,
+					st.birth,
+					st.placeOfBirth,
+					st.sex,
+					st.generation,
+					st.gpa
+				FROM Student st
+				WHERE st.placeOfBirth ILIKE ?;
+			""");
+            prepareStatement.setString(1, place);
+            var studentPlace = prepareStatement.executeQuery();
+
+			while(studentPlace.next())
+				result.add(new Student(
+					studentPlace.getInt("id"),
+					studentPlace.getShort("generation"),
+					studentPlace.getFloat("gpa"),
+					studentPlace.getString("urName"),
+					studentPlace.getString("birth"),
+					studentPlace.getString("placeOfBirth"),
+					studentPlace.getBoolean("sex")));
+		} catch (SQLException e) {
+			log.error(e.toString());
+		}
+
+		return null;
+	}*/
 }

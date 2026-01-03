@@ -1,5 +1,6 @@
 package com.myteam.work.controller;
 
+import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -22,12 +23,12 @@ public class StudentWinController {
         throw new UnsupportedOperationException("Unimplemented method 'deleteStudent'");
     }
 
-    public void createStudent(String id, String name, String dateOfBirth, String studentClass) {
+    public void createStudent(int id, String name, LocalDate dateOfBirth, Class<? extends Student> studentClass) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'createStudent'");
     }
 
-    public void updateStudent(Student target, String id, String name, String dateOfBirth, String studentClass) {
+    public void updateStudent(Student target, int id, String name, LocalDate dateOfBirth, Class<? extends Student> studentClass) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'updateStudent'");
     }

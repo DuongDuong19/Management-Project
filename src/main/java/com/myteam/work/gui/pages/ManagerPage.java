@@ -35,7 +35,7 @@ import lombok.Getter;
 public class ManagerPage extends JPanel {
 	private static final String subjectTableDefaultText = "Search by subject name or subject id";
 	private static final String teacherTableDefaultText = "Search by teacher name or teacher id";
-	private static final String studentTableDefaultText = "Search by student name or student id";
+	private static final String studentTableDefaultText = "Search by student name or student id or student's place";
 	private static final Configuration config = Configuration.getConfiguration();
 	private static ManagerPageEventController mpec;
 	private static ManagerPage mp;
@@ -86,7 +86,8 @@ public class ManagerPage extends JPanel {
 	}
 
 	public static JPanel getPage() {
-		if(mp == null) mp = new ManagerPage();
+		if (mp == null)
+			mp = new ManagerPage();
 
 		return mp;
 	}
@@ -103,15 +104,17 @@ public class ManagerPage extends JPanel {
 		var selectorPanel = new JPanel(new BorderLayout(12, 0));
 		var searchBtn = new JPanel(new BorderLayout());
 		searchPanel.setOpaque(false);
-		
+
 		this.studentSearchField = new JTextField(studentTableDefaultText);
 		this.studentSearchField.setBorder(null);
 		this.studentSearchField.setForeground(config.getFieldColor());
 		this.studentSearchField.addFocusListener(new DefaultTextDisplayer(studentTableDefaultText));
 		this.studentSearchField.getDocument().addDocumentListener(new DocumentListener() {
 			private Timer updater = new Timer(125, e -> {
-				if(studentSearchField.getText().equals(studentTableDefaultText)) mpec.loadStudent();
-				else mpec.searchStudent(studentSearchField.getText());
+				if (studentSearchField.getText().equals(studentTableDefaultText))
+					mpec.loadStudent();
+				else
+					mpec.searchStudent(studentSearchField.getText());
 			});
 
 			public void changedUpdate(DocumentEvent e) {
@@ -136,14 +139,17 @@ public class ManagerPage extends JPanel {
 		removeStudentBtn.addActionListener(e -> new StudentWindow(null));
 		searchBtn.add(addStudentBtn, BorderLayout.WEST);
 		searchBtn.add(removeStudentBtn, BorderLayout.CENTER);
-		
+
 		selectorPanel.add(this.studentSearchField, BorderLayout.CENTER);
 
 		searchPanel.add(selectorPanel, BorderLayout.CENTER);
 		searchPanel.add(searchBtn, BorderLayout.EAST);
 
-		this.studentTable = new MSTable(new String[]{"ID", "Student Name", "Birth", "Place of birth", "Sex", "Generation", "Gpa"},
-				List.<Class<?>>of(Integer.class, String.class, String.class, String.class, String.class, Short.class, Float.class), Collections.EMPTY_LIST);
+		this.studentTable = new MSTable(new String[] { "ID", "Student Name", "Birth",
+				"Place of birth", "Sex", "Generation", "Gpa" },
+				List.<Class<?>>of(Integer.class, String.class, String.class, String.class,
+						String.class, Short.class, Float.class),
+				Collections.EMPTY_LIST);
 
 		contentPanel.add(searchPanel, BorderLayout.NORTH);
 		contentPanel.add(this.studentTable.getDisplayer(), BorderLayout.CENTER);
@@ -152,6 +158,167 @@ public class ManagerPage extends JPanel {
 		this.studentTable.setResizingColumn(false);
 		return contentPanel;
 	}
+
+	/*
+	 * private JPanel studentManagementPage() {
+	 * var contentPanel = new JPanel(new BorderLayout(15, 15));
+	 * contentPanel.add(new JLabel("student"));
+	 * contentPanel.setBorder(new EmptyBorder(20, 25, 20, 25));
+	 * 
+	 * var searchPanel = new JPanel(new BorderLayout(15, 0));
+	 * var selectorPanel = new JPanel(new BorderLayout(12, 0));
+	 * var searchBtn = new JPanel(new BorderLayout());
+	 * searchPanel.setOpaque(false);
+	 * 
+	 * // Panel chứa 2 search fields
+	 * var fieldsPanel = new JPanel(new GridLayout(2, 1, 0, 8));
+	 * fieldsPanel.setOpaque(false);
+	 * 
+	 * // Search field cho ID và Name
+	 * this.studentSearchField = new JTextField(studentTableDefaultText);
+	 * this.studentSearchField.setBorder(BorderFactory.createCompoundBorder(
+	 * BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1),
+	 * BorderFactory.createEmptyBorder(5, 10, 5, 10)));
+	 * this.studentSearchField.setForeground(config.getFieldColor());
+	 * this.studentSearchField.addFocusListener(new
+	 * DefaultTextDisplayer(studentTableDefaultText));
+	 * 
+	 * // Panel cho Place of Birth filter
+	 * var placePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
+	 * placePanel.setOpaque(false);
+	 * placePanel.add(new JLabel("Place of Birth:"));
+	 * 
+	 * var placeField = new JTextField("Filter by place...");
+	 * placeField.setPreferredSize(new Dimension(200, 30));
+	 * placeField.setBorder(BorderFactory.createCompoundBorder(
+	 * BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1),
+	 * BorderFactory.createEmptyBorder(5, 10, 5, 10)));
+	 * placeField.setForeground(config.getFieldColor());
+	 * placeField.addFocusListener(new DefaultTextDisplayer("Filter by place..."));
+	 * placePanel.add(placeField);
+	 * 
+	 * var clearBtn = new JButton("Clear");
+	 * clearBtn.addActionListener(e -> {
+	 * this.studentSearchField.setText(studentTableDefaultText);
+	 * placeField.setText("Filter by place...");
+	 * mpec.searchStudentPlace();
+	 * });
+	 * placePanel.add(clearBtn);
+	 * 
+	 * fieldsPanel.add(this.studentSearchField);
+	 * fieldsPanel.add(placePanel);
+	 * 
+	 * this.studentSearchField.getDocument().addDocumentListener(new
+	 * DocumentListener() {
+	 * private Timer updater = new Timer(125, e -> {
+	 * String searchText = studentSearchField.getText();
+	 * String placeText = placeField.getText();
+	 * 
+	 * boolean isSearchEmpty = searchText.equals(studentTableDefaultText) ||
+	 * searchText.trim().isEmpty();
+	 * boolean isPlaceEmpty = placeText.equals("Filter by place...") ||
+	 * placeText.trim().isEmpty();
+	 * 
+	 * if (isSearchEmpty && isPlaceEmpty) {
+	 * mpec.loadStudent();
+	 * } else {
+	 * StringBuilder query = new StringBuilder();
+	 * if (!isSearchEmpty)
+	 * query.append(searchText.trim());
+	 * if (!isPlaceEmpty) {
+	 * if (query.length() > 0)
+	 * query.append(" ");
+	 * query.append("place:").append(placeText.trim());
+	 * }
+	 * mpec.searchStudent(query.toString());
+	 * }
+	 * });
+	 * 
+	 * public void changedUpdate(DocumentEvent e) {
+	 * updater.setRepeats(false);
+	 * updater.restart();
+	 * }
+	 * 
+	 * public void insertUpdate(DocumentEvent e) {
+	 * updater.setRepeats(false);
+	 * updater.restart();
+	 * }
+	 * 
+	 * public void removeUpdate(DocumentEvent e) {
+	 * updater.setRepeats(false);
+	 * updater.restart();
+	 * }
+	 * });
+	 * 
+	 * placeField.getDocument().addDocumentListener(new DocumentListener() {
+	 * private Timer updater = new Timer(125, e -> {
+	 * String searchText = studentSearchField.getText();
+	 * String placeText = placeField.getText();
+	 * 
+	 * boolean isSearchEmpty = searchText.equals(studentTableDefaultText) ||
+	 * searchText.trim().isEmpty();
+	 * boolean isPlaceEmpty = placeText.equals("Filter by place...") ||
+	 * placeText.trim().isEmpty();
+	 * 
+	 * if (isSearchEmpty && isPlaceEmpty) {
+	 * mpec.loadStudent();
+	 * } else {
+	 * StringBuilder query = new StringBuilder();
+	 * if (!isSearchEmpty)
+	 * query.append(searchText.trim());
+	 * if (!isPlaceEmpty) {
+	 * if (query.length() > 0)
+	 * query.append(" ");
+	 * query.append("place:").append(placeText.trim());
+	 * }
+	 * mpec.searchStudent(query.toString());
+	 * }
+	 * });
+	 * 
+	 * public void changedUpdate(DocumentEvent e) {
+	 * updater.setRepeats(false);
+	 * updater.restart();
+	 * }
+	 * 
+	 * public void insertUpdate(DocumentEvent e) {
+	 * updater.setRepeats(false);
+	 * updater.restart();
+	 * }
+	 * 
+	 * public void removeUpdate(DocumentEvent e) {
+	 * updater.setRepeats(false);
+	 * updater.restart();
+	 * }
+	 * });
+	 * 
+	 * var addStudentBtn = new JButton("Add student");
+	 * addStudentBtn.addActionListener(e -> new StudentWindow(null));
+	 * var removeStudentBtn = new JButton("Remove student");
+	 * removeStudentBtn.addActionListener(e -> new StudentWindow(null));
+	 * searchBtn.add(addStudentBtn, BorderLayout.WEST);
+	 * searchBtn.add(removeStudentBtn, BorderLayout.CENTER);
+	 * 
+	 * selectorPanel.add(fieldsPanel, BorderLayout.CENTER);
+	 * 
+	 * searchPanel.add(selectorPanel, BorderLayout.CENTER);
+	 * searchPanel.add(searchBtn, BorderLayout.EAST);
+	 * 
+	 * this.studentTable = new MSTable(
+	 * new String[] { "ID", "Student Name", "Birth", "Place of birth", "Sex",
+	 * "Generation", "Gpa" },
+	 * List.<Class<?>>of(Integer.class, String.class, String.class, String.class,
+	 * String.class, Short.class,
+	 * Float.class),
+	 * Collections.EMPTY_LIST);
+	 * 
+	 * contentPanel.add(searchPanel, BorderLayout.NORTH);
+	 * contentPanel.add(this.studentTable.getDisplayer(), BorderLayout.CENTER);
+	 * 
+	 * this.studentTable.setReorderingColumn(false);
+	 * this.studentTable.setResizingColumn(false);
+	 * return contentPanel;
+	 * }
+	 */
 
 	private JPanel subjectManagementPage() {
 		var contentPanel = new JPanel(new BorderLayout(15, 15));
@@ -167,8 +334,10 @@ public class ManagerPage extends JPanel {
 		this.subjectSearchField.addFocusListener(new DefaultTextDisplayer(subjectTableDefaultText));
 		this.subjectSearchField.getDocument().addDocumentListener(new DocumentListener() {
 			private Timer updater = new Timer(125, e -> {
-				if(subjectSearchField.getText().equals(subjectTableDefaultText)) mpec.loadAllSubject();
-				else mpec.searchSubject(subjectSearchField.getText());
+				if (subjectSearchField.getText().equals(subjectTableDefaultText))
+					mpec.loadAllSubject();
+				else
+					mpec.searchSubject(subjectSearchField.getText());
 
 			});
 
@@ -198,8 +367,9 @@ public class ManagerPage extends JPanel {
 		searchBtn.add(subjectDeleteBtn, BorderLayout.EAST);
 		searchPanel.add(this.subjectSearchField, BorderLayout.CENTER);
 		searchPanel.add(searchBtn, BorderLayout.EAST);
-		this.subjectTable = new MSTable(new String[]{"ID", "Subject name", "Prerequisites", "Credits", "Require"}, 
-				List.<Class<?>>of(Integer.class, String.class, String[].class, Short.class, String.class), Collections.EMPTY_LIST);
+		this.subjectTable = new MSTable(new String[] { "ID", "Subject name", "Prerequisites", "Credits", "Require" },
+				List.<Class<?>>of(Integer.class, String.class, String[].class, Short.class, String.class),
+				Collections.EMPTY_LIST);
 		this.subjectTable.setRowHeight(42);
 		this.subjectTable.setShowGrid(true);
 		this.subjectTable.setPreferredWidth(0, 191);
@@ -211,7 +381,8 @@ public class ManagerPage extends JPanel {
 		this.subjectTable.setResizingColumn(false);
 		contentPanel.add(searchPanel, BorderLayout.NORTH);
 		contentPanel.add(this.subjectTable.getDisplayer(), BorderLayout.CENTER);
-		subjectDeleteBtn.addActionListener(_ -> createDeleteWindow(subjectTable, mpec::deleteSubject, subjectSearchField, subjectTableDefaultText, mpec::loadAllSubject, mpec::searchSubject));
+		subjectDeleteBtn.addActionListener(_ -> createDeleteWindow(subjectTable, mpec::deleteSubject,
+				subjectSearchField, subjectTableDefaultText, mpec::loadAllSubject, mpec::searchSubject));
 
 		return contentPanel;
 	}
@@ -235,8 +406,10 @@ public class ManagerPage extends JPanel {
 		this.teacherSearchField.addFocusListener(new DefaultTextDisplayer(teacherTableDefaultText));
 		this.teacherSearchField.getDocument().addDocumentListener(new DocumentListener() {
 			private Timer updater = new Timer(125, e -> {
-				if(teacherSearchField.getText().equals(teacherTableDefaultText)) mpec.loadTeacherSubject();
-				else mpec.searchTeacher(teacherSearchField.getText());
+				if (teacherSearchField.getText().equals(teacherTableDefaultText))
+					mpec.loadTeacherSubject();
+				else
+					mpec.searchTeacher(teacherSearchField.getText());
 			});
 
 			public void changedUpdate(DocumentEvent e) {
@@ -256,17 +429,23 @@ public class ManagerPage extends JPanel {
 		});
 
 		var addTeacherBtn = new JButton("Add teacher");
+		// addTeacherBtn.addActionListener(e -> );
 		var removeTeacherBtn = new JButton("Remove teacher");
+		// removeTeacherBtn.addActionListener(e -> );
 		searchBtn.add(addTeacherBtn, BorderLayout.WEST);
 		searchBtn.add(removeTeacherBtn, BorderLayout.CENTER);
-		
+
 		selectorPanel.add(this.teacherSearchField, BorderLayout.CENTER);
 
 		searchPanel.add(selectorPanel, BorderLayout.CENTER);
 		searchPanel.add(searchBtn, BorderLayout.EAST);
 
-		this.teacherTable = new MSTable(new String[]{"ID", "Teacher name", "Username", "Password", "Birth", "Place of birth", "Sex", "Subject", "Teach class"},
-				List.<Class<?>>of(Integer.class, String.class, String.class, String.class, String.class, String.class, String.class, String[].class, String[].class), Collections.EMPTY_LIST);
+		this.teacherTable = new MSTable(
+				new String[] { "ID", "Teacher name", "Username", "Password", "Birth", "Place of birth", "Sex",
+						"Subject", "Teach class" },
+				List.<Class<?>>of(Integer.class, String.class, String.class, String.class, String.class, String.class,
+						String.class, String[].class, String[].class),
+				Collections.EMPTY_LIST);
 
 		contentPanel.add(searchPanel, BorderLayout.NORTH);
 		contentPanel.add(this.teacherTable.getDisplayer(), BorderLayout.CENTER);
@@ -298,8 +477,9 @@ public class ManagerPage extends JPanel {
 		classSearchPanel.add(this.classSemesterSelector, BorderLayout.WEST);
 		classSearchPanel.add(classSearchField, BorderLayout.CENTER);
 		classSearchPanel.add(classSearchBtn, BorderLayout.EAST);
-		this.classTable = new MSTable(new String[]{"ID", "Class name", "Semester", "Subject", "GPA", "Teacher"},
-				List.<Class<?>>of(Integer.class, String.class, String.class, String.class, Float.class, String[].class), Collections.EMPTY_LIST);
+		this.classTable = new MSTable(new String[] { "ID", "Class name", "Semester", "Subject", "GPA", "Teacher" },
+				List.<Class<?>>of(Integer.class, String.class, String.class, String.class, Float.class, String[].class),
+				Collections.EMPTY_LIST);
 		classPanel.add(classSearchPanel, BorderLayout.NORTH);
 		classPanel.add(this.classTable.getDisplayer(), BorderLayout.CENTER);
 		var semesterPanel = new JPanel(new BorderLayout(15, 0));
@@ -314,7 +494,8 @@ public class ManagerPage extends JPanel {
 		semesterSearchBtn.add(semesterDeleteBtn, BorderLayout.EAST);
 		semesterSearchPanel.add(semesterSearchField, BorderLayout.CENTER);
 		semesterSearchPanel.add(semesterSearchBtn, BorderLayout.EAST);
-		this.semesterTable = new MSTable(new String[]{"ID", "Semester", "Year"}, List.<Class<?>>of(Integer.class, Short.class, Short.class), Collections.EMPTY_LIST);
+		this.semesterTable = new MSTable(new String[] { "ID", "Semester", "Year" },
+				List.<Class<?>>of(Integer.class, Short.class, Short.class), Collections.EMPTY_LIST);
 		semesterPanel.add(semesterSearchPanel, BorderLayout.NORTH);
 		semesterPanel.add(this.semesterTable.getDisplayer(), BorderLayout.CENTER);
 		contentPanel.add(classPanel, BorderLayout.CENTER);
@@ -338,7 +519,8 @@ public class ManagerPage extends JPanel {
 		this.classManagementSubjectSelector.addActionListener(e -> loadManagementTeachClass());
 		this.classManagementClassSelector = new JComboBox<>();
 		this.classManagementClassSelector.setRenderer(config.getComboBoxRenderer());
-		this.classManagementClassSelector.addActionListener(e -> mpec.loadStudentInTeachClass((TeachClass) ((JComboBox) e.getSource()).getSelectedItem()));
+		this.classManagementClassSelector.addActionListener(
+				e -> mpec.loadStudentInTeachClass((TeachClass) ((JComboBox) e.getSource()).getSelectedItem()));
 		var searchField = new JTextField();
 		var addStudentBtn = new JButton("Add student");
 		addStudentBtn.addActionListener(e -> mpec.AddStudent());
@@ -351,8 +533,12 @@ public class ManagerPage extends JPanel {
 		selectorPanel.add(this.classManagementClassSelector, BorderLayout.EAST);
 		searchPanel.add(selectorPanel, BorderLayout.CENTER);
 		searchPanel.add(searchBtn, BorderLayout.EAST);
-		this.studentClassTable = new MSTable(new String[]{"ID", "Student name", "Sex", "Generation", "Test 1", "Test 2", "End test", "Total Score", "Normalized Score", "Rate"},
-				List.<Class<?>>of(Integer.class, String.class, String.class, Short.class, Float.class, Float.class, Float.class, Float.class, Float.class, String.class), Collections.EMPTY_LIST);
+		this.studentClassTable = new MSTable(
+				new String[] { "ID", "Student name", "Sex", "Generation", "Test 1", "Test 2", "End test", "Total Score",
+						"Normalized Score", "Rate" },
+				List.<Class<?>>of(Integer.class, String.class, String.class, Short.class, Float.class, Float.class,
+						Float.class, Float.class, Float.class, String.class),
+				Collections.EMPTY_LIST);
 		contentPanel.add(searchPanel, BorderLayout.NORTH);
 		contentPanel.add(this.studentClassTable.getDisplayer(), BorderLayout.CENTER);
 		this.studentClassTable.setReorderingColumn(false);
@@ -362,39 +548,45 @@ public class ManagerPage extends JPanel {
 	}
 
 	public void logout() {
-		
+
 	}
 
 	private void loadManagementTeachClass() {
-		mpec.loadTeachClass((Semester) this.classManagementSemesterSelector.getSelectedItem(), (Subject) this.classManagementSubjectSelector.getSelectedItem());
+		mpec.loadTeachClass((Semester) this.classManagementSemesterSelector.getSelectedItem(),
+				(Subject) this.classManagementSubjectSelector.getSelectedItem());
 	}
 
-	private void createDeleteWindow(MSTable table, Consumer<Integer> deleteFunc, JTextField searchBar, String defaultText, Runnable loadAll, Consumer<String> search) {
+	private void createDeleteWindow(MSTable table, Consumer<Integer> deleteFunc, JTextField searchBar,
+			String defaultText, Runnable loadAll, Consumer<String> search) {
 		var submitWin = new SubmitWindow(false);
 		submitWin.setSubmitAction(_ -> {
 			var selectedRow = table.getSelectedRow();
 
-			if(selectedRow == -1) return;
+			if (selectedRow == -1)
+				return;
 
 			deleteFunc.accept(selectedRow);
-			
-			if(searchBar.getText().equals(defaultText)) loadAll.run();
-			else search.accept(searchBar.getText());
+
+			if (searchBar.getText().equals(defaultText))
+				loadAll.run();
+			else
+				search.accept(searchBar.getText());
 		});
 		submitWin.setCancelAction(_ -> submitWin.dispose());
 	}
 
 	// private void createSubmitWindow1() {
-	// 	var submitWin = new SubmitWindow(true);
-	// 	submitWin.setSubmitAction(e -> {
-	// 		mpec.AddStudent((TeachClass) this.classSelector.getSelectedItem());
-	// 		submitWin.dispose();
-	// 	});
-	// 	submitWin.setRevokeAction(e -> {
-	// 		mpec.getRecorder().clear();
-	// 		mpec.loadStudentInTeachClass((TeachClass) this.classSelector.getSelectedItem());
-	// 		submitWin.dispose();
-	// 	});
-	// 	submitWin.setCancelAction(e -> submitWin.dispose());
+	// var submitWin = new SubmitWindow(true);
+	// submitWin.setSubmitAction(e -> {
+	// mpec.AddStudent((TeachClass) this.classSelector.getSelectedItem());
+	// submitWin.dispose();
+	// });
+	// submitWin.setRevokeAction(e -> {
+	// mpec.getRecorder().clear();
+	// mpec.loadStudentInTeachClass((TeachClass)
+	// this.classSelector.getSelectedItem());
+	// submitWin.dispose();
+	// });
+	// submitWin.setCancelAction(e -> submitWin.dispose());
 	// }
 }
