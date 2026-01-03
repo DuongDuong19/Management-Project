@@ -3,8 +3,6 @@ package com.myteam.work.controller;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.swing.JTextField;
-
 import com.myteam.work.gui.pages.utilwin.StudentWindow;
 import com.myteam.work.management.data.DataTableParser;
 import com.myteam.work.management.data.Student;
@@ -34,9 +32,22 @@ public class StudentWinController {
         throw new UnsupportedOperationException("Unimplemented method 'updateStudent'");
     }
 
-    public void loadAllStudents(StudentWindow studentWindow) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'loadAllStudents'");
+    public void loadAllStudents(StudentWindow sw) {
+        var table = sw.getStudentTable();
+		table.clearData();
+		var students = this.sth.getAllStudents();
+
+		if(students == null) return;
+
+        // If there's no chosen-student table (optional UI), treat as no exclusions
+        var existedTable = sw.getChoosenStudentTable();
+        List<Integer> existedStudent = new LinkedList<>();
+        if (existedTable != null) {
+            var existedTableModel = existedTable.getIDModel();
+            for(var i = 0; i < existedTableModel.getRowCount(); i++) existedStudent.add((Integer) existedTableModel.getValueAt(i, 0));
+        }
+
+        table.addData(this.parser.parseStudentFetch(students, existedStudent));
     }
 
     public void searchStudent(StudentWindow sw, String s) {
@@ -46,16 +57,17 @@ public class StudentWinController {
 
 		if(students == null) return;
 
-		var existedTableModel = sw.getChoosenPrerequisitesTable().getIDModel();
-		List<Integer> existedStudent = new LinkedList<>();
+        var existedTable = sw.getChoosenStudentTable();
+        List<Integer> existedStudent = new LinkedList<>();
+        if (existedTable != null) {
+            var existedTableModel = existedTable.getIDModel();
+            for(var i = 0; i < existedTableModel.getRowCount(); i++) existedStudent.add((Integer) existedTableModel.getValueAt(i, 0));
+        }
 
-		for(var i = 0; i < existedTableModel.getRowCount(); i++) existedStudent.add((Integer) existedTableModel.getValueAt(i, 0));
-
-		table.addData(this.parser.parseStudentFetch(students));
+        table.addData(this.parser.parseStudentFetch(students, existedStudent));
     }
 
-    public void loadTarget(Student target, JTextField studentId, JTextField studentName, JTextField dob,
-            JTextField className) {
+    public void loadTarget(Student target) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'loadTarget'");
     }
@@ -63,6 +75,15 @@ public class StudentWinController {
     public void deleteStudent(Object selectedRow) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'deleteStudent'");
+    }
+
+    public void searchByBirthPlace(StudentWindow studentWindow, String text) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'searchByBirthPlace'");
+    }
+
+    public void loadTargetByRow(StudentWindow aThis, int selectedRow) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
 }

@@ -46,7 +46,15 @@ public class DataTableParser {
 	}
 
 	public Object[][] parseStudentFetch(List<Student> students) {
-		// List<Object[]> data = new LinkedList<Object[]>();
+		List<Object[]> data = new LinkedList<Object[]>();
+
+		for(Student student : students) data.add(parseStudentWithInformation(student));
+
+		return data.toArray(Object[][]::new);
+	}
+
+	public Object[][] parseStudentFetch(List<Student> students, List<Integer> excludes) {
+		/*// List<Object[]> data = new LinkedList<Object[]>();
 
 		// for(Student student : students) data.add(parseStudentWithInformation(student));
 
@@ -62,6 +70,12 @@ public class DataTableParser {
 
 		for (Student student : unique.values()) data.add(parseStudentWithInformation(student));
 
+		return data.toArray(Object[][]::new);*/
+		List<Object[]> data = new LinkedList<Object[]>();
+		for(Student student : students) {
+			if(excludes.contains(student.getId()))	continue;
+			data.add(parseStudentWithInformation(student));
+		}
 		return data.toArray(Object[][]::new);
 	}
 

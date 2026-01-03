@@ -21,6 +21,7 @@ import javax.swing.event.DocumentListener;
 
 import com.myteam.work.Configuration;
 import com.myteam.work.controller.ManagerPageEventController;
+import com.myteam.work.gui.pages.utilwin.StudentWindow;
 import com.myteam.work.gui.pages.utilwin.SubjectWindow;
 import com.myteam.work.gui.pages.utilwin.SubmitWindow;
 import com.myteam.work.management.data.Semester;
@@ -130,9 +131,9 @@ public class ManagerPage extends JPanel {
 		});
 
 		var addStudentBtn = new JButton("Add student");
-		//addStudentBtn.addActionListener(e -> createSubmitWindow());
+		addStudentBtn.addActionListener(e -> new StudentWindow(null));
 		var removeStudentBtn = new JButton("Remove student");
-		//removeStudentBtn.addActionListener(e -> createSubmitWindow());
+		removeStudentBtn.addActionListener(e -> new StudentWindow(null));
 		searchBtn.add(addStudentBtn, BorderLayout.WEST);
 		searchBtn.add(removeStudentBtn, BorderLayout.CENTER);
 		
@@ -382,4 +383,18 @@ public class ManagerPage extends JPanel {
 		});
 		submitWin.setCancelAction(_ -> submitWin.dispose());
 	}
+
+	// private void createSubmitWindow1() {
+	// 	var submitWin = new SubmitWindow(true);
+	// 	submitWin.setSubmitAction(e -> {
+	// 		mpec.AddStudent((TeachClass) this.classSelector.getSelectedItem());
+	// 		submitWin.dispose();
+	// 	});
+	// 	submitWin.setRevokeAction(e -> {
+	// 		mpec.getRecorder().clear();
+	// 		mpec.loadStudentInTeachClass((TeachClass) this.classSelector.getSelectedItem());
+	// 		submitWin.dispose();
+	// 	});
+	// 	submitWin.setCancelAction(e -> submitWin.dispose());
+	// }
 }

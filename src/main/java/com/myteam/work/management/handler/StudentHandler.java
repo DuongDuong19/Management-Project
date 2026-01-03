@@ -9,6 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.myteam.work.management.data.Student;
+import com.myteam.work.management.data.Subject;
 import com.myteam.work.management.data.User;
 
 import lombok.extern.slf4j.Slf4j;
@@ -79,6 +80,31 @@ public class StudentHandler {
 						studentInfo.getBoolean("sex")
 					);
 		} catch (SQLException e) {
+			log.error(e.toString());
+		}
+
+		return null;
+	}
+
+	public List<Student> getAllStudents() {
+		try {
+			List<Student> results = new LinkedList<>();
+			var studentInformation = this.connection.prepareStatement("select * from student").executeQuery();
+
+			while(studentInformation.next()) {
+				results.add(new Student(
+							studentInformation.getInt("id"),
+							studentInformation.getShort("generation"),
+							studentInformation.getFloat("gpa"),
+							studentInformation.getString("urName"),
+							studentInformation.getString("birth"),
+							studentInformation.getString("placeOfBirth"),
+							studentInformation.getBoolean("sex")
+							));
+			}
+
+			if(!results.isEmpty()) return results;
+		} catch(SQLException e) {
 			log.error(e.toString());
 		}
 
