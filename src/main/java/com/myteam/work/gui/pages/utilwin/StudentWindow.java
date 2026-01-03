@@ -50,7 +50,7 @@ public class StudentWindow extends JFrame {
     private Student target;
     @Getter
 	private MSTable choosenPrerequisitesTable;
-    private StudentWinController swc;
+    private StudentWinController stwc;
     
     public StudentWindow(Student target) {
         this.setTitle("Student Management");
@@ -166,21 +166,21 @@ public class StudentWindow extends JFrame {
         studentSearch.addFocusListener(new DefaultTextDisplayer(defaultSearchText));
         
         this.target = target;
-        this.swc = new StudentWinController();
+        this.stwc = new StudentWinController();
         
         if(this.target != null) {
-            this.swc.loadTarget(this.target, studentId, studentName, dob, className);
+            this.stwc.loadTarget(this.target, studentId, studentName, dob, className);
         }
         
-        this.swc.loadAllStudents(this);
+        this.stwc.loadAllStudents(this);
         
         // Search functionality with delay
         studentSearch.getDocument().addDocumentListener(new DocumentListener() {
             private Timer updater = new Timer(125, e -> {
                 if(studentSearch.getText().equals(defaultSearchText)) {
-                    swc.loadAllStudents(StudentWindow.this);
+                    stwc.loadAllStudents(StudentWindow.this);
                 } else {
-                    swc.searchStudent(StudentWindow.this, studentSearch.getText());
+                    stwc.searchStudent(StudentWindow.this, studentSearch.getText());
                 }
             });
             
@@ -229,14 +229,14 @@ public class StudentWindow extends JFrame {
     
     public void addStudent(String id, String name, String dateOfBirth, String studentClass) {
         if(target == null) {
-            swc.createStudent(id, name, dateOfBirth, studentClass);
+            stwc.createStudent(id, name, dateOfBirth, studentClass);
         } else {
-            swc.updateStudent(target, id, name, dateOfBirth, studentClass);
+            stwc.updateStudent(target, id, name, dateOfBirth, studentClass);
         }
     }
     
     public void removeStudent() {
-        var selectedRow = studentTable.getSelectedId();
+        var selectedRow = studentTable.getSelectedRow();
         
         if(selectedRow == -1) {
             JOptionPane.showMessageDialog(
@@ -257,7 +257,7 @@ public class StudentWindow extends JFrame {
         );
         
         if(confirm == JOptionPane.YES_OPTION) {
-            swc.deleteStudent(selectedRow);
+            stwc.deleteStudent(selectedRow);
         }
     }
     

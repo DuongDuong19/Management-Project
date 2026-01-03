@@ -262,3 +262,4 @@ public class SubjectWindow extends JFrame {
         
         return button;
     }
+}
