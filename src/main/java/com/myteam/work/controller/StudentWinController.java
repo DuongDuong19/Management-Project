@@ -60,4 +60,9 @@ public class StudentWinController {
         throw new UnsupportedOperationException("Unimplemented method 'loadTarget'");
     }
 
+    public void deleteStudent(Object selectedRow) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'deleteStudent'");
+    }
+
 }

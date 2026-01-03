@@ -65,6 +65,8 @@ public class ManagerPage extends JPanel {
 	private JComboBox<User> classManagementTeacherSelector;
 	@Getter
 	private JComboBox<User> teacherSelector;
+	@Getter
+	private JComboBox<Student> studentSelector;
 	private JTextField subjectSearchField;
 	private JTextField teacherSearchField;
 	private JTextField studentSearchField;
@@ -128,9 +130,9 @@ public class ManagerPage extends JPanel {
 		});
 
 		var addStudentBtn = new JButton("Add student");
-		addStudentBtn.addActionListener(e -> createSubmitWindow());
+		//addStudentBtn.addActionListener(e -> createSubmitWindow());
 		var removeStudentBtn = new JButton("Remove student");
-		removeStudentBtn.addActionListener(e -> createSubmitWindow());
+		//removeStudentBtn.addActionListener(e -> createSubmitWindow());
 		searchBtn.add(addStudentBtn, BorderLayout.WEST);
 		searchBtn.add(removeStudentBtn, BorderLayout.CENTER);
 		
