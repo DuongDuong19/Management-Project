@@ -68,17 +68,38 @@ public class SubjectWinController {
 
 
 	public void createSubject(String subjectName, short credits, boolean required, List<Integer> prerequisites) {
-		var beforeExecute = this.sh.countExisted(subjectName, credits, required);
-		this.sh.createSubject(credits, required, subjectName);
-		
-		if(this.sh.countExisted(subjectName, credits, required) > beforeExecute) {
-			var createdSubjectId = this.sh.searchLatestSubjectId(subjectName, credits, required);
+		if(subjectName == null) return;
+
+		var name = subjectName.trim();
+		if(name.isEmpty() || name.equals("Please enter subject name here")) return;
+
+		if(credits <= 0) return;
+
+		var beforeExecute = this.sh.countExisted(name, credits, required);
+		this.sh.createSubject(credits, required, name);
+
+		if(this.sh.countExisted(name, credits, required) > beforeExecute) {
+			var createdSubjectId = this.sh.searchLatestSubjectId(name, credits, required);
 			for(var id : prerequisites) this.sh.addPrerequisite(createdSubjectId, id);
 		}
 	}
 
 	public void updateSubject(Subject target, String subjectName, String credits, boolean required, List<Integer> prerequisites) {
-		this.sh.editSubject(target.getId(), Short.parseShort(credits), required, subjectName);
+		if(target == null || subjectName == null) return;
+
+		var name = subjectName.trim();
+		if(name.isEmpty() || name.equals("Please enter subject name here")) return;
+
+		short cr;
+		try {
+			cr = Short.parseShort(credits.trim());
+		} catch(Exception e) {
+			return;
+		}
+
+		if(cr <= 0) return;
+
+		this.sh.editSubject(target.getId(), cr, required, name);
 		var currentPrerequisites = this.sh.getPrerequisites(target.getId());
 
 		for(var id : prerequisites) if(currentPrerequisites.contains(id)) {
