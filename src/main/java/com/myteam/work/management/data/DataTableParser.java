@@ -116,9 +116,21 @@ public class DataTableParser {
 		return studentRows.toArray(Object[][]::new);
 	}
 
+	public Object[][] parsePrerequisiteFetchName(List<Integer> prerequisites) {
+		List<Object[]> rows = new LinkedList<>();
+
+		for(Integer id : prerequisites) {
+			Object[] row = {id, this.sh.getName(id)};
+
+			rows.add(row);
+		}
+
+		return rows.toArray(Object[][]::new);		
+	}
+
 	private Object[] parseSubjectWithPrerequisite(Subject subject) {
 		var id = subject.getId();
-		var prerequisites = this.sh.getPrerequistes(id);
+		var prerequisites = this.sh.getPrerequisites(id);
 		var prerequisitesName = new String[prerequisites == null ? 0 : prerequisites.size()];
 
 		for(var i = 0; i < prerequisitesName.length; i++) prerequisitesName[i] = sh.getName(prerequisites.get(i));
