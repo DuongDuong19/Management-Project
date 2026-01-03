@@ -5,23 +5,22 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.GridLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.Collections;
-import java.util.List;
 
 import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JTextField;
-import javax.swing.Timer;
 import javax.swing.border.EmptyBorder;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 
 import com.myteam.work.Configuration;
 import com.myteam.work.controller.StudentWinController;
@@ -30,27 +29,29 @@ import com.myteam.work.gui.pages.MSTable;
 import com.myteam.work.management.data.Student;
 
 import lombok.Getter;    
-public class StudentWindow extends JFrame {
+
+/*public class StudentWindow extends JFrame {
     public static final int CREATE = 1;
     public static final int EDIT = 2;
     private static final Configuration config = Configuration.getConfiguration();
-    private static final String defaultSearchText = "Search by student name or student id";
-    private static final String defaultBirthPlaceSearchText = "Search by birth place";
+    private static final String defaultStudentIdText = "Please enter student id here";
+    private static final String defaultStudentNameText = "Please enter student name here";
+    private static final String defaultDateOfBirthText = "DD/MM/YYYY";
+    private static final String defaultBirthPlaceText = "Please enter birth place here";
     private static final Color PRIMARY_COLOR = new Color(41, 128, 185);
     private static final Color BACKGROUND_COLOR = new Color(236, 240, 241);
     
     @Getter
-    private MSTable studentTable;
-    @Getter
     private Student target;
     @Getter
     private MSTable choosenStudentTable;
+    @Getter
+    private MSTable studentTable;
     private StudentWinController stwc;
-    private Student student;
     
     public StudentWindow(Student target) {
         this.setTitle("Student Management");
-        this.setSize(new Dimension(950, 600));
+        this.setSize(new Dimension(900, 300));
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.setResizable(false);
         this.setLocationRelativeTo(null);
@@ -60,218 +61,150 @@ public class StudentWindow extends JFrame {
         mainPanel.setBackground(BACKGROUND_COLOR);
         mainPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
         
-        // Center Panel - Student List with Search
-        var centerPanel = new JPanel(new BorderLayout(10, 10));
-        centerPanel.setBackground(Color.WHITE);
-        centerPanel.setBorder(BorderFactory.createCompoundBorder(
+        // Top Panel - Student Information Form
+        var topPanel = new JPanel(new GridBagLayout());
+        topPanel.setBackground(Color.WHITE);
+        topPanel.setBorder(BorderFactory.createCompoundBorder(
             BorderFactory.createLineBorder(new Color(189, 195, 199), 1),
             new EmptyBorder(15, 15, 15, 15)
         ));
         
-        var studentListLabel = new JLabel("Student List");
-        studentListLabel.setFont(new Font("Segoe UI", Font.BOLD, 16));
-        studentListLabel.setForeground(PRIMARY_COLOR);
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.insets = new Insets(5, 5, 5, 5);
         
-        // Search Panel with two search fields
-        var searchPanel = new JPanel(new BorderLayout(10, 10));
-        searchPanel.setBackground(Color.WHITE);
+        var studentIdField = createStyledTextField(defaultStudentIdText, 200);
+        var studentNameField = createStyledTextField(defaultStudentNameText, 250);
+        var dateOfBirthField = createStyledTextField(defaultDateOfBirthText, 150);
+        var birthPlaceField = createStyledTextField(defaultBirthPlaceText, 300);
         
-        var topSearchPanel = new JPanel(new BorderLayout(10, 10));
-        topSearchPanel.setBackground(Color.WHITE);
+        // Row 1: Student ID and Student Name
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.weightx = 0;
+        topPanel.add(createLabel("Student ID:"), gbc);
         
-        // Search fields container
-        var searchFieldsPanel = new JPanel(new GridLayout(2, 1, 10, 10));
-        searchFieldsPanel.setBackground(Color.WHITE);
+        gbc.gridx = 1;
+        gbc.weightx = 0.3;
+        topPanel.add(studentIdField, gbc);
         
-        var studentSearch = createStyledTextField(defaultSearchText, 0);
-        var birthPlaceSearch = createStyledTextField(defaultBirthPlaceSearchText, 0);
+        gbc.gridx = 2;
+        gbc.weightx = 0;
+        topPanel.add(createLabel("Student Name:"), gbc);
         
-        searchFieldsPanel.add(studentSearch);
-        searchFieldsPanel.add(birthPlaceSearch);
+        gbc.gridx = 3;
+        gbc.weightx = 0.7;
+        topPanel.add(studentNameField, gbc);
         
-        topSearchPanel.add(studentListLabel, BorderLayout.NORTH);
-        topSearchPanel.add(searchFieldsPanel, BorderLayout.CENTER);
+        // Row 2: Date of Birth and Birth Place
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.weightx = 0;
+        topPanel.add(createLabel("Date of Birth:"), gbc);
         
-        this.studentTable = new MSTable(
-            new String[]{"ID", "Student Name", "Date of Birth", "Class", "Birth Place"},
-            List.<Class<?>>of(String.class, String.class, String.class, String.class, String.class),
-            Collections.EMPTY_LIST
-        );
-        this.studentTable.setReorderingColumn(false);
-        this.studentTable.setResizingColumn(false);
+        gbc.gridx = 1;
+        gbc.weightx = 0.3;
+        topPanel.add(dateOfBirthField, gbc);
         
-        searchPanel.add(topSearchPanel, BorderLayout.NORTH);
-        searchPanel.add(studentTable.getDisplayer(), BorderLayout.CENTER);
+        gbc.gridx = 2;
+        gbc.weightx = 0;
+        topPanel.add(createLabel("Birth Place:"), gbc);
         
-        centerPanel.add(searchPanel, BorderLayout.CENTER);
+        gbc.gridx = 3;
+        gbc.weightx = 0.7;
+        topPanel.add(birthPlaceField, gbc);
         
-        // Bottom Panel - Action Buttons (Create, Edit, Delete)
+        // Bottom Panel - Submit Button
         var bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 10));
         bottomPanel.setBackground(BACKGROUND_COLOR);
         
-        var createStudentBtn = createStyledButton("Create Student", new Color(39, 174, 96));
-        var editStudentBtn = createStyledButton("Edit Student", new Color(52, 152, 219));
-        var deleteStudentBtn = createStyledButton("Delete Student", new Color(231, 76, 60));
+        var submitBtn = createStyledButton("Submit", new Color(39, 174, 96));
+        submitBtn.setPreferredSize(new Dimension(150, 40));
         
-        createStudentBtn.setPreferredSize(new Dimension(150, 40));
-        editStudentBtn.setPreferredSize(new Dimension(150, 40));
-        deleteStudentBtn.setPreferredSize(new Dimension(150, 40));
+        bottomPanel.add(submitBtn);
         
-        bottomPanel.add(createStudentBtn);
-        bottomPanel.add(editStudentBtn);
-        bottomPanel.add(deleteStudentBtn);
-        
-        mainPanel.add(centerPanel, BorderLayout.CENTER);
+        mainPanel.add(topPanel, BorderLayout.CENTER);
         mainPanel.add(bottomPanel, BorderLayout.SOUTH);
         
         this.add(mainPanel);
         
+        // Add Focus Listeners
+        studentIdField.addFocusListener(new DefaultTextDisplayer(defaultStudentIdText));
+        studentNameField.addFocusListener(new DefaultTextDisplayer(defaultStudentNameText));
+        dateOfBirthField.addFocusListener(new DefaultTextDisplayer(defaultDateOfBirthText));
+        birthPlaceField.addFocusListener(new DefaultTextDisplayer(defaultBirthPlaceText));
+        
         this.target = target;
         this.stwc = new StudentWinController();
         
-        // Add Focus Listeners for search fields
-        studentSearch.addFocusListener(new DefaultTextDisplayer(defaultSearchText));
-        birthPlaceSearch.addFocusListener(new DefaultTextDisplayer(defaultBirthPlaceSearchText));
-        this.stwc = new StudentWinController();
-        
         if(this.target != null) {
+            studentIdField.setText(String.valueOf(this.target.getId()));
+            studentNameField.setText(this.target.getInfo().getName());
+            dateOfBirthField.setText((this.target.getInfo().getBirth()).toString());
+            birthPlaceField.setText(this.target.getInfo().getPlaceOfBirth() != null ? 
+                this.target.getInfo().getPlaceOfBirth() : "");
             this.stwc.loadTarget(this.target);
         }
         
-        this.stwc.loadAllStudents(this);
-        
-        // Student Search functionality with delay
-        studentSearch.getDocument().addDocumentListener(new DocumentListener() {
-            private Timer updater = new Timer(125, e -> {
-                if(studentSearch.getText().equals(defaultSearchText)) {
-                    stwc.loadAllStudents(StudentWindow.this);
+        // Submit Button Action
+        submitBtn.addActionListener(_ -> {
+            var submit = new SubmitWindow(false);
+            submit.setCancelAction(_ -> submit.dispose());
+            submit.setSubmitAction(_ -> {
+                String studentId = studentIdField.getText();
+                String studentName = studentNameField.getText();
+                String dateOfBirth = dateOfBirthField.getText();
+                String birthPlace = birthPlaceField.getText();
+                
+                // Validate
+                if(studentId.equals(defaultStudentIdText) || studentId.trim().isEmpty()) {
+                    JOptionPane.showMessageDialog(
+                        StudentWindow.this,
+                        "Please enter a valid Student ID!",
+                        "Validation Error",
+                        JOptionPane.WARNING_MESSAGE
+                    );
+                    submit.dispose();
+                    return;
+                }
+                
+                if(studentName.equals(defaultStudentNameText) || studentName.trim().isEmpty()) {
+                    JOptionPane.showMessageDialog(
+                        StudentWindow.this,
+                        "Please enter a valid Student Name!",
+                        "Validation Error",
+                        JOptionPane.WARNING_MESSAGE
+                    );
+                    submit.dispose();
+                    return;
+                }
+                
+                if(target == null) {
+                    stwc.createStudent(target.getId(), target.getInfo().getName(), target.getInfo().getBirth(), null);
                 } else {
-                    stwc.searchStudent(StudentWindow.this, studentSearch.getText());
+                    stwc.updateStudent(this.target, target.getId(), target.getInfo().getName(), target.getInfo().getBirth(), null);
                 }
+                
+                // Clear form and close window
+                submit.dispose();
+                StudentWindow.this.dispose();
             });
-            
-            public void changedUpdate(DocumentEvent e) {
-                updater.setRepeats(false);
-                updater.restart();
-            }
-            
-            public void insertUpdate(DocumentEvent e) {
-                updater.setRepeats(false);
-                updater.restart();
-            }
-            
-            public void removeUpdate(DocumentEvent e) {
-                updater.setRepeats(false);
-                updater.restart();
-            }
-        });
-        
-        // Birth Place Search functionality with delay
-        birthPlaceSearch.getDocument().addDocumentListener(new DocumentListener() {
-            private Timer updater = new Timer(125, e -> {
-                if(birthPlaceSearch.getText().equals(defaultBirthPlaceSearchText)) {
-                    stwc.loadAllStudents(StudentWindow.this);
-                } else {
-                    stwc.searchByBirthPlace(StudentWindow.this, birthPlaceSearch.getText());
-                }
-            });
-            
-            public void changedUpdate(DocumentEvent e) {
-                updater.setRepeats(false);
-                updater.restart();
-            }
-            
-            public void insertUpdate(DocumentEvent e) {
-                updater.setRepeats(false);
-                updater.restart();
-            }
-            
-            public void removeUpdate(DocumentEvent e) {
-                updater.setRepeats(false);
-                updater.restart();
-            }
-        });
-        
-        // Create Student Button Action
-        createStudentBtn.addActionListener(e -> {
-            createStudent(student);
-        });
-        
-        // Edit Student Button Action
-        editStudentBtn.addActionListener(e -> {
-            editStudent(student);
-        });
-        
-        // Delete Student Button Action
-        deleteStudentBtn.addActionListener(e -> {
-            deleteStudent();
-        });
-        
-        // Table Selection Listener - Auto-populate fields when row is selected
-        studentTable.addRowSelectionListener(e -> {
-            if (!e.getValueIsAdjusting()) {
-                int selectedRow = studentTable.getSelectedRow();
-                if (selectedRow != -1) {
-                    // Load target student for editing
-                    stwc.loadTargetByRow(StudentWindow.this, selectedRow);
-                }
-            }
         });
         
         this.setVisible(true);
     }
     
-    public void createStudent(Student st) {
-        stwc.createStudent(st.getId(), st.getInfo().getName(), st.getInfo().getBirth(), st.getClass());
-    }
-    
-    public void editStudent(Student st) {
-        var selectedRow = studentTable.getSelectedRow();
-        
-        if(selectedRow == -1) {
-            JOptionPane.showMessageDialog(
-                this,
-                "Please select a student to edit!",
-                "Warning",
-                JOptionPane.WARNING_MESSAGE
-            );
-            return;
-        }
-        
-        if(target != null) {
-            stwc.updateStudent(target, st.getId(), st.getInfo().getName(), st.getInfo().getBirth(), st.getClass());
-        }
-    }
-    
-    public void deleteStudent() {
-        var selectedRow = studentTable.getSelectedRow();
-        
-        if(selectedRow == -1) {
-            JOptionPane.showMessageDialog(
-                this,
-                "Please select a student to delete!",
-                "Warning",
-                JOptionPane.WARNING_MESSAGE
-            );
-            return;
-        }
-        
-        int confirm = JOptionPane.showConfirmDialog(
-            this,
-            "Are you sure you want to delete this student?",
-            "Confirm Deletion",
-            JOptionPane.YES_NO_OPTION,
-            JOptionPane.QUESTION_MESSAGE
-        );
-        
-        if(confirm == JOptionPane.YES_OPTION) {
-            stwc.deleteStudent(selectedRow);
-        }
+    private JLabel createLabel(String text) {
+        var label = new JLabel(text);
+        label.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        label.setForeground(new Color(52, 73, 94));
+        return label;
     }
     
     private JTextField createStyledTextField(String text, int width) {
         var textField = new JTextField(text);
         textField.setForeground(Configuration.getConfiguration().getFieldColor());
+        textField.setFont(new Font("Segoe UI", Font.PLAIN, 13));
         if (width > 0) {
             textField.setPreferredSize(new Dimension(width, 35));
         } else {
@@ -288,6 +221,223 @@ public class StudentWindow extends JFrame {
         var button = new JButton(text);
         button.setForeground(Color.WHITE);
         button.setBackground(bgColor);
+        button.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        button.setFocusPainted(false);
+        button.setBorderPainted(false);
+        button.setCursor(config.getHandCursor());
+        button.setPreferredSize(new Dimension(180, 35));
+        
+        button.addMouseListener(new MouseAdapter() {
+            public void mouseEntered(MouseEvent evt) {
+                button.setBackground(bgColor.brighter());
+            }
+            public void mouseExited(MouseEvent evt) {
+                button.setBackground(bgColor);
+            }
+        });
+        
+        return button;
+    }
+}
+*/
+public class StudentWindow extends JFrame {
+    public static final int CREATE = 1;
+    public static final int EDIT = 2;
+    private static final Configuration config = Configuration.getConfiguration();
+    private static final String defaultStudentNameText = "Please enter student name here";
+    private static final String defaultDateOfBirthText = "DD/MM/YYYY";
+    private static final String defaultBirthPlaceText = "Please enter birth place here";
+    private static final Color PRIMARY_COLOR = new Color(41, 128, 185);
+    private static final Color BACKGROUND_COLOR = new Color(236, 240, 241);
+    
+    @Getter
+    private Student target;
+    @Getter
+    private MSTable choosenStudentTable;
+    @Getter
+    private MSTable studentTable;
+    private StudentWinController stwc;
+    
+    public StudentWindow(Student target) {
+        this.setTitle("Student Management");
+        this.setSize(new Dimension(900, 300));
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        this.setResizable(false);
+        this.setLocationRelativeTo(null);
+        this.getContentPane().setBackground(BACKGROUND_COLOR);
+        
+        var mainPanel = new JPanel(new BorderLayout(15, 15));
+        mainPanel.setBackground(BACKGROUND_COLOR);
+        mainPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
+        
+        // Top Panel - Student Information Form
+        var topPanel = new JPanel(new GridBagLayout());
+        topPanel.setBackground(Color.WHITE);
+        topPanel.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(new Color(189, 195, 199), 1),
+            new EmptyBorder(15, 15, 15, 15)
+        ));
+        
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.insets = new Insets(5, 5, 5, 5);
+        
+        var maleRadio = new JRadioButton("Nam");
+        var femaleRadio = new JRadioButton("Nữ");
+        maleRadio.setSelected(true);
+        var sexGroup = new ButtonGroup();
+        sexGroup.add(maleRadio);
+        sexGroup.add(femaleRadio);
+        maleRadio.setBackground(Color.WHITE);
+        femaleRadio.setBackground(Color.WHITE);
+        maleRadio.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        femaleRadio.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        maleRadio.setCursor(config.getHandCursor());
+        femaleRadio.setCursor(config.getHandCursor());
+        var sexPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
+        sexPanel.setBackground(Color.WHITE);
+        sexPanel.add(maleRadio);
+        sexPanel.add(femaleRadio);
+        
+        var studentNameField = createStyledTextField(defaultStudentNameText, 250);
+        var dateOfBirthField = createStyledTextField(defaultDateOfBirthText, 150);
+        var birthPlaceField = createStyledTextField(defaultBirthPlaceText, 300);
+        
+        // Row 1: Student Sex and Student Name
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.weightx = 0;
+        topPanel.add(createLabel("Student Sex:"), gbc);
+        
+        gbc.gridx = 1;
+        gbc.weightx = 0.3;
+        topPanel.add(sexPanel, gbc);
+        
+        gbc.gridx = 2;
+        gbc.weightx = 0;
+        topPanel.add(createLabel("Student Name:"), gbc);
+        
+        gbc.gridx = 3;
+        gbc.weightx = 0.7;
+        topPanel.add(studentNameField, gbc);
+        
+        // Row 2: Date of Birth and Birth Place
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.weightx = 0;
+        topPanel.add(createLabel("Date of Birth:"), gbc);
+        
+        gbc.gridx = 1;
+        gbc.weightx = 0.3;
+        topPanel.add(dateOfBirthField, gbc);
+        
+        gbc.gridx = 2;
+        gbc.weightx = 0;
+        topPanel.add(createLabel("Birth Place:"), gbc);
+        
+        gbc.gridx = 3;
+        gbc.weightx = 0.7;
+        topPanel.add(birthPlaceField, gbc);
+        
+        // Bottom Panel - Submit Button
+        var bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 10));
+        bottomPanel.setBackground(BACKGROUND_COLOR);
+        
+        var submitBtn = createStyledButton("Submit", new Color(39, 174, 96));
+        submitBtn.setPreferredSize(new Dimension(150, 40));
+        
+        bottomPanel.add(submitBtn);
+        
+        mainPanel.add(topPanel, BorderLayout.CENTER);
+        mainPanel.add(bottomPanel, BorderLayout.SOUTH);
+        
+        this.add(mainPanel);
+        
+        // Add Focus Listeners
+        studentNameField.addFocusListener(new DefaultTextDisplayer(defaultStudentNameText));
+        dateOfBirthField.addFocusListener(new DefaultTextDisplayer(defaultDateOfBirthText));
+        birthPlaceField.addFocusListener(new DefaultTextDisplayer(defaultBirthPlaceText));
+        
+        this.target = target;
+        this.stwc = new StudentWinController();
+        
+        if(this.target != null) {
+            if(this.target.getInfo().isSex()) {
+                femaleRadio.setSelected(true);
+            } else {
+                maleRadio.setSelected(true);
+            }
+            studentNameField.setText(this.target.getInfo().getName());
+            dateOfBirthField.setText((this.target.getInfo().getBirth()).toString());
+            birthPlaceField.setText(this.target.getInfo().getPlaceOfBirth() != null ? 
+                this.target.getInfo().getPlaceOfBirth() : "");
+            this.stwc.loadTarget(this.target);
+        }
+        
+        // Submit Button Action
+        submitBtn.addActionListener(_ -> {
+            var submit = new SubmitWindow(false);
+            submit.setCancelAction(_ -> submit.dispose());
+            submit.setSubmitAction(_ -> {
+                String studentName = studentNameField.getText();
+                String dateOfBirth = dateOfBirthField.getText();
+                String birthPlace = birthPlaceField.getText();
+                
+                // Validate
+                if(studentName.equals(defaultStudentNameText) || studentName.trim().isEmpty()) {
+                    JOptionPane.showMessageDialog(
+                        StudentWindow.this,
+                        "Please enter a valid Student Name!",
+                        "Validation Error",
+                        JOptionPane.WARNING_MESSAGE
+                    );
+                    submit.dispose();
+                    return;
+                }
+                
+                if(target == null) {
+                    stwc.createStudent(target.getId(), target.getInfo().getName(), target.getInfo().getBirth(), null);
+                } else {
+                    stwc.updateStudent(this.target, target.getId(), target.getInfo().getName(), target.getInfo().getBirth(), null);
+                }
+                
+                // Clear form and close window
+                submit.dispose();
+                StudentWindow.this.dispose();
+            });
+        });
+        
+        this.setVisible(true);
+    }
+    
+    private JLabel createLabel(String text) {
+        var label = new JLabel(text);
+        label.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        label.setForeground(new Color(52, 73, 94));
+        return label;
+    }
+    
+    private JTextField createStyledTextField(String text, int width) {
+        var textField = new JTextField(text);
+        textField.setForeground(Configuration.getConfiguration().getFieldColor());
+        textField.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        if (width > 0) {
+            textField.setPreferredSize(new Dimension(width, 35));
+        } else {
+            textField.setPreferredSize(new Dimension(textField.getPreferredSize().width, 35));
+        }
+        textField.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(new Color(189, 195, 199), 1),
+            new EmptyBorder(5, 10, 5, 10)
+        ));
+        return textField;
+    }
+    
+    private JButton createStyledButton(String text, Color bgColor) {
+        var button = new JButton(text);
+        button.setForeground(Color.WHITE);
+        button.setBackground(bgColor);
+        button.setFont(new Font("Segoe UI", Font.BOLD, 13));
         button.setFocusPainted(false);
         button.setBorderPainted(false);
         button.setCursor(config.getHandCursor());
