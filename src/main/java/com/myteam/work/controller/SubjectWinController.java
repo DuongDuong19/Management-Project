@@ -47,9 +47,15 @@ public class SubjectWinController {
 		table.addData(this.parser.parseSubjectFetchPrerequisites(subjects, existedPrerequisite));
 	}
 
-	public void loadTarget(Subject target) {
+	public void loadPrerequisites(Subject s, SubjectWindow sw) {
+		var existedPrerequisiteTable = sw.getChoosenPrerequisitesTable();
+		var prerequisites = this.sh.getPrerequisites(s.getId());
 
+		if(prerequistes == null) return;
+
+		table.addData(this.parser.parsePrerequisite(prerequisites));
 	}
+
 
 	public void createSubject(String subjectName, String credits, boolean required, List<Integer> prerequisites) {
 
@@ -57,9 +63,5 @@ public class SubjectWinController {
 
 	public void updateSubject(Subject target, String subjectName, String credits, boolean required, List<Integer> prerequistes) {
 
-	}
-
-	public boolean deleteSubject(Object targert, Object subjectName) {
-		return false;
 	}
 }

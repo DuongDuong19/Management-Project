@@ -171,7 +171,10 @@ public class SubjectWindow extends JFrame {
 		this.swc = new SubjectWinController();
 		
 		if(this.target != null) {
-			this.swc.loadTarget(this.target);
+			subjectName.setText(this.target.getSubjectName());
+			credits.setText("" + this.target.getCredits());
+			required.setSelected(this.target.isRequired());
+			this.swc.loadPrerequisites(this.target);
 		}
 
 		this.swc.loadAllSubject(this);
@@ -224,6 +227,7 @@ public class SubjectWindow extends JFrame {
 			if(target == null) swc.createSubject(subjectName.getText(), credits.getText(), required.isValidateRoot(), prerequisites);
 			else swc.updateSubject(target, subjectName.getText(), credits.getText(), required.isValidateRoot(), prerequisites);
 		});
+
         this.setVisible(true);
     }
     
