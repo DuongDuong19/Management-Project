@@ -16,6 +16,7 @@ import javax.swing.table.TableModel;
 import javax.swing.JViewport;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
@@ -197,4 +198,8 @@ public class MSTable {
     public int getSelectedRow() {
         return this.stickyTable.getSelectedRow();
     }
+
+	public void addRowSelectionListener(ListSelectionListener listener) {
+    this.stickyTable.getSelectionModel().addListSelectionListener(listener);
+}
 }

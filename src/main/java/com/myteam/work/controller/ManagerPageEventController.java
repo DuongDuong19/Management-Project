@@ -94,6 +94,7 @@ public class ManagerPageEventController {
 	public void loadStudent() {
 		var students = this.sth.loadStudent("");
 		var selector = ((ManagerPage) ManagerPage.getPage()).getStudentSelector();
+		if(selector == null)	return;
 		selector.removeAllItems();
 		selector.addItem(null);
 
