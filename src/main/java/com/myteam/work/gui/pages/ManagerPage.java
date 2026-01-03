@@ -39,7 +39,6 @@ public class ManagerPage extends JPanel {
 	private static final Configuration config = Configuration.getConfiguration();
 	private static ManagerPageEventController mpec;
 	private static ManagerPage mp;
-	private Subject subject = null;
 	private CardLayout pager;
 	private JPanel contentPanel;
 	@Getter
@@ -357,9 +356,8 @@ public class ManagerPage extends JPanel {
 			}
 		});
 		var subjectCreateBtn = new JButton("Create subject");
-		subjectCreateBtn.addActionListener(e -> new SubjectWindow(null));
-		var subjectEditBtn = new JButton("Edit subject");
-		subjectEditBtn.addActionListener(e -> new SubjectWindow(subject));
+		subjectCreateBtn.addActionListener(_ -> new SubjectWindow(null));
+		var subjectEditBtn = new JButton("Edit subject");	
 		var subjectDeleteBtn = new JButton("Delete subject");
 
 		searchBtn.add(subjectCreateBtn, BorderLayout.WEST);
@@ -381,8 +379,21 @@ public class ManagerPage extends JPanel {
 		this.subjectTable.setResizingColumn(false);
 		contentPanel.add(searchPanel, BorderLayout.NORTH);
 		contentPanel.add(this.subjectTable.getDisplayer(), BorderLayout.CENTER);
-		subjectDeleteBtn.addActionListener(_ -> createDeleteWindow(subjectTable, mpec::deleteSubject,
-				subjectSearchField, subjectTableDefaultText, mpec::loadAllSubject, mpec::searchSubject));
+		subjectEditBtn.addActionListener(_ -> {
+			var selectedRow = subjectTable.getSelectedRow();
+
+			if(selectedRow == -1) return;
+
+			var contentModel = subjectTable.getContentModel();
+
+			new SubjectWindow(new Subject(
+						(Integer) subjectTable.getIDModel().getValueAt(selectedRow, 0),
+						(Short) contentModel.getValueAt(selectedRow, 2),
+						((String) contentModel.getValueAt(selectedRow, 3)).equals("yes") ? true : false,
+						(String) contentModel.getValueAt(selectedRow, 0)
+						));
+		});
+		subjectDeleteBtn.addActionListener(_ -> createDeleteWindow(subjectTable, mpec::deleteSubject, subjectSearchField, subjectTableDefaultText, mpec::loadAllSubject, mpec::searchSubject));
 
 		return contentPanel;
 	}
