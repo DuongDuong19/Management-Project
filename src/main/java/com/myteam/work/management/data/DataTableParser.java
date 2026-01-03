@@ -33,8 +33,6 @@ public class DataTableParser {
 	public Object[][] parseTeacherFetch(List<User> users) {
 		List<Object[]> data = new LinkedList<Object[]>();
 
-		// Deduplicate users by id to avoid repeated rows when SQL joins return multiple
-		// result rows for the same teacher (one per subject/class).
 		var unique = new HashMap<Integer, User>();
 		for (User user : users) {
 			if (!unique.containsKey(user.getId())) unique.put(user.getId(), user);
@@ -45,10 +43,10 @@ public class DataTableParser {
 		return data.toArray(Object[][]::new);
 	}
 
-	public Object[][] parseStudentFetch(List<Student> students) {
+	public Object[][] parseStudent(List<Student> students) {
 		List<Object[]> data = new LinkedList<Object[]>();
 
-		for(Student student : students) data.add(parseStudentWithInformation(student));
+		for(Student student : students) data.add(parseStudent(student));
 
 		return data.toArray(Object[][]::new);
 	}
@@ -74,7 +72,7 @@ public class DataTableParser {
 		List<Object[]> data = new LinkedList<Object[]>();
 		for(Student student : students) {
 			if(excludes.contains(student.getId()))	continue;
-			data.add(parseStudentWithInformation(student));
+			data.add(parseStudent(student));
 		}
 		return data.toArray(Object[][]::new);
 	}
@@ -156,16 +154,10 @@ public class DataTableParser {
 		return teacherRow;
 	}
 
-	private Object[] parseStudentWithInformation(Student student) {
-		var id = student.getId();
-		var students = this.sth.getStudentName(id);
-		var studentName = new String[students == null ? 0 : students.size()];
-
-		for(var i = 0; i < studentName.length; i++) studentName[i] = sth.getStudentUrName(students.get(i));
-
+	private Object[] parseStudent(Student student) {
 		var studentRow = new Object[7];
-		studentRow[0] = id;
-		studentRow[1] = studentName;
+		studentRow[0] = student.getId();
+		studentRow[1] = student.getInfo().getName();
 		studentRow[2] = student.getInfo().getBirth();
 		studentRow[3] = student.getInfo().getPlaceOfBirth();
 		studentRow[4] = student.getInfo().isSex() ? "Male" : "Female";
