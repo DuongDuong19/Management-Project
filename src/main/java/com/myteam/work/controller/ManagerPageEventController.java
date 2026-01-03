@@ -114,6 +114,17 @@ public class ManagerPageEventController {
 		table.addData(this.parser.parseTeacherFetch(teachers));
 	}
 
+	/*public void searchStudentPlace(String s) {
+		log.info("Search student's place: " + s);
+		var table = ((ManagerPage) ManagerPage.getPage()).getStudentTable();
+		table.clearData();
+		var students = this.sth.filterStudentByPlace(s);
+
+		if(students == null) return;
+
+		table.addData(this.parser.parseStudentFetch(students));
+	}*/
+
 	public void searchStudent(String s) {
 		var table = ((ManagerPage) ManagerPage.getPage()).getStudentTable();
 		table.clearData();

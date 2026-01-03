@@ -300,11 +300,6 @@ public class StudentWindow extends JFrame {
     public static final int CREATE = 1;
     public static final int EDIT = 2;
     private static final Configuration config = Configuration.getConfiguration();
-    private static final String defaultStudentIdText = "Please enter student ID here";
-    private static final String defaultStudentNameText = "Please enter student name here";
-    private static final String defaultDobText = "dd/mm/yyyy";
-    private static final String defaultClassText = "Please enter class here";
-    private static final String defaultBirthPlaceText = "Please enter birth place here";
     private static final String defaultSearchText = "Search by student name or student id";
     private static final String defaultBirthPlaceSearchText = "Search by birth place";
     private static final Color PRIMARY_COLOR = new Color(41, 128, 185);
@@ -317,6 +312,7 @@ public class StudentWindow extends JFrame {
     @Getter
     private MSTable choosenStudentTable;
     private StudentWinController stwc;
+    private Student student;
     
     public StudentWindow(Student target) {
         this.setTitle("Student Management");
@@ -329,59 +325,6 @@ public class StudentWindow extends JFrame {
         var mainPanel = new JPanel(new BorderLayout(15, 15));
         mainPanel.setBackground(BACKGROUND_COLOR);
         mainPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
-        
-        // Top Panel - Student Information Input
-        var topPanel = new JPanel(new GridLayout(3, 1, 10, 10));
-        topPanel.setBackground(BACKGROUND_COLOR);
-        
-        // First Row - Student ID and Name
-        var firstRowPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 10));
-        firstRowPanel.setBackground(Color.WHITE);
-        firstRowPanel.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(new Color(189, 195, 199), 1),
-            new EmptyBorder(15, 15, 15, 15)
-        ));
-        
-        var studentId = createStyledTextField(defaultStudentIdText, 150);
-        var studentName = createStyledTextField(defaultStudentNameText, 250);
-        
-        firstRowPanel.add(new JLabel("Student ID:"));
-        firstRowPanel.add(studentId);
-        firstRowPanel.add(new JLabel("Student Name:"));
-        firstRowPanel.add(studentName);
-        
-        // Second Row - DOB and Class
-        var secondRowPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 10));
-        secondRowPanel.setBackground(Color.WHITE);
-        secondRowPanel.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(new Color(189, 195, 199), 1),
-            new EmptyBorder(15, 15, 15, 15)
-        ));
-        
-        var dob = createStyledTextField(defaultDobText, 150);
-        var className = createStyledTextField(defaultClassText, 200);
-        
-        secondRowPanel.add(new JLabel("Date of Birth:"));
-        secondRowPanel.add(dob);
-        secondRowPanel.add(new JLabel("Class:"));
-        secondRowPanel.add(className);
-        
-        // Third Row - Birth Place
-        var thirdRowPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 10));
-        thirdRowPanel.setBackground(Color.WHITE);
-        thirdRowPanel.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(new Color(189, 195, 199), 1),
-            new EmptyBorder(15, 15, 15, 15)
-        ));
-        
-        var birthPlace = createStyledTextField(defaultBirthPlaceText, 400);
-        
-        thirdRowPanel.add(new JLabel("Birth Place:"));
-        thirdRowPanel.add(birthPlace);
-        
-        topPanel.add(firstRowPanel);
-        topPanel.add(secondRowPanel);
-        topPanel.add(thirdRowPanel);
         
         // Center Panel - Student List with Search
         var centerPanel = new JPanel(new BorderLayout(10, 10));
@@ -444,22 +387,17 @@ public class StudentWindow extends JFrame {
         bottomPanel.add(editStudentBtn);
         bottomPanel.add(deleteStudentBtn);
         
-        mainPanel.add(topPanel, BorderLayout.NORTH);
         mainPanel.add(centerPanel, BorderLayout.CENTER);
         mainPanel.add(bottomPanel, BorderLayout.SOUTH);
         
         this.add(mainPanel);
         
-        // Add Focus Listeners
-        studentId.addFocusListener(new DefaultTextDisplayer(defaultStudentIdText));
-        studentName.addFocusListener(new DefaultTextDisplayer(defaultStudentNameText));
-        dob.addFocusListener(new DefaultTextDisplayer(defaultDobText));
-        className.addFocusListener(new DefaultTextDisplayer(defaultClassText));
-        birthPlace.addFocusListener(new DefaultTextDisplayer(defaultBirthPlaceText));
+        this.target = target;
+        this.stwc = new StudentWinController();
+        
+        // Add Focus Listeners for search fields
         studentSearch.addFocusListener(new DefaultTextDisplayer(defaultSearchText));
         birthPlaceSearch.addFocusListener(new DefaultTextDisplayer(defaultBirthPlaceSearchText));
-        
-        this.target = target;
         this.stwc = new StudentWinController();
         
         if(this.target != null) {
@@ -522,14 +460,12 @@ public class StudentWindow extends JFrame {
         
         // Create Student Button Action
         createStudentBtn.addActionListener(e -> {
-            createStudent(studentId.getText(), studentName.getText(), 
-                         dob.getText(), className.getText(), birthPlace.getText());
+            createStudent(student);
         });
         
         // Edit Student Button Action
         editStudentBtn.addActionListener(e -> {
-            editStudent(studentId.getText(), studentName.getText(), 
-                       dob.getText(), className.getText(), birthPlace.getText());
+            editStudent(student);
         });
         
         // Delete Student Button Action
@@ -542,28 +478,6 @@ public class StudentWindow extends JFrame {
             if (!e.getValueIsAdjusting()) {
                 int selectedRow = studentTable.getSelectedRow();
                 if (selectedRow != -1) {
-                    // Get data from sticky table (ID) and content table (other columns)
-                    var idModel = studentTable.getIDModel();
-                    var contentModel = studentTable.getContentModel();
-                    
-                    String id = idModel.getValueAt(selectedRow, 0).toString();
-                    String name = contentModel.getValueAt(selectedRow, 0).toString();
-                    String dobValue = contentModel.getValueAt(selectedRow, 1).toString();
-                    String classValue = contentModel.getValueAt(selectedRow, 2).toString();
-                    String birthPlaceValue = contentModel.getValueAt(selectedRow, 3).toString();
-                    
-                    // Populate fields
-                    studentId.setText(id);
-                    studentId.setForeground(Color.BLACK);
-                    studentName.setText(name);
-                    studentName.setForeground(Color.BLACK);
-                    dob.setText(dobValue);
-                    dob.setForeground(Color.BLACK);
-                    className.setText(classValue);
-                    className.setForeground(Color.BLACK);
-                    birthPlace.setText(birthPlaceValue);
-                    birthPlace.setForeground(Color.BLACK);
-                    
                     // Load target student for editing
                     stwc.loadTargetByRow(StudentWindow.this, selectedRow);
                 }
@@ -573,11 +487,11 @@ public class StudentWindow extends JFrame {
         this.setVisible(true);
     }
     
-    public void createStudent(String id, String name, String dateOfBirth, String studentClass, String birthPlace) {
-        stwc.createStudent(id, name, dateOfBirth, studentClass);
+    public void createStudent(Student st) {
+        stwc.createStudent(st.getId(), st.getInfo().getName(), st.getInfo().getBirth(), st.getClass());
     }
     
-    public void editStudent(String id, String name, String dateOfBirth, String studentClass, String birthPlace) {
+    public void editStudent(Student st) {
         var selectedRow = studentTable.getSelectedRow();
         
         if(selectedRow == -1) {
@@ -591,7 +505,7 @@ public class StudentWindow extends JFrame {
         }
         
         if(target != null) {
-            stwc.updateStudent(target, id, name, dateOfBirth, studentClass);
+            stwc.updateStudent(target, st.getId(), st.getInfo().getName(), st.getInfo().getBirth(), st.getClass());
         }
     }
     

@@ -310,4 +310,38 @@ public class StudentHandler {
 			log.error(e.toString());
 		}
 	}
+/*
+	public List<Student> filterStudentByPlace(String place) {
+		try {
+			List<Student> result = new LinkedList<>();
+			var prepareStatement = SQLHandler.getConnection().prepareStatement("""
+                SELECT
+					st.id,
+					st.urName,
+					st.birth,
+					st.placeOfBirth,
+					st.sex,
+					st.generation,
+					st.gpa
+				FROM Student st
+				WHERE st.placeOfBirth ILIKE ?;
+			""");
+            prepareStatement.setString(1, place);
+            var studentPlace = prepareStatement.executeQuery();
+
+			while(studentPlace.next())
+				result.add(new Student(
+					studentPlace.getInt("id"),
+					studentPlace.getShort("generation"),
+					studentPlace.getFloat("gpa"),
+					studentPlace.getString("urName"),
+					studentPlace.getString("birth"),
+					studentPlace.getString("placeOfBirth"),
+					studentPlace.getBoolean("sex")));
+		} catch (SQLException e) {
+			log.error(e.toString());
+		}
+
+		return null;
+	}*/
 }
