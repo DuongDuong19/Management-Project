@@ -298,10 +298,9 @@ public class ManagerPage extends JPanel {
 		});
 
 		var addTeacherBtn = new JButton("Add teacher");
-		addTeacherBtn.addActionListener(e -> new TeacherWindow());
+		addTeacherBtn.addActionListener(e -> new TeacherWindow(null));
 		var editTeacherBtn = new JButton("Edit Teacher");
 		var removeTeacherBtn = new JButton("Remove teacher");
-		removeTeacherBtn.addActionListener(e -> new TeacherWindow());
 		searchBtn.add(addTeacherBtn, BorderLayout.WEST);
 		searchBtn.add(editTeacherBtn, BorderLayout.CENTER);
 		searchBtn.add(removeTeacherBtn, BorderLayout.EAST);
@@ -320,7 +319,9 @@ public class ManagerPage extends JPanel {
 
 		contentPanel.add(searchPanel, BorderLayout.NORTH);
 		contentPanel.add(this.teacherTable.getDisplayer(), BorderLayout.CENTER);
+		editTeacherBtn.addActionListener(_ -> new TeacherWindow(new User(
 
+						)));		
 		this.teacherTable.setReorderingColumn(false);
 		this.teacherTable.setResizingColumn(false);
 		this.teacherTable.setRowHeight(42);
