@@ -2,6 +2,7 @@ package com.myteam.work.management.handler;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.PreparedStatement;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -285,6 +286,126 @@ public class TeachClassHandler {
 
 			if(!results.isEmpty()) return results;
 		} catch(SQLException e) {
+			log.error(e.toString());
+		}
+
+		return null;
+	}
+
+	public List<Integer> loadAllClassId() {
+		try {
+			var classInfo = this.connection.prepareStatement("""
+						SELECT id
+						FROM TeachClass;
+					""").executeQuery();
+			List<Integer> result = new LinkedList<>();
+
+			while(classInfo.next()) result.add(classInfo.getInt("id"));
+
+			if(!result.isEmpty()) return result;
+		} catch(SQLException e) {
+			log.error(e.toString());
+		}
+
+		return null;
+	}
+
+	public Pair<String, Float> fetchNameAGpa(int id) {
+		try {
+			var prepareStatement = this.connection.prepareStatement("""
+				SELECT
+    				tc.className,
+    				sc.gpa
+				FROM TeachClass tc
+				JOIN SubjectClass sc ON sc.classes = tc.id
+				WHERE tc.id = ?;
+					""");
+			prepareStatement.setInt(1, id);
+			var info = prepareStatement.executeQuery();
+
+			if(info.next()) return new Pair<String, Float>(info.getString("classname"), info.getFloat("gpa"));
+		} catch(SQLException e) {
+			log.error(e.toString());
+		}
+
+		return null;
+	}
+
+	public Pair<String, String> fetchSemesterASubject(int id) {
+		try {
+			var prepareStatement = this.connection.prepareStatement("""
+				SELECT
+    				se.id,
+    				se.semester,
+    				se.years,
+    				sb.subjectName
+				FROM SubjectClass sc
+				JOIN Semester se ON se.id = sc.semester
+				JOIN Subject sb  ON sb.id = sc.subject
+				WHERE sc.classes = ?;
+					""");
+				prepareStatement.setInt(1, id);
+				var info = prepareStatement.executeQuery();
+				
+				if(info.next()) return new Pair<String, String>(info.getShort("semester") + "-" + info.getShort("years"), info.getString("subjectname"));
+		} catch(SQLException e) {
+			log.error(e.toString());
+		}
+
+		return null;
+	}
+
+	public List<String> getTeacherName(int id) {
+		try {
+			var prepareStatement = this.connection.prepareStatement("""
+				SELECT
+    			u.urName 
+				FROM TeacherTeachClass ttc
+				JOIN Users u ON u.id = ttc.teacher
+				WHERE ttc.classes = ?;
+					""");
+			prepareStatement.setInt(1, id);
+			var info = prepareStatement.executeQuery();
+			List<String> result = new LinkedList<>();
+
+			while(info.next()) result.add(info.getString("urname"));
+
+			if(!result.isEmpty()) return result;
+		} catch(SQLException e) {
+			log.error(e.toString());
+		}
+
+		return null;
+	}
+
+	public List<Integer> searchClass(String s) {
+		try {
+			List<Integer> result = new LinkedList<>();
+
+			PreparedStatement statement;
+
+			try {
+				statement = this.connection.prepareStatement("""
+					SELECT
+    				id
+					FROM TeachClass
+					WHERE id = ?;
+						""");
+				statement.setInt(1, Integer.parseInt(s));
+			} catch(NumberFormatException _) {
+				statement = this.connection.prepareStatement("""
+					SELECT
+    				id
+					FROM TeachClass
+					WHERE className ILIKE ?;
+						""");
+				statement.setString(1, "%" + s + "%");
+			}
+
+			var info = statement.executeQuery();
+
+			while(info.next()) result.add(info.getInt("id"));
+		} catch (SQLException e) {
 			log.error(e.toString());
 		}
 

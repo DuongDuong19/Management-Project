@@ -43,6 +43,7 @@ public class ManagerPage extends JPanel {
 	private static final String subjectTableDefaultText = "Search by subject name or subject id";
 	private static final String teacherTableDefaultText = "Search by teacher name or teacher id";
 	private static final String studentTableDefaultText = "Search by student name or student id or student's place";
+	private static final String classTableDefaultText = "Search by class id or class name";
 	private static final String semesterTableDefaultText = "Search by semester";
 	private static final String classManagementTableDefaultText = "Search by class";
 	private static final Configuration config = Configuration.getConfiguration();
@@ -382,8 +383,9 @@ public class ManagerPage extends JPanel {
 		var classPanel = new JPanel(new BorderLayout(15, 0));
 		var classSearchPanel = new JPanel(new BorderLayout(15, 0));
 		var classSearchBtn = new JPanel(new BorderLayout());
-		this.classSemesterSelector = new JComboBox<>();
-		var classSearchField = new JTextField();
+		var classSearchField = new JTextField(classTableDefaultText);
+		classSearchField.setForeground(config.getFieldColor());
+		classSearchField.addFocusListener(new DefaultTextDisplayer(classTableDefaultText));
 		var classCreateBtn = new JButton("Create class");
 		classCreateBtn.addActionListener(e -> new ClassWindow());
 		var classEditBtn = new JButton("Edit class");
@@ -393,12 +395,33 @@ public class ManagerPage extends JPanel {
 		classSearchBtn.add(classCreateBtn, BorderLayout.WEST);
 		classSearchBtn.add(classEditBtn, BorderLayout.CENTER);
 		classSearchBtn.add(classDeleteBtn, BorderLayout.EAST);
-		classSearchPanel.add(this.classSemesterSelector, BorderLayout.WEST);
 		classSearchPanel.add(classSearchField, BorderLayout.CENTER);
 		classSearchPanel.add(classSearchBtn, BorderLayout.EAST);
-		this.classTable = new MSTable(new String[] { "ID", "Class name", "Semester", "Subject", "GPA", "Teacher" },
+		this.classTable = new MSTable(new String[] { "ID", "Class name", "Semester", "Subject", "Average", "Teacher" },
 				List.<Class<?>>of(Integer.class, String.class, String.class, String.class, Float.class, String[].class),
 				Collections.EMPTY_LIST);
+		this.updateClass = () -> {
+			if(classSearchField.getText().equals(classTableDefaultText)) mpec.loadAllClass();
+			else mpec.searchClass(classSearchField.getText());
+		};
+		classSearchField.getDocument().addDocumentListener(new DocumentListener() {
+			private Timer updater = new Timer(125, e -> updateClass.run());
+
+			public void changedUpdate(DocumentEvent e) {
+				updater.setRepeats(false);
+				updater.restart();
+			}
+
+			public void insertUpdate(DocumentEvent e) {
+				updater.setRepeats(false);
+				updater.restart();
+			}
+
+			public void removeUpdate(DocumentEvent e) {
+				updater.setRepeats(false);
+				updater.restart();
+			}
+		});
 		classPanel.add(classSearchPanel, BorderLayout.NORTH);
 		classPanel.add(this.classTable.getDisplayer(), BorderLayout.CENTER);
 		var semesterPanel = new JPanel(new BorderLayout(15, 0));

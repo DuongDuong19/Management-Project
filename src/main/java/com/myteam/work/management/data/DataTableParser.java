@@ -146,6 +146,29 @@ public class DataTableParser {
 		return rows.toArray(Object[][]::new);		
 	}
 
+	public Object[][] parseClassFetchInfo(List<Integer> classes) {
+		List<Object[]> rows = new LinkedList<>();
+
+		for(Integer id : classes) {
+			var row = new Object[6];
+			var nag = this.tch.fetchNameAGpa(id);
+			var sas = this.tch.fetchSemesterASubject(id);
+
+			var names = this.tch.getTeacherName(id);
+
+			row[0] = id;
+			row[1] = nag == null ? "" : nag.first();
+			row[2] = sas == null ? "" : sas.first();
+			row[3] = sas == null ? "" : sas.second();
+			row[4] = nag == null ? "" : nag.second();
+			row[5] = names == null ? new String[0] : names.toArray(String[]::new);
+
+			rows.add(row);
+		}
+
+		return rows.toArray(Object[][]::new);
+	}
+
 	private Object[] parseSubjectWithPrerequisite(Subject subject) {
 		var id = subject.getId();
 		var prerequisites = this.sh.getPrerequisites(id);

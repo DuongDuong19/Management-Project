@@ -289,8 +289,23 @@ public class ManagerPageEventController {
 		
 	}
 
+	public void loadAllClass() {
+		var table = ((ManagerPage) ManagerPage.getPage()).getClassTable();
+		table.clearData();
+		var classes = this.tch.loadAllClassId();
 
-   
-	
+		if(classes == null) return;
 
+		table.addData(this.parser.parseClassFetchInfo(classes));
+	}
+
+	public void searchClass(String s) {
+		var table = ((ManagerPage) ManagerPage.getPage()).getClassTable();
+		table.clearData();
+		var classes = this.tch.searchClass(s);
+
+		if(classes == null) return;
+
+		table.addData(this.parser.parseClassFetchInfo(classes));
+	}
 }
