@@ -3,6 +3,7 @@ package com.myteam.work.management.handler;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Date;
 import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
@@ -297,7 +298,7 @@ public class StudentHandler {
 
 	public void removeStudent(int id) {
 		try {
-			PreparedStatement statement = this.connection.prepareStatement("DELETE FROM Student WHERE id = ?;");
+			PreparedStatement statement = this.connection.prepareStatement("DELETE FROM Student WHERE id = ?");
 
 			statement.setInt(1, id);
 
@@ -341,13 +342,46 @@ public class StudentHandler {
 		return null;
 	}*/
 
-    public void createStudent(String name, LocalDate dateOfBirth, boolean sex, String birthPlace) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'createStudent'");
+    public void createStudent(String name, LocalDate dateOfBirth, boolean sex, String birthPlace, short generation) {
+		try {
+			var prepareStatement = this.connection.prepareStatement("""
+						INSERT INTO Student (urName, birth, placeOfBirth, sex, generation)
+						VALUES (?, ?, ?, ?, ?);
+					""");
+
+			prepareStatement.setString(1, name);
+			prepareStatement.setDate(2, Date.valueOf(dateOfBirth));
+			prepareStatement.setString(3, birthPlace);
+			prepareStatement.setBoolean(4, sex);
+			prepareStatement.setShort(5, generation);
+			prepareStatement.executeUpdate();
+		} catch(SQLException e) {
+			log.error(e.toString());
+		}
     }
 
-    public void updateStudent(int id, String name, LocalDate dateOfBirth, boolean sex, String birthPlace) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'updateStudent'");
-    }
+    public void updateStudent(int id, String name, LocalDate dateOfBirth, boolean sex, String birthPlace, short generation) {
+		try {
+			var prepareStatement = this.connection.prepareStatement("""
+						UPDATE Student
+						SET
+    						urName       = ?,
+    						birth        = ?,
+    						placeOfBirth = ?,
+    						sex          = ?,
+    						generation   = ?
+						WHERE id = ?;
+					""");
+
+			prepareStatement.setString(1, name);
+			prepareStatement.setDate(2, Date.valueOf(dateOfBirth));
+			prepareStatement.setString(3, birthPlace);
+			prepareStatement.setBoolean(4, sex);
+			prepareStatement.setShort(5, generation);
+			prepareStatement.setInt(6, id);
+			prepareStatement.executeUpdate();
+		} catch(SQLException e) {
+			log.error(e.toString());
+		}
+    }	
 }

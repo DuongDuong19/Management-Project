@@ -54,7 +54,7 @@ public class DataTableParser {
 			if (!unique.containsKey(semester.getId())) unique.put(semester.getId(), semester);
 		}
 
-		for (Semester semester : unique.values()) data.add(parseSemesterWithInformation(semester));
+		//for (Semester semester : unique.values()) data.add(parseSemesterWithInformation(semester));
 
 		return data.toArray(Object[][]::new);
 	}

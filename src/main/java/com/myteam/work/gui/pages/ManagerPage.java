@@ -7,6 +7,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 
+import java.time.LocalDate;
+
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -131,7 +133,7 @@ public class ManagerPage extends JPanel {
 		this.studentSearchField.addFocusListener(new DefaultTextDisplayer(studentTableDefaultText));
 		this.updateStudent = () -> {
 			if (studentSearchField.getText().equals(studentTableDefaultText))
-				mpec.loadStudent();
+				mpec.searchStudent("");
 			else
 				mpec.searchStudent(studentSearchField.getText());
 		};
@@ -191,13 +193,13 @@ public class ManagerPage extends JPanel {
 						(Short) contentModel.getValueAt(selectedRow, 4),
 						(Float) contentModel.getValueAt(selectedRow, 5),
 						(String) contentModel.getValueAt(selectedRow, 0),
-						(String) contentModel.getValueAt(selectedRow, 1),
+						((LocalDate) contentModel.getValueAt(selectedRow, 1)).toString(),
 						(String) contentModel.getValueAt(selectedRow, 2),
 						((String) contentModel.getValueAt(selectedRow, 3)).equals("Male") ? true : false
 						));
 		});
-
-		removeStudentBtn.addActionListener(_ -> createDeleteWindow(studentTable, mpec::deleteStudent, studentSearchField, studentTableDefaultText, mpec::loadStudent, mpec::searchStudent));
+		Runnable update = () -> mpec.searchStudent("");
+		removeStudentBtn.addActionListener(_ -> createDeleteWindow(studentTable, mpec::deleteStudent, studentSearchField, studentTableDefaultText, update, mpec::searchStudent));
 		return contentPanel;
 	}
 

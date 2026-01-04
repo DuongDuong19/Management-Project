@@ -33,14 +33,12 @@ import com.myteam.work.management.data.Student;
 
 import lombok.Getter;    
 
-
 public class StudentWindow extends JFrame {
-    public static final int CREATE = 1;
-    public static final int EDIT = 2;
     private static final Configuration config = Configuration.getConfiguration();
     private static final String defaultStudentNameText = "Please enter student name here";
-    private static final String defaultDateOfBirthText = "DD/MM/YYYY";
+    private static final String defaultDateOfBirthText = "yyyy-MM-dd";
     private static final String defaultBirthPlaceText = "Please enter birth place here";
+	private static final String defaultGenerationText = "Please enter generation here";
     private static final Color PRIMARY_COLOR = new Color(41, 128, 185);
     private static final Color BACKGROUND_COLOR = new Color(236, 240, 241);
     
@@ -99,6 +97,7 @@ public class StudentWindow extends JFrame {
         var studentNameField = createStyledTextField(defaultStudentNameText, 250);
         var dateOfBirthField = createStyledTextField(defaultDateOfBirthText, 150);
         var birthPlaceField = createStyledTextField(defaultBirthPlaceText, 300);
+		var generationField = createStyledTextField(defaultGenerationText, 300);
         
         // Row 1: Student Sex and Student Name
         gbc.gridx = 0;
@@ -135,6 +134,13 @@ public class StudentWindow extends JFrame {
         gbc.gridx = 3;
         gbc.weightx = 0.7;
         topPanel.add(birthPlaceField, gbc);
+
+		gbc.gridx = 0;
+		gbc.gridy = 2;
+		topPanel.add(createLabel("Generation"), gbc);
+
+		gbc.gridx = 1;
+		topPanel.add(generationField, gbc);
         
         // Bottom Panel - Submit Button
         var bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 10));
@@ -154,6 +160,7 @@ public class StudentWindow extends JFrame {
         studentNameField.addFocusListener(new DefaultTextDisplayer(defaultStudentNameText));
         dateOfBirthField.addFocusListener(new DefaultTextDisplayer(defaultDateOfBirthText));
         birthPlaceField.addFocusListener(new DefaultTextDisplayer(defaultBirthPlaceText));
+		generationField.addFocusListener(new DefaultTextDisplayer(defaultGenerationText));
         
         this.target = target;
         this.stwc = new StudentWinController();
@@ -168,6 +175,11 @@ public class StudentWindow extends JFrame {
             dateOfBirthField.setText((this.target.getInfo().getBirth()).toString());
             birthPlaceField.setText(this.target.getInfo().getPlaceOfBirth() != null ? 
                 this.target.getInfo().getPlaceOfBirth() : "");
+			generationField.setText(this.target.getGeneration() + "");
+			studentNameField.setForeground(new Color(30, 30, 30));
+			dateOfBirthField.setForeground(new Color(30, 30, 30));
+			birthPlaceField.setForeground(new Color(30, 30, 30));
+			generationField.setForeground(new Color(30, 30, 30));
         }
         
         // Submit Button Action
@@ -193,12 +205,11 @@ public class StudentWindow extends JFrame {
                 }
                 */
                 if(target == null) {
-                    stwc.createStudent(studentNameField.getText(), LocalDate.parse(dateOfBirthField.getText(), DateTimeFormatter.ofPattern("yyyy-MM-dd")), maleRadio.isSelected(), birthPlaceField.getText());
+                    stwc.createStudent(studentNameField.getText(), LocalDate.parse(dateOfBirthField.getText(), DateTimeFormatter.ofPattern("yyyy-MM-dd")), maleRadio.isSelected(), birthPlaceField.getText(), generationField.getText());
                 } else {
-                    stwc.updateStudent(this.target, studentNameField.getText(), LocalDate.parse(dateOfBirthField.getText(), DateTimeFormatter.ofPattern("yyyy-MM-dd")), maleRadio.isSelected(), birthPlaceField.getText());
+                    stwc.updateStudent(this.target, studentNameField.getText(), LocalDate.parse(dateOfBirthField.getText(), DateTimeFormatter.ofPattern("yyyy-MM-dd")), maleRadio.isSelected(), birthPlaceField.getText(), generationField.getText());
                 }
                 
-                // Clear form and close window
                 submit.dispose();
                 StudentWindow.this.dispose();
 				((ManagerPage) ManagerPage.getPage()).refreshStudent();
