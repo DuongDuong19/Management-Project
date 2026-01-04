@@ -18,6 +18,7 @@ import javax.swing.Timer;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.table.TableModel;
 
 import com.myteam.work.Configuration;
 import com.myteam.work.controller.ManagerPageEventController;
@@ -40,6 +41,7 @@ public class ManagerPage extends JPanel {
 	private static final String subjectTableDefaultText = "Search by subject name or subject id";
 	private static final String teacherTableDefaultText = "Search by teacher name or teacher id";
 	private static final String studentTableDefaultText = "Search by student name or student id or student's place";
+	private static final String semesterTableDefaultText = "Search by semester";
 	private static final Configuration config = Configuration.getConfiguration();
 	private static ManagerPageEventController mpec;
 	private static ManagerPage mp;
@@ -71,9 +73,12 @@ public class ManagerPage extends JPanel {
 	private JComboBox<User> teacherSelector;
 	@Getter
 	private JComboBox<Student> studentSelector;
+	@Getter
+	private JComboBox<Semester> semesterSelector;
 	private JTextField subjectSearchField;
 	private JTextField teacherSearchField;
 	private JTextField studentSearchField;
+	private JTextField semesterSearchField;
 	private Runnable updateStudent;
 	private Runnable updateTeacher;
 	private Runnable updateSubject;
@@ -313,7 +318,7 @@ public class ManagerPage extends JPanel {
 		});
 
 		var addTeacherBtn = new JButton("Add teacher");
-		addTeacherBtn.addActionListener(e -> new TeacherWindow(null));
+		addTeacherBtn.addActionListener(_ -> new TeacherWindow(null));
 		var editTeacherBtn = new JButton("Edit Teacher");
 		var removeTeacherBtn = new JButton("Remove teacher");
 		searchBtn.add(addTeacherBtn, BorderLayout.WEST);
@@ -334,15 +339,33 @@ public class ManagerPage extends JPanel {
 
 		contentPanel.add(searchPanel, BorderLayout.NORTH);
 		contentPanel.add(this.teacherTable.getDisplayer(), BorderLayout.CENTER);
-		editTeacherBtn.addActionListener(_ -> new TeacherWindow(new User(
+		editTeacherBtn.addActionListener(_ -> {
+			var selectedRow = teacherTable.getSelectedRow();
 
-						)));		
+			if(selectedRow == -1) return;
+
+			var contentModel = teacherTable.getContentModel();
+
+			new TeacherWindow(new User(
+				(Integer) teacherTable.getIDModel().getValueAt(selectedRow, 0),
+				(String) contentModel.getValueAt(selectedRow, 1),
+				(String) contentModel.getValueAt(selectedRow, 2),
+				//(Boolean) getTwoColumns(contentModel, selectedRow, 6, 7)[0],
+				true,
+				(String) contentModel.getValueAt(selectedRow, 0),
+				(String) contentModel.getValueAt(selectedRow, 3),
+				(String) contentModel.getValueAt(selectedRow, 4),
+				((String) contentModel.getValueAt(selectedRow, 5)).equals("Male") ? true : false
+
+			));
+		});		
 		this.teacherTable.setReorderingColumn(false);
 		this.teacherTable.setResizingColumn(false);
 		this.teacherTable.setRowHeight(42);
 		this.teacherTable.setShowGrid(true);
 		this.teacherTable.setIntercellSpacing(new Dimension(1, 1));
-
+		
+		removeTeacherBtn.addActionListener(_ -> createDeleteWindow(teacherTable, mpec::deleteTeacher, teacherSearchField, teacherTableDefaultText, mpec::loadAllTeacher, mpec::searchTeacher));
 		return contentPanel;
 	}
 
@@ -380,7 +403,6 @@ public class ManagerPage extends JPanel {
 		semesterCreateBtn.addActionListener(e -> new SemesterWindow(null));
 		var semesterEditBtn = new JButton("Edit semester");
 		var semesterDeleteBtn = new JButton("Delete semester");
-		semesterDeleteBtn.addActionListener(e -> new SemesterWindow());
 		semesterSearchBtn.add(semesterCreateBtn, BorderLayout.WEST);
 		semesterSearchBtn.add(semesterEditBtn, BorderLayout.CENTER);
 		semesterSearchBtn.add(semesterDeleteBtn, BorderLayout.EAST);
@@ -397,6 +419,7 @@ public class ManagerPage extends JPanel {
 		contentPanel.add(classPanel, BorderLayout.CENTER);
 		contentPanel.add(semesterPanel, BorderLayout.SOUTH);
 
+		semesterDeleteBtn.addActionListener(_ -> createDeleteWindow(semesterTable, mpec::deleteSemester, semesterSearchField, semesterTableDefaultText, mpec::loadSemester, mpec::searchSemester));
 		return new JScrollPane(contentPanel);
 	}
 
@@ -491,32 +514,11 @@ public class ManagerPage extends JPanel {
 		throw new UnsupportedOperationException("Unimplemented method 'refreshTeacher'");
 	}
 
-	private void addStudentWindow() {
-		var submitWin = new StudentWindow(true);
-		submitWin.setAddAction(e -> {
-			mpec.AddStudent((Student) this.studentSelector.getSelectedItem());
-			submitWin.dispose();
-		});
-		// submitWin.setSubmitAction(e -> {
-		// 	mpec.getRecorder().clear();
-		// 	mpec.loadStudentInTeachClass((Student) this.studentSelector.getSelectedItem());
-		// 	submitWin.dispose();
-		// });
-		// submitWin.setCancelAction(e -> submitWin.dispose());
-	}
-
-	private void editStudentWindow() {
-		var submitWin = new StudentWindow(true);
-		submitWin.setSubmitAction(e -> {
-			mpec.editBirthPlace((Student) this.studentSelector.getSelectedItem());
-			submitWin.dispose();
-		});
-		// submitWin.setRevokeAction(e -> {
-		// 	tpec.getRecorder().clear();
-		// 	tpec.loadStudentInTeachClass((TeachClass) this.classSelector.getSelectedItem());
-		// 	submitWin.dispose();
-		// });
-		// submitWin.setCancelAction(e -> submitWin.dispose());
+	public Object[] getTwoColumns(TableModel model, int row, int col1, int col2) {
+		return new Object[] {
+			model.getValueAt(row, col1),
+			model.getValueAt(row, col2)
+		};
 	}
 
 	

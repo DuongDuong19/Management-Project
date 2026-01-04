@@ -101,10 +101,33 @@ public class ManagerPageEventController {
 
 		for(Student student : students) selector.addItem(student);
 	}
+	
+	public void loadSemester() {
+		var semesters = this.seh.getAllSemester();
+		var selector = ((ManagerPage) ManagerPage.getPage()).getSemesterSelector();
+		if(selector == null)	return;
+		selector.removeAllItems();
+		selector.addItem(null);
+
+		if(semesters == null) return;
+
+		for(Semester semester : semesters) selector.addItem(semester);
+	}
 
 	public void searchTeacher(String s) {
 		log.info("Search teacher: " + s);
 		var table = ((ManagerPage) ManagerPage.getPage()).getTeacherTable();
+		table.clearData();
+		var teachers = this.th.loadTeacher(s);
+
+		if(teachers == null) return;
+
+		table.addData(this.parser.parseTeacherFetch(teachers));
+	}
+
+	public void searchSemester(String s) {
+		log.info("Search semester: " + s);
+		var table = ((ManagerPage) ManagerPage.getPage()).getSemesterTable();
 		table.clearData();
 		var teachers = this.th.loadTeacher(s);
 
@@ -197,6 +220,17 @@ public class ManagerPageEventController {
 		table.addData(this.parser.parseSubjectFetchPrerequisites(subjects));
 	}
 
+	public void loadAllTeacher() {
+		log.info("Load all teacher");
+		var table = ((ManagerPage) ManagerPage.getPage()).getTeacherTable();
+		table.clearData();
+		var teachers = this.th.getAllTeacher();
+
+		if(teachers == null) return;
+
+		table.addData(this.parser.parseTeacherFetch(teachers));
+	}
+
 	public void loadTeachClass(Semester semester, Subject subject) {
 		var selector = ((ManagerPage) ManagerPage.getPage()).getClassManagementClassSelector();
 		selector.removeAllItems();
@@ -228,12 +262,19 @@ public class ManagerPageEventController {
 	}
 
 	public void AddStudent() {
-		// UI có chọn sex, nhập name, nhập date of birth, nhập birth place
 		
 	}
 
 	public void deleteStudent(int id) {
 		this.sth.removeStudent(id);
+	}
+
+	public void deleteTeacher(int id) {
+		this.th.removeTeacher(id);
+	}
+
+	public void deleteSemester(int id) {
+		this.seh.removeSemester(id);
 	}
 
     public void createSemester(String semester, String year) {
@@ -244,14 +285,7 @@ public class ManagerPageEventController {
 
 	}
 
-    // public void createSemester(String semester, String year) {
-    //     throw new UnsupportedOperationException("Not supported yet.");
-    // }
-
-    // public void createSemester(String semester, String year) {
-    //     // TODO Auto-generated method stub
-    //     throw new UnsupportedOperationException("Unimplemented method 'createSemester'");
-    // }
+   
 	
 
 }

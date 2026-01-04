@@ -154,4 +154,41 @@ public class TeacherHandler {
 		}
 	}
 
+    public void removeTeacher(int id) {
+		try {
+			PreparedStatement statement = this.connection.prepareStatement("DELETE FROM Users WHERE id = ?");
+
+			statement.setInt(1, id);
+
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			log.error(e.toString());
+		}
+	}
+
+    public List<User> getAllTeacher() {
+		try {
+			List<User> results = new LinkedList<>();
+			var teacherInformation = this.connection.prepareStatement("select * from users").executeQuery();
+
+			while(teacherInformation.next()) {
+				results.add(new User(
+                    teacherInformation.getInt("id"),
+                    teacherInformation.getString("authName"),
+                    teacherInformation.getString("authPass"),
+                    teacherInformation.getBoolean("role"),
+                    teacherInformation.getString("urName"),
+                    teacherInformation.getString("birth"),
+                    teacherInformation.getString("placeOfBirth"),
+                    teacherInformation.getBoolean("sex")));
+			}
+
+			if(!results.isEmpty()) return results;
+		} catch(SQLException e) {
+			log.error(e.toString());
+		}
+
+		return null;
+	}
+
 }
