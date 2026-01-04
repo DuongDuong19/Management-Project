@@ -49,7 +49,7 @@ public class TeacherWindow extends JFrame {
     private MSTable teacherTable;
     private TeacherWinController ttwc;
 
-    public TeacherWindow() {
+    public TeacherWindow(User target) {
         this.setTitle("Teacher Management");
         this.setSize(new Dimension(1100, 750));
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
