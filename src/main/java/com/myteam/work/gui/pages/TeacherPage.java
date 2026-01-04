@@ -175,6 +175,11 @@ public class TeacherPage extends JPanel {
 		this.subjectTable.clearData();
 		this.searchField.setText(defaultText);
 		this.searchField.setForeground(config.getFieldColor());
+		this.studentTable.clearData();
+		this.semesterSelector.removeAll();
+		this.subjectSelector.removeAll();
+		this.classSelector.removeAll();
+		this.tpec.getRecorder().clear();
 	}
 
 	private void loadTeachClass() {

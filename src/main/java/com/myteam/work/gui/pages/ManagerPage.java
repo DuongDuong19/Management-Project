@@ -362,9 +362,8 @@ public class ManagerPage extends JPanel {
 		var semesterSearchBtn = new JPanel(new BorderLayout());
 		var semesterSearchField = new JTextField();
 		var semesterCreateBtn = new JButton("Create semester");
-		semesterCreateBtn.addActionListener(e -> new SemesterWindow());
+		semesterCreateBtn.addActionListener(e -> new SemesterWindow(null));
 		var semesterEditBtn = new JButton("Edit semester");
-		semesterEditBtn.addActionListener(e -> new SemesterWindow());
 		var semesterDeleteBtn = new JButton("Delete semester");
 		semesterDeleteBtn.addActionListener(e -> new SemesterWindow());
 		semesterSearchBtn.add(semesterCreateBtn, BorderLayout.WEST);
@@ -374,6 +373,10 @@ public class ManagerPage extends JPanel {
 		semesterSearchPanel.add(semesterSearchBtn, BorderLayout.EAST);
 		this.semesterTable = new MSTable(new String[] { "ID", "Semester", "Year" },
 				List.<Class<?>>of(Integer.class, Short.class, Short.class), Collections.EMPTY_LIST);
+		semesterEditBtn.addActionListener(e -> new SemesterWindow(new Semester(
+
+						)));
+		//semesterDeleteBtn.addActionListener(_ -> createDeleteWindow(this.semesterTable, ManagerPageEventController::deleteSemester, semesterSearchField, them default text o day, ham reload toan bo, ham reload khi co search))
 		semesterPanel.add(semesterSearchPanel, BorderLayout.NORTH);
 		semesterPanel.add(this.semesterTable.getDisplayer(), BorderLayout.CENTER);
 		contentPanel.add(classPanel, BorderLayout.CENTER);

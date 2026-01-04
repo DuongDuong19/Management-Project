@@ -236,8 +236,12 @@ public class ManagerPageEventController {
 	}
 
     public void createSemester(String semester, String year) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
+    	
+	}
+
+	public void updateSemester(Semester target, String semester, String year) {
+
+	}
 
     // public void createSemester(String semester, String year) {
     //     throw new UnsupportedOperationException("Not supported yet.");
