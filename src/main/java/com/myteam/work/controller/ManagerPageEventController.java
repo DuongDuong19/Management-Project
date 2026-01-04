@@ -91,7 +91,7 @@ public class ManagerPageEventController {
 	}
 
 	public void loadStudent() {
-		var students = this.sth.loadStudent("");
+		var students = this.sth.getAllStudents();
 		var selector = ((ManagerPage) ManagerPage.getPage()).getStudentSelector();
 		if(selector == null)	return;
 		selector.removeAllItems();
@@ -228,11 +228,12 @@ public class ManagerPageEventController {
 	}
 
 	public void AddStudent() {
+		// UI có chọn sex, nhập name, nhập date of birth, nhập birth place
 		
 	}
 
-	public void RemoveStudent() {
-
+	public void deleteStudent(int id) {
+		this.sth.removeStudent(id);
 	}
 
     public void createSemester(String semester, String year) {

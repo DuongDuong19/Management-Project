@@ -299,11 +299,11 @@ public class StudentHandler {
 		}
 	}
 
-	public void removeStudent(Student student) {
+	public void removeStudent(int id) {
 		try {
 			PreparedStatement statement = this.connection.prepareStatement("DELETE FROM Student WHERE id = ?;");
 
-			statement.setInt(1, student.getId());
+			statement.setInt(1, id);
 
 			statement.executeUpdate();
 		} catch (SQLException e) {

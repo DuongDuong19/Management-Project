@@ -55,7 +55,7 @@ public class StudentWindow extends JFrame {
     private JButton remove;
     private JButton submit;
     
-    public StudentWindow(boolean showRevoke) {
+    public StudentWindow(Student target) {
         this.setTitle("Student Management");
         this.setSize(new Dimension(900, 300));
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
