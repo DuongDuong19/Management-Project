@@ -371,7 +371,6 @@ public class StudentWindow extends JFrame {
             dateOfBirthField.setText((this.target.getInfo().getBirth()).toString());
             birthPlaceField.setText(this.target.getInfo().getPlaceOfBirth() != null ? 
                 this.target.getInfo().getPlaceOfBirth() : "");
-            this.stwc.loadTarget(this.target);
         }
         
         // Submit Button Action
@@ -384,6 +383,7 @@ public class StudentWindow extends JFrame {
                 String birthPlace = birthPlaceField.getText();
                 
                 // Validate
+				/*
                 if(studentName.equals(defaultStudentNameText) || studentName.trim().isEmpty()) {
                     JOptionPane.showMessageDialog(
                         StudentWindow.this,
@@ -394,7 +394,7 @@ public class StudentWindow extends JFrame {
                     submit.dispose();
                     return;
                 }
-                
+                */
                 if(target == null) {
                     stwc.createStudent(target.getId(), target.getInfo().getName(), target.getInfo().getBirth(), null);
                 } else {
@@ -404,6 +404,7 @@ public class StudentWindow extends JFrame {
                 // Clear form and close window
                 submit.dispose();
                 StudentWindow.this.dispose();
+				ManagerPage.getPage().refreshStudent();
             });
         });
         

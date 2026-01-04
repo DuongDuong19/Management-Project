@@ -18,73 +18,12 @@ public class StudentWinController {
         this.parser = new DataTableParser();
     }
 
-    public void deleteStudent(int selectedRow) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'deleteStudent'");
-    }
 
-    public void createStudent(int id, String name, LocalDate dateOfBirth, Class<? extends Student> studentClass) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'createStudent'");
-    }
+    public void createStudent(String name, LocalDate dateOfBirth, boolean sex, String birthPlace) {
+    	this.sth.createStudent(name, dateOfBirth, sex, birthPlace);
+	}
 
-    public void updateStudent(Student target, int id, String name, LocalDate dateOfBirth, Class<? extends Student> studentClass) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'updateStudent'");
-    }
-
-    public void loadAllStudents(StudentWindow sw) {
-        var table = sw.getStudentTable();
-		table.clearData();
-		var students = this.sth.getAllStudents();
-
-		if(students == null) return;
-
-        // If there's no chosen-student table (optional UI), treat as no exclusions
-        var existedTable = sw.getChoosenStudentTable();
-        List<Integer> existedStudent = new LinkedList<>();
-        if (existedTable != null) {
-            var existedTableModel = existedTable.getIDModel();
-            for(var i = 0; i < existedTableModel.getRowCount(); i++) existedStudent.add((Integer) existedTableModel.getValueAt(i, 0));
-        }
-
-        table.addData(this.parser.parseStudentFetch(students, existedStudent));
-    }
-
-    public void searchStudent(StudentWindow sw, String s) {
-        var table = sw.getStudentTable();
-		table.clearData();
-		var students = this.sth.loadStudent(s);
-
-		if(students == null) return;
-
-        var existedTable = sw.getChoosenStudentTable();
-        List<Integer> existedStudent = new LinkedList<>();
-        if (existedTable != null) {
-            var existedTableModel = existedTable.getIDModel();
-            for(var i = 0; i < existedTableModel.getRowCount(); i++) existedStudent.add((Integer) existedTableModel.getValueAt(i, 0));
-        }
-
-        table.addData(this.parser.parseStudentFetch(students, existedStudent));
-    }
-
-    public void loadTarget(Student target) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'loadTarget'");
-    }
-
-    public void deleteStudent(Object selectedRow) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'deleteStudent'");
-    }
-
-    public void searchByBirthPlace(StudentWindow studentWindow, String text) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'searchByBirthPlace'");
-    }
-
-    public void loadTargetByRow(StudentWindow aThis, int selectedRow) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
+    public void updateStudent(Student target, String name, LocalDate dateOfBirth, boolean sex, String birthPlace) {
+    	this.sth.updateStudent(target.getId(), name, dateOfBirth, sex, birthPlace);
+	}  
 }

@@ -231,6 +231,11 @@ public class SubjectWindow extends JFrame {
 				else swc.updateSubject(target, subjectName.getText(), credits.getText(), required.isValidateRoot(), prerequisites);
 
 				submit.dispose();
+				SubjectWindow.this.dispose();
+				if (ManagerPage.getPage().getSubjectSearchField.getText().equals(subjectTableDefaultText))
+					ManagerPageEventController.getController().loadAllSubject();
+				else
+					ManagerPageEventController.getController().searchSubject(subjectSearchField.getText());
 			});
 		});
 
