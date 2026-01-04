@@ -460,7 +460,9 @@ public class ManagerPage extends JPanel {
 			if (searchBar.getText().equals(defaultText))
 				loadAll.run();
 			else
-				search.accept(searchBar.getText());
+			 	search.accept(searchBar.getText());
+			
+			submitWin.dispose();
 		});
 		submitWin.setCancelAction(_ -> submitWin.dispose());
 	}
