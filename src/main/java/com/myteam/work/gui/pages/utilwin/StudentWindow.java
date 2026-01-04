@@ -10,13 +10,14 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
@@ -26,6 +27,7 @@ import com.myteam.work.Configuration;
 import com.myteam.work.controller.StudentWinController;
 import com.myteam.work.gui.pages.DefaultTextDisplayer;
 import com.myteam.work.gui.pages.MSTable;
+import com.myteam.work.gui.pages.ManagerPage;
 import com.myteam.work.management.data.Student;
 
 import lombok.Getter;    
@@ -396,15 +398,15 @@ public class StudentWindow extends JFrame {
                 }
                 */
                 if(target == null) {
-                    stwc.createStudent(target.getId(), target.getInfo().getName(), target.getInfo().getBirth(), null);
+                    stwc.createStudent(studentNameField.getText(), LocalDate.parse(dateOfBirthField.getText(), DateTimeFormatter.ofPattern("yyyy-MM-dd")), maleRadio.isSelected(), birthPlaceField.getText());
                 } else {
-                    stwc.updateStudent(this.target, target.getId(), target.getInfo().getName(), target.getInfo().getBirth(), null);
+                    stwc.updateStudent(this.target, studentNameField.getText(), LocalDate.parse(dateOfBirthField.getText(), DateTimeFormatter.ofPattern("yyyy-MM-dd")), maleRadio.isSelected(), birthPlaceField.getText());
                 }
                 
                 // Clear form and close window
                 submit.dispose();
                 StudentWindow.this.dispose();
-				ManagerPage.getPage().refreshStudent();
+				((ManagerPage) ManagerPage.getPage()).refreshStudent();
             });
         });
         

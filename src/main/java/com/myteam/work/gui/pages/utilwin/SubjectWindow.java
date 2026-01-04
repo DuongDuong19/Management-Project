@@ -28,6 +28,7 @@ import com.myteam.work.Configuration;
 import com.myteam.work.controller.SubjectWinController;
 import com.myteam.work.gui.pages.DefaultTextDisplayer;
 import com.myteam.work.gui.pages.MSTable;
+import com.myteam.work.gui.pages.ManagerPage;
 import com.myteam.work.management.data.Subject;
 
 import lombok.Getter;
@@ -225,15 +226,12 @@ public class SubjectWindow extends JFrame {
 			var submit = new SubmitWindow(false);
 			submit.setCancelAction(_ -> submit.dispose());
 			submit.setSubmitAction(_ -> {
-				if(target == null) swc.createSubject(subjectName.getText(), Short.parseShort(credits.getText()), required.isValidateRoot(), prerequisites);
-				else swc.updateSubject(target, subjectName.getText(), credits.getText(), required.isValidateRoot(), prerequisites);
+				if(target == null) swc.createSubject(subjectName.getText(), Short.parseShort(credits.getText()), required.isSelected(), prerequisites);
+				else swc.updateSubject(target, subjectName.getText(), credits.getText(), required.isSelected(), prerequisites);
 
 				submit.dispose();
 				SubjectWindow.this.dispose();
-				if (ManagerPage.getPage().getSubjectSearchField.getText().equals(subjectTableDefaultText))
-					ManagerPageEventController.getController().loadAllSubject();
-				else
-					ManagerPageEventController.getController().searchSubject(subjectSearchField.getText());
+				((ManagerPage) ManagerPage.getPage()).refreshSubject();
 			});
 		});
 

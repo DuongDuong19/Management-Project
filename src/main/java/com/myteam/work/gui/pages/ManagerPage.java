@@ -79,6 +79,8 @@ public class ManagerPage extends JPanel {
 	private Runnable updateClass;
 	private Runnable updateSemester;
 	private Runnable updateManagementClass;
+	private Consumer<Integer> deleteFunc;
+	private Consumer<String> search;
 
 	private ManagerPage() {
 		this.mpec = ManagerPageEventController.getController();
@@ -180,14 +182,14 @@ public class ManagerPage extends JPanel {
 		this.subjectSearchField.setBorder(null);
 		this.subjectSearchField.setForeground(config.getFieldColor());
 		this.subjectSearchField.addFocusListener(new DefaultTextDisplayer(subjectTableDefaultText));
+		this.updateSubject = () -> {
+			if (subjectSearchField.getText().equals(subjectTableDefaultText))
+				mpec.loadAllSubject();
+			else
+				mpec.searchSubject(subjectSearchField.getText());
+		};
 		this.subjectSearchField.getDocument().addDocumentListener(new DocumentListener() {
-			private Timer updater = new Timer(125, e -> {
-				if (subjectSearchField.getText().equals(subjectTableDefaultText))
-					mpec.loadAllSubject();
-				else
-					mpec.searchSubject(subjectSearchField.getText());
-
-			});
+			private Timer updater = new Timer(125, e -> updateSubject.run());
 
 			public void changedUpdate(DocumentEvent e) {
 				updater.setRepeats(false);
@@ -207,7 +209,11 @@ public class ManagerPage extends JPanel {
 		var subjectCreateBtn = new JButton("Create subject");
 		subjectCreateBtn.addActionListener(_ -> new SubjectWindow(null));
 		var subjectEditBtn = new JButton("Edit subject");	
+		subjectEditBtn.addActionListener(_ -> new SubjectWindow(null));
 		var subjectDeleteBtn = new JButton("Delete subject");
+		// subjectDeleteBtn.addActionListener.(_ -> createDeleteWindow(classTable, deleteFunc, subjectSearchField, subjectTableDefaultText, updateClass, search));
+		// subjectDeleteBtn.addActionListener(_ -> createDeleteWindow(subjectTable, mpec::deleteSubject, subjectSearchField, subjectTableDefaultText, mpec::loadAllSubject, mpec::searchSubject));
+		// subjectDeleteBtn.addActionListener(_ -> createDeleteWindow(subjectTable, deleteFunc, subjectSearchField, subjectTableDefaultText, updateClass, search));
 
 		searchBtn.add(subjectCreateBtn, BorderLayout.WEST);
 		searchBtn.add(subjectEditBtn, BorderLayout.CENTER);
@@ -419,6 +425,10 @@ public class ManagerPage extends JPanel {
 
 	public void refreshStudent() {
 		this.updateStudent.run();
+	}
+
+	public void refreshSubject() {
+		this.updateSubject.run();
 	}
 
 	private void loadManagementTeachClass() {

@@ -344,4 +344,14 @@ public class StudentHandler {
 
 		return null;
 	}*/
+
+    public void createStudent(String name, LocalDate dateOfBirth, boolean sex, String birthPlace) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'createStudent'");
+    }
+
+    public void updateStudent(int id, String name, LocalDate dateOfBirth, boolean sex, String birthPlace) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'updateStudent'");
+    }
 }
