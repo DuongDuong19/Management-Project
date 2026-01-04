@@ -65,7 +65,7 @@ public class SemesterHandler {
 		}
 	}
 
-	public void deleteSemester(int id) {
+	public void removeSemester(int id) {
 		try {
 			PreparedStatement statement = this.connection.prepareStatement("delete from semester where id = ?");
 

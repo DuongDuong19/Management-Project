@@ -46,6 +46,19 @@ public class DataTableParser {
 		return data.toArray(Object[][]::new);
 	}
 
+	public Object[][] parseSemesterFetch(List<Semester> semesters) {
+		List<Object[]> data = new LinkedList<Object[]>();
+
+		var unique = new HashMap<Integer, Semester>();
+		for (Semester semester : semesters) {
+			if (!unique.containsKey(semester.getId())) unique.put(semester.getId(), semester);
+		}
+
+		for (Semester semester : unique.values()) data.add(parseSemesterWithInformation(semester));
+
+		return data.toArray(Object[][]::new);
+	}
+
 	public Object[][] parseStudent(List<Student> students) {
 		List<Object[]> data = new LinkedList<Object[]>();
 
