@@ -467,15 +467,22 @@ public class ManagerPage extends JPanel {
 		this.classManagementSubjectSelector.addActionListener(e -> loadManagementTeachClass());
 		this.classManagementClassSelector = new JComboBox<>();
 		this.classManagementClassSelector.setRenderer(config.getComboBoxRenderer());
-		this.classManagementClassSelector.addActionListener(
-				e -> mpec.loadStudentInTeachClass((TeachClass) ((JComboBox) e.getSource()).getSelectedItem()));
+		this.classManagementClassSelector.addActionListener(e -> mpec.loadStudentInTeachClass((TeachClass) ((JComboBox) e.getSource()).getSelectedItem()));
 		var searchField = new JTextField();
 		var addStudentBtn = new JButton("Add student");
-		addStudentBtn.addActionListener(e -> new ClassManagementWindow(null));
+		//addStudentBtn.addActionListener(e -> new ClassManagementWindow(null));
 		var editStudentBtn = new JButton("Edit student"); 
 		var deleteStudentBtn = new JButton("Delete student");
-		searchBtn.add(addStudentBtn, BorderLayout.WEST);
-		searchBtn.add(editStudentBtn, BorderLayout.CENTER);
+		var inputArea = new JTextField();
+		addStudentBtn.addActionListener(e -> {
+			var classes = (TeachClass) classManagementClassSelector.getSelectedItem();
+
+			mpec.addStudentTeachClass(classes, inputArea.getText());
+			mpec.loadStudentInTeachClass(classes);
+		});
+		searchBtn.add(inputArea, BorderLayout.WEST);
+		searchBtn.add(addStudentBtn, BorderLayout.CENTER);
+		//searchBtn.add(editStudentBtn, BorderLayout.CENTER);
 		searchBtn.add(deleteStudentBtn, BorderLayout.EAST);
 		//searchBtn.add(removeStudentBtn, BorderLayout.EAST);
 		selectorPanel.add(this.classManagementSemesterSelector, BorderLayout.WEST);
@@ -505,7 +512,16 @@ public class ManagerPage extends JPanel {
 				(String) contentModel.getValueAt(selectedRow, 1)
 			));
 		});
+		deleteStudentBtn.addActionListener(e -> {
+			var selectedRow =studentClassTable.getSelectedRow();
 
+			if(selectedRow == -1) return;
+
+			var classes = (TeachClass) classManagementClassSelector.getSelectedItem();
+
+			mpec.removeStudentTeachClass(classes, (Integer) studentClassTable.getIDModel().getValueAt(selectedRow, 0));
+			mpec.loadStudentInTeachClass(classes);
+		});
 		//deleteStudentBtn.addActionListener(_ -> createDeleteWindow(classManagementTable, mpec::deleteClassManagement, classManagementSearchField, classManagementTableDefaultText, mpec::loadAllClassManagement, mpec::searchClassManagement));
 		return contentPanel;
 	}
