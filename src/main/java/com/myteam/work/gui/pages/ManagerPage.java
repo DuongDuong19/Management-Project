@@ -73,6 +73,12 @@ public class ManagerPage extends JPanel {
 	private JTextField subjectSearchField;
 	private JTextField teacherSearchField;
 	private JTextField studentSearchField;
+	private Runnable updateStudent;
+	private Runnable updateTeacher;
+	private Runnable updateSubject;
+	private Runnable updateClass;
+	private Runnable updateSemester;
+	private Runnable updateManagementClass;
 
 	private ManagerPage() {
 		this.mpec = ManagerPageEventController.getController();
@@ -111,13 +117,14 @@ public class ManagerPage extends JPanel {
 		this.studentSearchField.setBorder(null);
 		this.studentSearchField.setForeground(config.getFieldColor());
 		this.studentSearchField.addFocusListener(new DefaultTextDisplayer(studentTableDefaultText));
+		this.updateStudent = () -> {
+			if (studentSearchField.getText().equals(studentTableDefaultText))
+				mpec.loadStudent();
+			else
+				mpec.searchStudent(studentSearchField.getText());
+		};
 		this.studentSearchField.getDocument().addDocumentListener(new DocumentListener() {
-			private Timer updater = new Timer(125, e -> {
-				if (studentSearchField.getText().equals(studentTableDefaultText))
-					mpec.loadStudent();
-				else
-					mpec.searchStudent(studentSearchField.getText());
-			});
+			private Timer updater = new Timer(125, e -> updateStudent.run());
 
 			public void changedUpdate(DocumentEvent e) {
 				updater.setRepeats(false);
@@ -408,6 +415,10 @@ public class ManagerPage extends JPanel {
 
 	public void logout() {
 
+	}
+
+	public void refreshStudent() {
+		this.updateStudent.run();
 	}
 
 	private void loadManagementTeachClass() {

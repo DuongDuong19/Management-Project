@@ -33,8 +33,6 @@ import com.myteam.work.management.data.Subject;
 import lombok.Getter;
 
 public class SubjectWindow extends JFrame {
-	public static final int CREATE = 1;
-	public static final int EDIT = 2;
     private static final Configuration config = Configuration.getConfiguration();
 	private static final String defaultSubjectText = "Please enter subject name here";
     private static final String defaultSubjectCredits = "0";
