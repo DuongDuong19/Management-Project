@@ -80,7 +80,7 @@ public class ManagerPage extends JPanel {
 	private Runnable updateClass;
 	private Runnable updateSemester;
 	private Runnable updateManagementClass;
-	private Consumer<Integer> deleteFunc;
+	// private Consumer<Integer> deleteFunc;
 	private Consumer<String> search;
 
 	private ManagerPage() {
@@ -146,11 +146,9 @@ public class ManagerPage extends JPanel {
 		});
 
 		var addStudentBtn = new JButton("Add student");
-	//	addStudentBtn.addActionListener(e -> new addStudentWindow(null));
+		addStudentBtn.addActionListener(_ -> new StudentWindow(null));
 		var removeStudentBtn = new JButton("Remove student");
-		removeStudentBtn.addActionListener(e -> createDeleteWindow(classTable, deleteFunc, subjectSearchField, subjectTableDefaultText, updateClass, search));
 		var editStudentBtn = new JButton("Edit Student");
-	//	editStudentBtn.addActionListener(e -> new editStudentWindow(null));
 		searchBtn.add(addStudentBtn, BorderLayout.WEST);
 		searchBtn.add(editStudentBtn, BorderLayout.CENTER);
 		searchBtn.add(removeStudentBtn, BorderLayout.EAST);
@@ -171,6 +169,26 @@ public class ManagerPage extends JPanel {
 
 		this.studentTable.setReorderingColumn(false);
 		this.studentTable.setResizingColumn(false);
+
+		editStudentBtn.addActionListener(_ -> {
+			var selectedRow = studentTable.getSelectedRow();
+
+			if(selectedRow == -1) return;
+
+			var contentModel = studentTable.getContentModel();
+
+			new StudentWindow(new Student(
+						(Integer) studentTable.getIDModel().getValueAt(selectedRow, 0),
+						(Short) contentModel.getValueAt(selectedRow, 4),
+						(Float) contentModel.getValueAt(selectedRow, 5),
+						(String) contentModel.getValueAt(selectedRow, 0),
+						(String) contentModel.getValueAt(selectedRow, 1),
+						(String) contentModel.getValueAt(selectedRow, 2),
+						((String) contentModel.getValueAt(selectedRow, 3)).equals("Male") ? true : false
+						));
+		});
+
+		removeStudentBtn.addActionListener(_ -> createDeleteWindow(studentTable, mpec::deleteStudent, studentSearchField, studentTableDefaultText, mpec::loadStudent, mpec::searchStudent));
 		return contentPanel;
 	}
 
@@ -214,9 +232,6 @@ public class ManagerPage extends JPanel {
 		subjectCreateBtn.addActionListener(_ -> new SubjectWindow(null));
 		var subjectEditBtn = new JButton("Edit subject");	
 		var subjectDeleteBtn = new JButton("Delete subject");
-		// subjectDeleteBtn.addActionListener.(_ -> createDeleteWindow(classTable, deleteFunc, subjectSearchField, subjectTableDefaultText, updateClass, search));
-		// subjectDeleteBtn.addActionListener(_ -> createDeleteWindow(subjectTable, mpec::deleteSubject, subjectSearchField, subjectTableDefaultText, mpec::loadAllSubject, mpec::searchSubject));
-		// subjectDeleteBtn.addActionListener(_ -> createDeleteWindow(subjectTable, deleteFunc, subjectSearchField, subjectTableDefaultText, updateClass, search));
 
 		searchBtn.add(subjectCreateBtn, BorderLayout.WEST);
 		searchBtn.add(subjectEditBtn, BorderLayout.CENTER);
@@ -479,7 +494,7 @@ public class ManagerPage extends JPanel {
 	private void addStudentWindow() {
 		var submitWin = new StudentWindow(true);
 		submitWin.setAddAction(e -> {
-			//mpec.AddStudent((Student) this.studentSelector.getSelectedItem());
+			mpec.AddStudent((Student) this.studentSelector.getSelectedItem());
 			submitWin.dispose();
 		});
 		// submitWin.setSubmitAction(e -> {
@@ -493,7 +508,7 @@ public class ManagerPage extends JPanel {
 	private void editStudentWindow() {
 		var submitWin = new StudentWindow(true);
 		submitWin.setSubmitAction(e -> {
-			//mpec.editBirthPlace((Student) this.studentSelector.getSelectedItem());
+			mpec.editBirthPlace((Student) this.studentSelector.getSelectedItem());
 			submitWin.dispose();
 		});
 		// submitWin.setRevokeAction(e -> {
