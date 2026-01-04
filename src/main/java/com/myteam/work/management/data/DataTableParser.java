@@ -9,17 +9,20 @@ import lombok.extern.slf4j.Slf4j;
 import com.myteam.work.management.handler.SubjectHandler;
 import com.myteam.work.management.handler.StudentHandler;
 import com.myteam.work.management.handler.TeacherHandler;
+import com.myteam.work.management.handler.TeachClassHandler;
 
 @Slf4j
 public class DataTableParser {
 	private SubjectHandler sh;
 	private StudentHandler sth;
 	private TeacherHandler th;
+	private TeachClassHandler tch;
 
 	public DataTableParser() {
 		this.sh = new SubjectHandler();
 		this.sth = new StudentHandler();
 		this.th = new TeacherHandler();
+		this.tch = new TeachClassHandler();
 	}
 
 	public Object[][] parseSubjectFetchPrerequisites(List<Subject> subjects) {
@@ -148,9 +151,13 @@ public class DataTableParser {
 	private Object[] parseTeacherWithInformation(User user) {
 		var id = user.getId();
 		var subjects = this.sh.loadTeacherSubject(id);
+		var teacherTeachClass = this.tch.getTeachesClass(id);
 		var teacherName = new String[subjects == null ? 0 : subjects.size()];
+		var teacherTeachClassName = new String[teacherTeachClass == null ? 0 : teacherTeachClass.size()];
 
 		for(var i = 0; i < teacherName.length; i++) teacherName[i] = subjects.get(i).getSubjectName();
+
+		for(var i = 0; i < teacherTeachClassName.length; i++) teacherTeachClassName[i] = teacherTeachClass.get(i);
 
 		var teacherRow = new Object[9];
 		teacherRow[0] = id;
@@ -161,7 +168,7 @@ public class DataTableParser {
 		teacherRow[5] = user.getInfo().getPlaceOfBirth();
 		teacherRow[6] = user.getInfo().isSex() ? "Male" : "Female";
 		teacherRow[7] = teacherName;
-		teacherRow[8] = new String[0];
+		teacherRow[8] = teacherTeachClassName;
 			
 		return teacherRow;
 	}

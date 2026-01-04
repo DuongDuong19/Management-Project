@@ -168,4 +168,25 @@ public class TeachClassHandler {
             log.error(e.toString());
         }
     }
+
+	public List<String> getTeachesClass(int id) {
+		try {
+			var prepareStatement = this.connection.prepareStatement("""
+					SELECT className
+					FROM TeacherTeachClass ttc
+					JOIN TeachClass tc ON tc.id = ttc.classes
+					WHERE ttc.teacher = ?""");
+			prepareStatement.setInt(1, id);
+			List<String> results = new LinkedList<>();
+			var classNames = prepareStatement.executeQuery();
+
+			while(classNames.next()) results.add(classNames.getString("classname"));
+
+			if(!results.isEmpty()) return results;
+		} catch(SQLException e) {
+			log.error(e.toString());
+		}
+
+		return null;
+	}
 }
