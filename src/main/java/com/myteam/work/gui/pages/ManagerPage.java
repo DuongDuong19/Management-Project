@@ -21,6 +21,7 @@ import javax.swing.event.DocumentListener;
 
 import com.myteam.work.Configuration;
 import com.myteam.work.controller.ManagerPageEventController;
+import com.myteam.work.gui.pages.utilwin.ClassManagementWindow;
 import com.myteam.work.gui.pages.utilwin.ClassWindow;
 import com.myteam.work.gui.pages.utilwin.SemesterWindow;
 import com.myteam.work.gui.pages.utilwin.StudentWindow;
@@ -400,12 +401,15 @@ public class ManagerPage extends JPanel {
 		var searchField = new JTextField();
 		var addStudentBtn = new JButton("Add student");
 		addStudentBtn.addActionListener(e -> mpec.AddStudent());
+		addStudentBtn.addActionListener(e -> new ClassManagementWindow());
 		var editStudentBtn = new JButton("Edit student"); 
-		var removeStudentBtn = new JButton("Remove student");
-		removeStudentBtn.addActionListener(e -> mpec.RemoveStudent());
+		editStudentBtn.addActionListener(e -> new ClassManagementWindow());
+		// var removeStudentBtn = new JButton("Remove student");
+		// removeStudentBtn.addActionListener(e -> mpec.RemoveStudent());
+		// removeStudentBtn.addActionListener(e -> new ClassManagementWindow());
 		searchBtn.add(addStudentBtn, BorderLayout.WEST);
 		searchBtn.add(editStudentBtn, BorderLayout.CENTER);
-		searchBtn.add(removeStudentBtn, BorderLayout.EAST);
+		//searchBtn.add(removeStudentBtn, BorderLayout.EAST);
 		selectorPanel.add(this.classManagementSemesterSelector, BorderLayout.WEST);
 		selectorPanel.add(this.classManagementSubjectSelector, BorderLayout.CENTER);
 		selectorPanel.add(this.classManagementClassSelector, BorderLayout.EAST);
