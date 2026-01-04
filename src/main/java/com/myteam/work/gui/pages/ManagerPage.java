@@ -146,10 +146,11 @@ public class ManagerPage extends JPanel {
 		});
 
 		var addStudentBtn = new JButton("Add student");
-		addStudentBtn.addActionListener(e -> new StudentWindow(null));
+	//	addStudentBtn.addActionListener(e -> new addStudentWindow(null));
 		var removeStudentBtn = new JButton("Remove student");
-		removeStudentBtn.addActionListener(e -> new StudentWindow(null));
+		removeStudentBtn.addActionListener(e -> createDeleteWindow(classTable, deleteFunc, subjectSearchField, subjectTableDefaultText, updateClass, search));
 		var editStudentBtn = new JButton("Edit Student");
+	//	editStudentBtn.addActionListener(e -> new editStudentWindow(null));
 		searchBtn.add(addStudentBtn, BorderLayout.WEST);
 		searchBtn.add(editStudentBtn, BorderLayout.CENTER);
 		searchBtn.add(removeStudentBtn, BorderLayout.EAST);
@@ -472,18 +473,33 @@ public class ManagerPage extends JPanel {
 		throw new UnsupportedOperationException("Unimplemented method 'refreshTeacher'");
 	}
 
-	// private void createSubmitWindow1() {
-	// var submitWin = new SubmitWindow(true);
-	// submitWin.setSubmitAction(e -> {
-	// mpec.AddStudent((TeachClass) this.classSelector.getSelectedItem());
-	// submitWin.dispose();
-	// });
-	// submitWin.setRevokeAction(e -> {
-	// mpec.getRecorder().clear();
-	// mpec.loadStudentInTeachClass((TeachClass)
-	// this.classSelector.getSelectedItem());
-	// submitWin.dispose();
-	// });
-	// submitWin.setCancelAction(e -> submitWin.dispose());
-	// }
+	private void addStudentWindow() {
+		var submitWin = new StudentWindow(true);
+		submitWin.setAddAction(e -> {
+			//mpec.AddStudent((Student) this.studentSelector.getSelectedItem());
+			submitWin.dispose();
+		});
+		// submitWin.setSubmitAction(e -> {
+		// 	mpec.getRecorder().clear();
+		// 	mpec.loadStudentInTeachClass((Student) this.studentSelector.getSelectedItem());
+		// 	submitWin.dispose();
+		// });
+		// submitWin.setCancelAction(e -> submitWin.dispose());
+	}
+
+	private void editStudentWindow() {
+		var submitWin = new StudentWindow(true);
+		submitWin.setSubmitAction(e -> {
+			//mpec.editBirthPlace((Student) this.studentSelector.getSelectedItem());
+			submitWin.dispose();
+		});
+		// submitWin.setRevokeAction(e -> {
+		// 	tpec.getRecorder().clear();
+		// 	tpec.loadStudentInTeachClass((TeachClass) this.classSelector.getSelectedItem());
+		// 	submitWin.dispose();
+		// });
+		// submitWin.setCancelAction(e -> submitWin.dispose());
+	}
+
+	
 }

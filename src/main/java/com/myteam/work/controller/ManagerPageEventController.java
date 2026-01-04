@@ -1,7 +1,6 @@
 package com.myteam.work.controller;
 
 import java.util.HashMap;
-import java.util.Map;
 
 import com.myteam.work.gui.pages.ManagerPage;
 import com.myteam.work.management.data.DataTableParser;
@@ -216,6 +215,10 @@ public class ManagerPageEventController {
 		this.sh.deleteSubject(id);
 	}	
 
+	public HashMap<Pair<Integer, Integer>, Object> getRecorder() {
+		return this.changeRecorder;
+	}	
+
 
 	public void newSubject(Subject s) {
 	}
@@ -225,7 +228,7 @@ public class ManagerPageEventController {
 	}
 
 	public void AddStudent() {
-
+		
 	}
 
 	public void RemoveStudent() {

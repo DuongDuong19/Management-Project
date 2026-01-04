@@ -8,6 +8,7 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.time.LocalDate;
@@ -50,8 +51,11 @@ public class StudentWindow extends JFrame {
     @Getter
     private MSTable studentTable;
     private StudentWinController stwc;
+    private JButton add;
+    private JButton remove;
+    private JButton submit;
     
-    public StudentWindow(Student target) {
+    public StudentWindow(boolean showRevoke) {
         this.setTitle("Student Management");
         this.setSize(new Dimension(900, 300));
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -247,5 +251,13 @@ public class StudentWindow extends JFrame {
         });
         
         return button;
+    }
+
+    public void setAddAction(ActionListener al) {
+        this.add.addActionListener(al);
+    }
+
+    public void setSubmitAction(ActionListener al) {
+        this.submit.addActionListener(al);
     }
 }
