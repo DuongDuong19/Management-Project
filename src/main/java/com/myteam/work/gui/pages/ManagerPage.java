@@ -148,8 +148,10 @@ public class ManagerPage extends JPanel {
 		addStudentBtn.addActionListener(e -> new StudentWindow(null));
 		var removeStudentBtn = new JButton("Remove student");
 		removeStudentBtn.addActionListener(e -> new StudentWindow(null));
+		var editStudentBtn = new JButton("Edit Student");
 		searchBtn.add(addStudentBtn, BorderLayout.WEST);
-		searchBtn.add(removeStudentBtn, BorderLayout.CENTER);
+		searchBtn.add(editStudentBtn, BorderLayout.CENTER);
+		searchBtn.add(removeStudentBtn, BorderLayout.EAST);
 
 		selectorPanel.add(this.studentSearchField, BorderLayout.CENTER);
 
@@ -296,10 +298,12 @@ public class ManagerPage extends JPanel {
 
 		var addTeacherBtn = new JButton("Add teacher");
 		addTeacherBtn.addActionListener(e -> new TeacherWindow());
+		var editTeacherBtn = new JButton("Edit Teacher");
 		var removeTeacherBtn = new JButton("Remove teacher");
 		removeTeacherBtn.addActionListener(e -> new TeacherWindow());
 		searchBtn.add(addTeacherBtn, BorderLayout.WEST);
-		searchBtn.add(removeTeacherBtn, BorderLayout.CENTER);
+		searchBtn.add(editTeacherBtn, BorderLayout.CENTER);
+		searchBtn.add(removeTeacherBtn, BorderLayout.EAST);
 
 		selectorPanel.add(this.teacherSearchField, BorderLayout.CENTER);
 
@@ -396,10 +400,12 @@ public class ManagerPage extends JPanel {
 		var searchField = new JTextField();
 		var addStudentBtn = new JButton("Add student");
 		addStudentBtn.addActionListener(e -> mpec.AddStudent());
+		var editStudentBtn = new JButton("Edit student"); 
 		var removeStudentBtn = new JButton("Remove student");
 		removeStudentBtn.addActionListener(e -> mpec.RemoveStudent());
 		searchBtn.add(addStudentBtn, BorderLayout.WEST);
-		searchBtn.add(removeStudentBtn, BorderLayout.CENTER);
+		searchBtn.add(editStudentBtn, BorderLayout.CENTER);
+		searchBtn.add(removeStudentBtn, BorderLayout.EAST);
 		selectorPanel.add(this.classManagementSemesterSelector, BorderLayout.WEST);
 		selectorPanel.add(this.classManagementSubjectSelector, BorderLayout.CENTER);
 		selectorPanel.add(this.classManagementClassSelector, BorderLayout.EAST);
