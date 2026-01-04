@@ -215,18 +215,18 @@ public class SubjectHandler {
     public int countExisted(String subjectName, short credits, boolean required) {
         try {
 			var prepareStatement = SQLHandler.getConnection().prepareStatement("""
-					SELECT COUNT(*) 
+					SELECT COUNT(*) as count
 					FROM Subject
 					WHERE subjectName = ?
 					AND credits = ?
-					AND required = true; 
+					AND required = ?; 
 					""");
 			prepareStatement.setString(1, subjectName);
 			prepareStatement.setShort(2, credits);
 			prepareStatement.setBoolean(3, required);
 			var countSubject = prepareStatement.executeQuery();
 
-			if(countSubject.next())  return countSubject.getInt(1);
+			if(countSubject.next())  return countSubject.getInt("count");
 		} catch (SQLException e) {
 			log.error(e.toString());
 		}
@@ -234,18 +234,52 @@ public class SubjectHandler {
 		return -1;
     }
 
-	public Object searchLatestSubjectId(String subjectName, short credits, boolean required) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'searchLatestSubjectId'");
+	public int searchLatestSubjectId(String subjectName, short credits, boolean required) {
+		try {
+			var prepareStatement = this.connection.prepareStatement("""
+					SELECT MAX(id) as id 
+					FROM Subject
+					WHERE subjectName = ?
+					AND credits = ?
+					AND required = ?""");
+			prepareStatement.setString(1, subjectName);
+			prepareStatement.setShort(2, credits);
+			prepareStatement.setBoolean(3, required);
+			var idInfo = prepareStatement.executeQuery();
+
+			if(idInfo.next()) return idInfo.getInt("id");
+		} catch(SQLException e) {
+			log.error(e.toString());
+		}
+
+		return -1;
 	}
 
-    public void addPrerequisite(Object createdSubjectId, Integer id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'addPrerequisite'");
+    public void addPrerequisite(int subject, int prerequisite) {
+		try {
+			var prepareStatement = this.connection.prepareStatement("""
+					INSERT INTO Prerequisite (subject, require)
+					VALUES (?, ?)
+					""");
+			prepareStatement.setInt(1, subject);
+			prepareStatement.setInt(2, prerequisite);
+			prepareStatement.executeUpdate();
+		} catch(SQLException e) {
+			log.error(e.toString());
+		}
     }
 
-    public void removePrerequisites(int id, Integer id2) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'removePrerequisites'");
+    public void removePrerequisites(int subject, int prerequisite) {
+		try {
+			var prepareStatement = this.connection.prepareStatement("""
+					DELETE FROM Prerequisite
+					WHERE subject = ? AND require = ?
+					""");
+			prepareStatement.setInt(1, subject);
+			prepareStatement.setInt(2, prerequisite);
+			prepareStatement.executeUpdate();
+		} catch(SQLException e) {
+			log.error(e.toString());
+		}
     }	
 }

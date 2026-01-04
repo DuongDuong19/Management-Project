@@ -8,6 +8,9 @@ import com.myteam.work.management.data.DataTableParser;
 import com.myteam.work.management.data.Subject;
 import com.myteam.work.management.handler.SubjectHandler;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class SubjectWinController {
 	private SubjectHandler sh;
 	private DataTableParser parser;
@@ -77,9 +80,14 @@ public class SubjectWinController {
 
 		var beforeExecute = this.sh.countExisted(name, credits, required);
 		this.sh.createSubject(credits, required, name);
+		log.debug("Debug point 1: " + beforeExecute);
+		log.debug("Debug point 2: " + this.sh.countExisted(name, credits, required));
 
 		if(this.sh.countExisted(name, credits, required) > beforeExecute) {
 			var createdSubjectId = this.sh.searchLatestSubjectId(name, credits, required);
+
+			if(createdSubjectId == -1) return;
+
 			for(var id : prerequisites) this.sh.addPrerequisite(createdSubjectId, id);
 		}
 	}
@@ -102,12 +110,12 @@ public class SubjectWinController {
 		this.sh.editSubject(target.getId(), cr, required, name);
 		var currentPrerequisites = this.sh.getPrerequisites(target.getId());
 
-		for(var id : prerequisites) if(currentPrerequisites.contains(id)) {
+		if(currentPrerequisites != null && prerequisites != null) for(var id : prerequisites) if(currentPrerequisites.contains(id)) {
 			prerequisites.remove(prerequisites.indexOf(id));
 			currentPrerequisites.remove(currentPrerequisites.indexOf(id));
 		}
 
-		for(var id : prerequisites) this.sh.addPrerequisite(target.getId(), id);
-		for(var id : currentPrerequisites) this.sh.removePrerequisites(target.getId(), id);
+		if(prerequisites != null) for(var id : prerequisites) this.sh.addPrerequisite(target.getId(), id);
+		if(currentPrerequisites != null) for(var id : currentPrerequisites) this.sh.removePrerequisites(target.getId(), id);
 	}
 }

@@ -212,7 +212,6 @@ public class ManagerPage extends JPanel {
 		var subjectCreateBtn = new JButton("Create subject");
 		subjectCreateBtn.addActionListener(_ -> new SubjectWindow(null));
 		var subjectEditBtn = new JButton("Edit subject");	
-		subjectEditBtn.addActionListener(_ -> new SubjectWindow(null));
 		var subjectDeleteBtn = new JButton("Delete subject");
 		// subjectDeleteBtn.addActionListener.(_ -> createDeleteWindow(classTable, deleteFunc, subjectSearchField, subjectTableDefaultText, updateClass, search));
 		// subjectDeleteBtn.addActionListener(_ -> createDeleteWindow(subjectTable, mpec::deleteSubject, subjectSearchField, subjectTableDefaultText, mpec::loadAllSubject, mpec::searchSubject));
