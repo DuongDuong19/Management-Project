@@ -48,9 +48,11 @@ public class PageController {
 		getHeader(ManagerPage.getPage());
 		getMenu(ManagerPage.getPage());
 		var mpec = ManagerPageEventController.getController();
-		mpec.loadSubjectAllSubject();
+		mpec.loadAllSubject();
 		mpec.loadManagementSemester();
 		mpec.loadManagementAllSubject();
+		mpec.searchTeacher("");
+		mpec.searchStudent("");
 	}
 
 	public void setUsername(String username) {
