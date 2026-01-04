@@ -3,8 +3,10 @@ package com.myteam.work.management.handler;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.time.LocalDate;
 
 import com.myteam.work.management.data.User;
 
@@ -191,4 +193,77 @@ public class TeacherHandler {
 		return null;
 	}
 
+	public int countTeacher() {
+		try {
+			var number = this.connection.prepareStatement("""
+				SELECT COUNT(*) as nc
+				FROM Users
+				WHERE ur = true;
+					""").executeQuery();
+			if(number.next()) return number.getInt("nc");
+		} catch(SQLException e) {
+			log.error(e.toString());
+		}
+
+		return -1;
+	}
+
+	public void createTeacher(boolean sex, String name, LocalDate birth, String birthPlace, String username, String password) {
+		try {
+			var prepareStatement = this.connection.prepareStatement("""
+				INSERT INTO Users (urName, birth, placeOfBirth, sex, auth, ur)
+				VALUES (?, ?, ?, ?, (?, ?), true);
+					""");
+			prepareStatement.setString(1, name);
+			prepareStatement.setDate(2, Date.valueOf(birth));
+			prepareStatement.setString(3, birthPlace);
+			prepareStatement.setBoolean(4, sex);
+			prepareStatement.setString(5, username);
+			prepareStatement.setString(6, password);
+
+			prepareStatement.executeUpdate();
+		} catch(SQLException e) {
+			log.error(e.toString());
+		}
+	}
+
+	public int getLatestId() {
+		try {
+			var number = this.connection.prepareStatement("""
+				SELECT MAX(id) as mi 
+    			FROM Users
+    			WHERE ur = true
+					""").executeQuery();
+
+			if(number.next()) return number.getInt("mi");
+		} catch(SQLException e) {
+			log.error(e.toString());
+		}
+
+		return -1;
+	}
+
+	public void editTeacher(int id, boolean sex, String name, LocalDate birth, String birthPlace, String username, String password) {
+		try {
+			var prepareStatement = this.connection.prepareStatement("""
+				UPDATE Users
+				SET
+    				urName       = ?,
+    				birth        = ?,
+    				placeOfBirth = ?,
+    				sex          = ?,
+    				auth         = (?, ?)
+				WHERE id = ?
+					""");
+			prepareStatement.setString(1, name);
+			prepareStatement.setDate(2, Date.valueOf(birth));
+			prepareStatement.setString(3, birthPlace);
+			prepareStatement.setBoolean(4, sex);
+			prepareStatement.setString(5, username);
+			prepareStatement.setString(6, password);
+			prepareStatement.executeUpdate();
+		} catch(SQLException e) {
+			log.error(e.toString());
+		}
+	}
 }

@@ -281,5 +281,55 @@ public class SubjectHandler {
 		} catch(SQLException e) {
 			log.error(e.toString());
 		}
-    }	
+    }
+
+	public void addSubject(int teacher, int subject) {
+		try {
+			var prepareStatement = this.connection.prepareStatement("""
+					INSERT INTO TeachSubject (teacher, subject)
+					VALUES (?, ?)
+					""");
+			prepareStatement.setInt(1, teacher);
+			prepareStatement.setInt(2, subject);
+			prepareStatement.executeUpdate();
+		} catch(SQLException e) {
+			log.error(e.toString());
+		}
+	}
+
+	public void removeSubject(int teacher, int subject) {
+		try {
+			var prepareStatement = this.connection.prepareStatement("""
+					DELETE FROM TeachSubject
+					WHERE teacher = ?
+					  AND subject = ?;
+					""");
+			prepareStatement.setInt(1, teacher);
+			prepareStatement.setInt(2, subject);
+		} catch(SQLException e) {
+			log.error(e.toString());
+		}
+	}
+
+	public List<Integer> loadTeacherSubjectId(int id) {
+		try {
+			List<Integer> result = new LinkedList<>();
+			var prepareStatement = SQLHandler.getConnection().prepareStatement("""
+					SELECT sb.id
+					FROM TeachSubject ts
+					JOIN Subject sb ON sb.id = ts.subject
+					WHERE ts.teacher = ?; 
+					""");
+			prepareStatement.setInt(1, id);
+			var subjectInformation = prepareStatement.executeQuery();
+
+			while(subjectInformation.next()) result.add(subjectInformation.getInt("id"));
+
+			if(!result.isEmpty()) return result;
+		} catch(SQLException e) {
+			log.error(e.toString());
+		}
+
+		return null;
+	}
 }

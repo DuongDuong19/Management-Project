@@ -429,7 +429,29 @@ public class TeacherWindow extends JFrame {
 				for(var i = 0; i < existedSubjectTableModel.getRowCount(); i++) existedSubject.add((Integer) existedSubjectTableModel.getValueAt(i, 0));
 				for(var i = 0; i < existedClassTableModel.getRowCount(); i++) existedClass.add((Integer) existedClassTableModel.getValueAt(i, 0));
 
+				if(target == null) ttwc.createTeacher(
+						maleRadio.isSelected(),
+						teacherNameField.getText(),
+						LocalDate.parse(dateOfBirthField.getText(), DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+						birthPlaceField.getText(),
+						usernameField.getText(),
+						passwordField.getText(),
+						existedSubject,
+						existedClass
+						);
+				else ttwc.updateTeacher(
+						target,
+						maleRadio.isSelected(),
+						teacherNameField.getText(),
+						LocalDate.parse(dateOfBirthField.getText(), DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+						birthPlaceField.getText(),
+						usernameField.getText(),
+						passwordField.getText(),
+						existedSubject,
+						existedClass
 
+						);
+				/*
                 String password = new String(passwordField.getPassword());
 
                 if (target == null) {
@@ -443,7 +465,7 @@ public class TeacherWindow extends JFrame {
                             LocalDate.parse(dateOfBirthField.getText(), DateTimeFormatter.ofPattern("yyyy-MM-dd")),
                             maleRadio.isSelected(),
                             birthPlaceField.getText());
-                }
+                }*/
 
                 submit.dispose();
                 TeacherWindow.this.dispose();

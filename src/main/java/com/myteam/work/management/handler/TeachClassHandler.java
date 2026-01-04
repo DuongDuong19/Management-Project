@@ -239,4 +239,55 @@ public class TeachClassHandler {
 
 		return null;
 	}
+
+	public void addClass(int teacher, int classes) {
+		try {
+			var prepareStatement = this.connection.prepareStatement("""
+					INSERT INTO TeacherTeachClass (teacher, classes)
+					VALUES (?, ?);
+					""");
+			prepareStatement.setInt(1, teacher);
+			prepareStatement.setInt(2, classes);
+			prepareStatement.executeUpdate();
+		} catch(SQLException e) {
+			log.error(e.toString());
+		}
+	}
+
+	public void removeClass(int teacher, int classes) {
+		try {
+			var prepareStatement = this.connection.prepareStatement("""
+				DELETE FROM TeacherTeachClass
+				WHERE teacher = ?
+				  AND classes = ?;
+					""");
+			prepareStatement.setInt(1, teacher);
+			prepareStatement.setInt(2, classes);
+		} catch(SQLException e) {
+			log.error(e.toString());
+		}
+	}
+
+	public List<Integer> getTeachesClassIdWithId(int id) {
+		try {
+			var prepareStatement = this.connection.prepareStatement("""
+					SELECT
+				    tc.id,
+					FROM TeacherTeachClass ttc
+					JOIN TeachClass tc ON tc.id = ttc.classes
+					WHERE ttc.teacher = ?;
+					""");
+			prepareStatement.setInt(1, id);
+			List<Integer> results = new LinkedList<>();
+			var classInfo = prepareStatement.executeQuery();
+
+			while(classInfo.next()) results.add(classInfo.getInt("id"));
+
+			if(!results.isEmpty()) return results;
+		} catch(SQLException e) {
+			log.error(e.toString());
+		}
+
+		return null;
+	}
 }

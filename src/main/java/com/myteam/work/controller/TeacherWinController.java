@@ -9,6 +9,7 @@ import com.myteam.work.management.data.Triple;
 import com.myteam.work.management.data.Subject;
 import com.myteam.work.gui.pages.utilwin.TeacherWindow;
 import com.myteam.work.management.handler.SubjectHandler;
+import com.myteam.work.management.handler.TeacherHandler;
 import com.myteam.work.management.handler.TeachClassHandler;
 
 public class TeacherWinController {
@@ -61,14 +62,45 @@ public class TeacherWinController {
 		table.addData(objectList.toArray(Object[][]::new));
 	}
 
-    public void createTeacher(String text, LocalDate localDate, boolean selected, String text2) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'createTeacher'");
-    }
+    public void createTeacher(boolean sex, String name, LocalDate birth, String birthPlace, String username, String password, List<Integer> subjects, List<Integer> classes) {
+		var th = new TeacherHandler();
+		var beforeCreated = th.countTeacher();
+		th.createTeacher(sex, name, birth, birthPlace, username, password);
 
-    public void updateTeacher(User target, String text, LocalDate localDate, boolean selected, String text2) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'updateTeacher'");
-    }
+		if(th.countTeacher() > beforeCreated) {
+			var teacherId = th.getLatestId();
+
+			if(teacherId == -1) return;
+
+			for(Integer id : subjects) new SubjectHandler().addSubject(teacherId, id);
+			for(Integer id : classes) new TeachClassHandler().addClass(teacherId, id);
+		}
+	}
+
+    public void updateTeacher(User target, boolean sex, String name, LocalDate birth, String birthPlace, String username, String password, List<Integer> subjects, List<Integer> classes) {
+    	var id = target.getId();
+		new TeacherHandler().editTeacher(id, sex, name, birth, birthPlace, username, password);
+		var currentSubject = new SubjectHandler().loadTeacherSubjectId(id);
+		var currentClass = new TeachClassHandler().getTeachesClassIdWithId(id);
+
+		if(subjects != null && currentSubject != null) {
+			for(Integer ids : subjects) if(currentSubject.contains(ids)) {
+				subjects.remove(subjects.indexOf(ids));
+				currentSubject.remove(currentSubject.indexOf(ids));
+			}
+		}
+
+		if(classes != null && currentClass != null) {
+			for(Integer ids : classes) if(currentClass.contains(ids)) {
+				classes.remove(classes.indexOf(ids));
+				currentClass.remove(currentClass.indexOf(ids));
+			}
+		}
+
+		if(subjects != null) for(Integer ids : subjects) new SubjectHandler().addSubject(id, ids);
+		if(currentSubject != null) for(Integer ids : currentSubject) new SubjectHandler().removeSubject(id, ids);
+		if(classes != null) for(Integer ids : classes) new TeachClassHandler().addClass(id, ids);
+		if(currentClass != null) for(Integer ids : currentClass) new TeachClassHandler().removeClass(id, ids);
+	}
     
 }
