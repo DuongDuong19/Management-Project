@@ -6,6 +6,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.myteam.work.management.data.TeachClass;
+import com.myteam.work.management.data.Pair;
+import com.myteam.work.management.data.Triple;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -183,6 +185,54 @@ public class TeachClassHandler {
 			while(classNames.next()) results.add(classNames.getString("classname"));
 
 			if(!results.isEmpty()) return results;
+		} catch(SQLException e) {
+			log.error(e.toString());
+		}
+
+		return null;
+	}
+
+	public List<Pair<Integer, String>> getTeachesClassWithId(int id) {
+		try {
+			var prepareStatement = this.connection.prepareStatement("""
+					SELECT
+				    tc.id,
+				    tc.className
+					FROM TeacherTeachClass ttc
+					JOIN TeachClass tc ON tc.id = ttc.classes
+					WHERE ttc.teacher = ?;
+					""");
+			prepareStatement.setInt(1, id);
+			List<Pair<Integer, String>> results = new LinkedList<>();
+			var classInfo = prepareStatement.executeQuery();
+
+			while(classInfo.next()) results.add(new Pair<Integer, String>(classInfo.getInt("id"), classInfo.getString("classname")));
+
+			if(!results.isEmpty()) return results;
+		} catch(SQLException e) {
+			log.error(e.toString());
+		}
+
+		return null;
+	}
+
+	public List<Triple<Integer, String, Integer>> loadAllClasses() {
+		try {
+			var prepareStatement = this.connection.prepareStatement("""
+				SELECT
+    			tc.id,
+    			tc.className,
+    			s.id as sid
+				FROM TeachClass tc
+				JOIN SubjectClass sc ON sc.classes = tc.id
+				JOIN Subject s ON s.id = sc.subject;
+					""");
+			var classInfo = prepareStatement.executeQuery();
+			List<Triple<Integer, String, Integer>> result = new LinkedList<>();
+
+			while(classInfo.next()) result.add(new Triple(classInfo.getInt("id"), classInfo.getString("className"), classInfo.getInt("sid")));
+
+			if(!result.isEmpty()) return result;
 		} catch(SQLException e) {
 			log.error(e.toString());
 		}

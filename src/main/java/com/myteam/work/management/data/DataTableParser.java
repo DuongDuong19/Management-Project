@@ -3,6 +3,8 @@ package com.myteam.work.management.data;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -166,11 +168,11 @@ public class DataTableParser {
 		var subjects = this.sh.loadTeacherSubject(id);
 		var teacherTeachClass = this.tch.getTeachesClass(id);
 		var teacherName = new String[subjects == null ? 0 : subjects.size()];
-		var teacherTeachClassName = new String[teacherTeachClass == null ? 0 : teacherTeachClass.size()];
+		Set<String> teacherTeachClassName = new HashSet<>();
 
 		for(var i = 0; i < teacherName.length; i++) teacherName[i] = subjects.get(i).getSubjectName();
 
-		for(var i = 0; i < teacherTeachClassName.length; i++) teacherTeachClassName[i] = teacherTeachClass.get(i);
+		for(var i = 0; i < teacherTeachClass.size(); i++) teacherTeachClassName.add(teacherTeachClass.get(i));
 
 		var teacherRow = new Object[9];
 		teacherRow[0] = id;
@@ -181,7 +183,7 @@ public class DataTableParser {
 		teacherRow[5] = user.getInfo().getPlaceOfBirth();
 		teacherRow[6] = user.getInfo().isSex() ? "Male" : "Female";
 		teacherRow[7] = teacherName;
-		teacherRow[8] = teacherTeachClassName;
+		teacherRow[8] = teacherTeachClassName.toArray(String[]::new);
 			
 		return teacherRow;
 	}

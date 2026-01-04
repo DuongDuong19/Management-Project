@@ -13,6 +13,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.LinkedList;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
@@ -30,14 +31,21 @@ import com.myteam.work.controller.TeacherWinController;
 import com.myteam.work.gui.pages.MSTable;
 import com.myteam.work.gui.pages.ManagerPage;
 import com.myteam.work.management.data.User;
+import com.myteam.work.gui.pages.DefaultTextDisplayer;
+import com.myteam.work.management.handler.TeachClassHandler;
+import com.myteam.work.management.handler.SubjectHandler;
+import com.myteam.work.management.data.Pair;
+import com.myteam.work.management.data.Subject;
 
 import lombok.Getter;
 
 public class TeacherWindow extends JFrame {
-    public static final int CREATE = 1;
-    public static final int EDIT = 2;
     private static final Configuration config = Configuration.getConfiguration();
-
+	private static final String defaultNameText = "Please enter name here";
+	private static final String defaultBirthText = "yyyy-MM-dd";
+	private static final String defaultPlaceOfBirthText = "Please enter place of birth here";
+	private static final String defaultUsernameText = "Please enter username here";
+	private static final String defaultPasswordText = "Please enter password here";
     private static final Color PRIMARY_COLOR = new Color(41, 128, 185);
     private static final Color BACKGROUND_COLOR = new Color(236, 240, 241);
 
@@ -45,8 +53,12 @@ public class TeacherWindow extends JFrame {
     private User target;
     @Getter
     private MSTable choosenTeacherTable;
+	@Getter
+	private MSTable availableSubjectTable;
     @Getter
     private MSTable teacherTable;
+	@Getter
+	private MSTable availableClassTable;
     private TeacherWinController ttwc;
 
     public TeacherWindow(User target) {
@@ -89,11 +101,16 @@ public class TeacherWindow extends JFrame {
         sexPanel.add(maleRadio);
         sexPanel.add(femaleRadio);
 
-        var teacherNameField = createStyledTextField("", 250);
-        var dateOfBirthField = createStyledTextField("", 150);
-        var birthPlaceField = createStyledTextField("", 300);
-        var usernameField = createStyledTextField("", 250);
-        var passwordField = createStyledPasswordField(250);
+        var teacherNameField = createStyledTextField(defaultNameText, 250);
+        var dateOfBirthField = createStyledTextField(defaultBirthText, 150);
+        var birthPlaceField = createStyledTextField(defaultPlaceOfBirthText, 300);
+        var usernameField = createStyledTextField(defaultUsernameText, 250);
+        var passwordField = createStyledPasswordField(defaultPasswordText, 250);
+		teacherNameField.addFocusListener(new DefaultTextDisplayer(defaultNameText));
+		dateOfBirthField.addFocusListener(new DefaultTextDisplayer(defaultBirthText));
+		birthPlaceField.addFocusListener(new DefaultTextDisplayer(defaultPlaceOfBirthText));
+		usernameField.addFocusListener(new DefaultTextDisplayer(defaultUsernameText));
+		passwordField.addFocusListener(new DefaultTextDisplayer(defaultPasswordText));
 
         // Row 1: Sex and Name
         gbc.gridx = 0;
@@ -190,7 +207,7 @@ public class TeacherWindow extends JFrame {
         availableSubjectTypes.add(String.class);
         var availableSubjectEditable = new java.util.ArrayList<Integer>();
 
-        var availableSubjectTable = new MSTable(availableSubjectColumns, availableSubjectTypes,
+        this.availableSubjectTable = new MSTable(availableSubjectColumns, availableSubjectTypes,
                 availableSubjectEditable);
 
         var availableSubjectScroll = availableSubjectTable.getDisplayer();
@@ -268,7 +285,7 @@ public class TeacherWindow extends JFrame {
         availableClassTypes.add(String.class);
         var availableClassEditable = new java.util.ArrayList<Integer>();
 
-        var availableClassTable = new MSTable(availableClassColumns, availableClassTypes, availableClassEditable);
+        this.availableClassTable = new MSTable(availableClassColumns, availableClassTypes, availableClassEditable);
 
         var availableClassScroll = availableClassTable.getDisplayer();
         availableClassScroll.setPreferredSize(new Dimension(250, 150));
@@ -320,21 +337,99 @@ public class TeacherWindow extends JFrame {
 
         if (this.target != null) {
             if (this.target.getInfo().isSex()) {
-                femaleRadio.setSelected(true);
-            } else {
                 maleRadio.setSelected(true);
+            } else {
+                femaleRadio.setSelected(true);
             }
             teacherNameField.setText(this.target.getInfo().getName());
             dateOfBirthField.setText((this.target.getInfo().getBirth()).toString());
             birthPlaceField.setText(
                     this.target.getInfo().getPlaceOfBirth() != null ? this.target.getInfo().getPlaceOfBirth() : "");
+			usernameField.setText(this.target.getAuthName());
+			passwordField.setText(this.target.getAuthPass());
+			teacherNameField.setForeground(new Color(30, 30, 30));
+			dateOfBirthField.setForeground(new Color(30, 30, 30));
+			birthPlaceField.setForeground(new Color(30, 30, 30));
+			usernameField.setForeground(new Color(30, 30, 30));
+			passwordField.setForeground(new Color(30, 30, 30));
+
+			var teachedSubject = new SubjectHandler().loadTeacherSubject(this.target.getId());
+			if(teachedSubject != null) {
+				var objectList = new LinkedList<Object[]>();
+				for(Subject s : teachedSubject) objectList.add(new Object[] {s.getId(), s.getSubjectName()});
+				this.choosenTeacherTable.addData(objectList.toArray(Object[][]::new));
+			}
+
+			var teachedClass = new TeachClassHandler().getTeachesClassWithId(this.target.getId());
+			if(teachedClass != null) {
+				var objectList = new LinkedList<Object[]>();
+				for(Pair<Integer, String> p : teachedClass) objectList.add(new Object[] {p.first(), p.second()});
+
+				this.teacherTable.addData(objectList.toArray(Object[][]::new));
+			}
         }
+
+		this.ttwc.loadAvailableSubject(this);
+		this.ttwc.loadAvailableClass(this);
+		addSubjectBtn.addActionListener(_ -> {
+			var selectedRow = availableSubjectTable.getSelectedRow();
+
+			if(selectedRow == -1) return;
+
+			choosenTeacherTable.addData(new Object[][]{new Object[]{
+				availableSubjectTable.getIDModel().getValueAt(selectedRow, 0),
+				availableSubjectTable.getContentModel().getValueAt(selectedRow, 0)
+			}});
+			ttwc.loadAvailableSubject(TeacherWindow.this);
+			ttwc.loadAvailableClass(TeacherWindow.this);
+		});
+		removeSubjectBtn.addActionListener(_ -> {
+			var selectedRow = choosenTeacherTable.getSelectedRow();
+
+			if(selectedRow == -1) return;
+
+			choosenTeacherTable.removeRow(selectedRow);
+			ttwc.loadAvailableSubject(TeacherWindow.this);
+			ttwc.loadAvailableClass(TeacherWindow.this);
+		});
+
+		addClassBtn.addActionListener(_ -> {
+			var selectedRow = availableClassTable.getSelectedRow();
+
+			if(selectedRow == -1) return;
+
+			teacherTable.addData(new Object[][]{new Object[]{
+				availableClassTable.getIDModel().getValueAt(selectedRow, 0),
+				availableClassTable.getContentModel().getValueAt(selectedRow, 0)
+			}});
+			ttwc.loadAvailableSubject(TeacherWindow.this);
+			ttwc.loadAvailableClass(TeacherWindow.this);
+		});
+		removeClassBtn.addActionListener(_ -> {
+			var selectedRow = teacherTable.getSelectedRow();
+
+			if(selectedRow == -1) return;
+
+			teacherTable.removeRow(selectedRow);
+			ttwc.loadAvailableSubject(TeacherWindow.this);
+			ttwc.loadAvailableClass(TeacherWindow.this);
+		});
 
         // Submit Button Action
         submitBtn.addActionListener(_ -> {
             var submit = new SubmitWindow(false);
             submit.setCancelAction(_ -> submit.dispose());
             submit.setSubmitAction(_ -> {
+				var existedClass = new LinkedList<Integer>();
+				var existedSubject = new LinkedList<Integer>();
+
+				var existedSubjectTableModel = choosenTeacherTable.getIDModel();
+				var existedClassTableModel = teacherTable.getIDModel();
+
+				for(var i = 0; i < existedSubjectTableModel.getRowCount(); i++) existedSubject.add((Integer) existedSubjectTableModel.getValueAt(i, 0));
+				for(var i = 0; i < existedClassTableModel.getRowCount(); i++) existedClass.add((Integer) existedClassTableModel.getValueAt(i, 0));
+
+
                 String password = new String(passwordField.getPassword());
 
                 if (target == null) {
@@ -369,6 +464,7 @@ public class TeacherWindow extends JFrame {
     private JTextField createStyledTextField(String text, int width) {
         var textField = new JTextField(text);
         textField.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+		textField.setForeground(config.getFieldColor());
         if (width > 0) {
             textField.setPreferredSize(new Dimension(width, 35));
         } else {
@@ -380,9 +476,11 @@ public class TeacherWindow extends JFrame {
         return textField;
     }
 
-    private JPasswordField createStyledPasswordField(int width) {
+    private JPasswordField createStyledPasswordField(String text, int width) {
         var passwordField = new JPasswordField();
-        passwordField.setEchoChar('*');
+		passwordField.setForeground(config.getFieldColor());
+        passwordField.setEchoChar((char) 0);
+		passwordField.setText(text);
         passwordField.setFont(new Font("Segoe UI", Font.PLAIN, 13));
         if (width > 0) {
             passwordField.setPreferredSize(new Dimension(width, 35));

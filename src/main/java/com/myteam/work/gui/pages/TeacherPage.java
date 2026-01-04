@@ -180,6 +180,7 @@ public class TeacherPage extends JPanel {
 		this.subjectSelector.removeAll();
 		this.classSelector.removeAll();
 		this.tpec.getRecorder().clear();
+		changeContent("student");
 	}
 
 	private void loadTeachClass() {

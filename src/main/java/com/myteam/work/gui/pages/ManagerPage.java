@@ -91,7 +91,6 @@ public class ManagerPage extends JPanel {
 	private Runnable updateClass;
 	private Runnable updateSemester;
 	private Runnable updateManagementClass;
-	// private Consumer<Integer> deleteFunc;
 	private Consumer<String> search;
 
 	private ManagerPage() {
@@ -299,13 +298,15 @@ public class ManagerPage extends JPanel {
 		this.teacherSearchField.setBorder(null);
 		this.teacherSearchField.setForeground(config.getFieldColor());
 		this.teacherSearchField.addFocusListener(new DefaultTextDisplayer(teacherTableDefaultText));
-		this.teacherSearchField.getDocument().addDocumentListener(new DocumentListener() {
-			private Timer updater = new Timer(125, e -> {
+		this.updateTeacher = () -> {
 				if (teacherSearchField.getText().equals(teacherTableDefaultText))
-					mpec.loadTeacherSubject();
+					mpec.searchTeacher("");
 				else
 					mpec.searchTeacher(teacherSearchField.getText());
-			});
+
+		};
+		this.teacherSearchField.getDocument().addDocumentListener(new DocumentListener() {
+			private Timer updater = new Timer(125, e -> updateTeacher.run());
 
 			public void changedUpdate(DocumentEvent e) {
 				updater.setRepeats(false);
@@ -356,10 +357,9 @@ public class ManagerPage extends JPanel {
 				(Integer) teacherTable.getIDModel().getValueAt(selectedRow, 0),
 				(String) contentModel.getValueAt(selectedRow, 1),
 				(String) contentModel.getValueAt(selectedRow, 2),
-				//(Boolean) getTwoColumns(contentModel, selectedRow, 6, 7)[0],
 				true,
 				(String) contentModel.getValueAt(selectedRow, 0),
-				(String) contentModel.getValueAt(selectedRow, 3),
+				((LocalDate) contentModel.getValueAt(selectedRow, 3)).toString(),
 				(String) contentModel.getValueAt(selectedRow, 4),
 				((String) contentModel.getValueAt(selectedRow, 5)).equals("Male") ? true : false
 
@@ -370,8 +370,8 @@ public class ManagerPage extends JPanel {
 		this.teacherTable.setRowHeight(42);
 		this.teacherTable.setShowGrid(true);
 		this.teacherTable.setIntercellSpacing(new Dimension(1, 1));
-		
-		removeTeacherBtn.addActionListener(_ -> createDeleteWindow(teacherTable, mpec::deleteTeacher, teacherSearchField, teacherTableDefaultText, mpec::loadAllTeacher, mpec::searchTeacher));
+		Runnable update = () -> mpec.searchTeacher("");
+		removeTeacherBtn.addActionListener(_ -> createDeleteWindow(teacherTable, mpec::deleteTeacher, teacherSearchField, teacherTableDefaultText, update , mpec::searchTeacher));
 		return contentPanel;
 	}
 
@@ -488,7 +488,7 @@ public class ManagerPage extends JPanel {
 	}
 
 	public void logout() {
-
+		changeContent("student");
 	}
 
 	public void refreshStudent() {
@@ -526,8 +526,7 @@ public class ManagerPage extends JPanel {
 	}
 
 	public void refreshTeacher() {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'refreshTeacher'");
+		this.updateTeacher.run();
 	}
 
 	public Object[] getTwoColumns(TableModel model, int row, int col1, int col2) {
