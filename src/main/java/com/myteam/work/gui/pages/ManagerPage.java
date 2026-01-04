@@ -445,7 +445,7 @@ public class ManagerPage extends JPanel {
 			if (selectedRow == -1)
 				return;
 
-			deleteFunc.accept(selectedRow);
+			deleteFunc.accept((Integer) table.getIDModel().getValueAt(selectedRow, 0));
 
 			if (searchBar.getText().equals(defaultText))
 				loadAll.run();
@@ -453,6 +453,11 @@ public class ManagerPage extends JPanel {
 				search.accept(searchBar.getText());
 		});
 		submitWin.setCancelAction(_ -> submitWin.dispose());
+	}
+
+	public void refreshTeacher() {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Unimplemented method 'refreshTeacher'");
 	}
 
 	// private void createSubmitWindow1() {

@@ -2,290 +2,417 @@ package com.myteam.work.gui.pages.utilwin;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.Insets;
 import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
+import javax.swing.JPasswordField;
+import javax.swing.JRadioButton;
 import javax.swing.JTextField;
-import javax.swing.ListSelectionModel;
-import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
-import javax.swing.table.DefaultTableModel;
 
-import org.w3c.dom.events.MouseEvent;
+import com.myteam.work.Configuration;
+import com.myteam.work.controller.TeacherWinController;
+import com.myteam.work.gui.pages.MSTable;
+import com.myteam.work.gui.pages.ManagerPage;
+import com.myteam.work.management.data.User;
+
+import lombok.Getter;
 
 public class TeacherWindow extends JFrame {
+    public static final int CREATE = 1;
+    public static final int EDIT = 2;
+    private static final Configuration config = Configuration.getConfiguration();
+
     private static final Color PRIMARY_COLOR = new Color(41, 128, 185);
     private static final Color BACKGROUND_COLOR = new Color(236, 240, 241);
-    
-    private JTable teacherTable;
-    private DefaultTableModel tableModel;
-    
+
+    @Getter
+    private User target;
+    @Getter
+    private MSTable choosenTeacherTable;
+    @Getter
+    private MSTable teacherTable;
+    private TeacherWinController ttwc;
+
     public TeacherWindow() {
         this.setTitle("Teacher Management");
-        this.setSize(new Dimension(950, 550));
+        this.setSize(new Dimension(1100, 750));
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.setResizable(false);
         this.setLocationRelativeTo(null);
         this.getContentPane().setBackground(BACKGROUND_COLOR);
-        
+
         var mainPanel = new JPanel(new BorderLayout(15, 15));
         mainPanel.setBackground(BACKGROUND_COLOR);
         mainPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
-        
-        // Center Panel - Teacher List
-        var centerPanel = new JPanel(new BorderLayout(10, 10));
-        centerPanel.setBackground(Color.WHITE);
-        centerPanel.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(new Color(189, 195, 199), 1),
-            new EmptyBorder(15, 15, 15, 15)
-        ));
-        
-        var teacherListLabel = new JLabel("Teacher List");
-        teacherListLabel.setFont(new Font("Segoe UI", Font.BOLD, 16));
-        teacherListLabel.setForeground(PRIMARY_COLOR);
-        
-        // Create Table
-        String[] columnNames = {"ID", "Teacher Name", "Date of Birth", "Subject", "Department"};
-        tableModel = new DefaultTableModel(columnNames, 0) {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false;
-            }
-        };
-        
-        teacherTable = new JTable(tableModel);
-        teacherTable.setRowHeight(30);
-        teacherTable.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-        teacherTable.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 13));
-        teacherTable.getTableHeader().setBackground(PRIMARY_COLOR);
-        teacherTable.getTableHeader().setForeground(Color.WHITE);
-        teacherTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        teacherTable.setSelectionBackground(new Color(52, 152, 219, 100));
-        
-        var scrollPane = new JScrollPane(teacherTable);
-        scrollPane.setBorder(BorderFactory.createLineBorder(new Color(189, 195, 199), 1));
-        
-        centerPanel.add(teacherListLabel, BorderLayout.NORTH);
-        centerPanel.add(scrollPane, BorderLayout.CENTER);
-        
-        // Bottom Panel - Action Buttons
+
+        // Top Panel - Teacher Information Form
+        var topPanel = new JPanel(new GridBagLayout());
+        topPanel.setBackground(Color.WHITE);
+        topPanel.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(189, 195, 199), 1),
+                new EmptyBorder(15, 15, 15, 15)));
+
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.insets = new Insets(5, 5, 5, 5);
+
+        var maleRadio = new JRadioButton("Nam");
+        var femaleRadio = new JRadioButton("Nữ");
+        maleRadio.setSelected(true);
+        var sexGroup = new ButtonGroup();
+        sexGroup.add(maleRadio);
+        sexGroup.add(femaleRadio);
+        maleRadio.setBackground(Color.WHITE);
+        femaleRadio.setBackground(Color.WHITE);
+        maleRadio.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        femaleRadio.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        maleRadio.setCursor(config.getHandCursor());
+        femaleRadio.setCursor(config.getHandCursor());
+        var sexPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
+        sexPanel.setBackground(Color.WHITE);
+        sexPanel.add(maleRadio);
+        sexPanel.add(femaleRadio);
+
+        var teacherNameField = createStyledTextField("", 250);
+        var dateOfBirthField = createStyledTextField("", 150);
+        var birthPlaceField = createStyledTextField("", 300);
+        var usernameField = createStyledTextField("", 250);
+        var passwordField = createStyledPasswordField(250);
+
+        // Row 1: Sex and Name
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.weightx = 0;
+        topPanel.add(createLabel("Teacher Sex:"), gbc);
+        gbc.gridx = 1;
+        gbc.weightx = 0.3;
+        topPanel.add(sexPanel, gbc);
+        gbc.gridx = 2;
+        gbc.weightx = 0;
+        topPanel.add(createLabel("Teacher Name:"), gbc);
+        gbc.gridx = 3;
+        gbc.weightx = 0.7;
+        topPanel.add(teacherNameField, gbc);
+
+        // Row 2: Birth Date and Place
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.weightx = 0;
+        topPanel.add(createLabel("Date of Birth:"), gbc);
+        gbc.gridx = 1;
+        gbc.weightx = 0.3;
+        topPanel.add(dateOfBirthField, gbc);
+        gbc.gridx = 2;
+        gbc.weightx = 0;
+        topPanel.add(createLabel("Birth Place:"), gbc);
+        gbc.gridx = 3;
+        gbc.weightx = 0.7;
+        topPanel.add(birthPlaceField, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        gbc.weightx = 0;
+        topPanel.add(createLabel("Username:"), gbc);
+        gbc.gridx = 1;
+        gbc.weightx = 0.3;
+        topPanel.add(usernameField, gbc);
+        gbc.gridx = 2;
+        gbc.weightx = 0;
+        topPanel.add(createLabel("Password:"), gbc);
+        gbc.gridx = 3;
+        gbc.weightx = 0.7;
+        topPanel.add(passwordField, gbc);
+
+        // Middle Panel - Tables
+        var middlePanel = new JPanel(new GridLayout(2, 1, 0, 15));
+        middlePanel.setBackground(BACKGROUND_COLOR);
+
+        // // Subject Section with Add/Remove buttons
+        var subjectSection = new JPanel(new BorderLayout(10, 0));
+        subjectSection.setBackground(BACKGROUND_COLOR);
+
+        var subjectTablesPanel = new JPanel(new GridLayout(1, 2, 15, 0));
+        subjectTablesPanel.setBackground(BACKGROUND_COLOR);
+
+        // Selected Subjects Panel
+        var selectedSubjectPanel = new JPanel(new BorderLayout(5, 5));
+        selectedSubjectPanel.setBackground(Color.WHITE);
+        selectedSubjectPanel.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(189, 195, 199), 1),
+                new EmptyBorder(10, 10, 10, 10)));
+
+        var selectedSubjectLabel = new JLabel("Selected Subjects");
+        selectedSubjectLabel.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        selectedSubjectLabel.setForeground(PRIMARY_COLOR);
+        selectedSubjectPanel.add(selectedSubjectLabel, BorderLayout.NORTH);
+
+        String[] selectedSubjectColumns = { "ID", "Subject Name" };
+        var selectedSubjectTypes = new java.util.ArrayList<Class<?>>();
+        selectedSubjectTypes.add(String.class);
+        var selectedSubjectEditable = new java.util.ArrayList<Integer>();
+
+        this.choosenTeacherTable = new MSTable(selectedSubjectColumns, selectedSubjectTypes, selectedSubjectEditable);
+
+        var selectedSubjectScroll = choosenTeacherTable.getDisplayer();
+        selectedSubjectScroll.setPreferredSize(new Dimension(250, 150));
+        selectedSubjectPanel.add(selectedSubjectScroll, BorderLayout.CENTER);
+
+        // Available Subjects Panel
+        var availableSubjectPanel = new JPanel(new BorderLayout(5, 5));
+        availableSubjectPanel.setBackground(Color.WHITE);
+        availableSubjectPanel.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(189, 195, 199), 1),
+                new EmptyBorder(10, 10, 10, 10)));
+
+        var availableSubjectLabel = new JLabel("Available Subjects");
+        availableSubjectLabel.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        availableSubjectLabel.setForeground(PRIMARY_COLOR);
+        availableSubjectPanel.add(availableSubjectLabel, BorderLayout.NORTH);
+
+        String[] availableSubjectColumns = { "ID", "Subject Name" };
+        var availableSubjectTypes = new java.util.ArrayList<Class<?>>();
+        availableSubjectTypes.add(String.class);
+        var availableSubjectEditable = new java.util.ArrayList<Integer>();
+
+        var availableSubjectTable = new MSTable(availableSubjectColumns, availableSubjectTypes,
+                availableSubjectEditable);
+
+        var availableSubjectScroll = availableSubjectTable.getDisplayer();
+        availableSubjectScroll.setPreferredSize(new Dimension(250, 150));
+        availableSubjectPanel.add(availableSubjectScroll, BorderLayout.CENTER);
+
+        subjectTablesPanel.add(selectedSubjectPanel);
+        subjectTablesPanel.add(availableSubjectPanel);
+
+        // Subject Buttons Panel
+        var subjectButtonsPanel = new JPanel(new GridLayout(2, 1, 0, 10));
+        subjectButtonsPanel.setBackground(BACKGROUND_COLOR);
+
+        var addSubjectBtn = createStyledButton("Add Subject", new Color(52, 152, 219));
+        addSubjectBtn.setPreferredSize(new Dimension(150, 35));
+
+        var removeSubjectBtn = createStyledButton("Remove Subject", new Color(231, 76, 60));
+        removeSubjectBtn.setPreferredSize(new Dimension(150, 35));
+
+        subjectButtonsPanel.add(addSubjectBtn);
+        subjectButtonsPanel.add(removeSubjectBtn);
+
+        // Add buttons to the right side of subject section
+        var subjectButtonWrapper = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        subjectButtonWrapper.setBackground(BACKGROUND_COLOR);
+        subjectButtonWrapper.add(subjectButtonsPanel);
+
+        subjectSection.add(subjectTablesPanel, BorderLayout.CENTER);
+        subjectSection.add(subjectButtonWrapper, BorderLayout.EAST);
+
+        // Class Section with Add/Remove buttons
+        var classSection = new JPanel(new BorderLayout(10, 0));
+        classSection.setBackground(BACKGROUND_COLOR);
+
+        var classTablesPanel = new JPanel(new GridLayout(1, 2, 15, 0));
+        classTablesPanel.setBackground(BACKGROUND_COLOR);
+
+        // Selected Classes Panel
+        var selectedClassPanel = new JPanel(new BorderLayout(5, 5));
+        selectedClassPanel.setBackground(Color.WHITE);
+        selectedClassPanel.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(189, 195, 199), 1),
+                new EmptyBorder(10, 10, 10, 10)));
+
+        var selectedClassLabel = new JLabel("Selected Classes");
+        selectedClassLabel.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        selectedClassLabel.setForeground(PRIMARY_COLOR);
+        selectedClassPanel.add(selectedClassLabel, BorderLayout.NORTH);
+
+        String[] selectedClassColumns = { "ID", "Class Name" };
+        var selectedClassTypes = new java.util.ArrayList<Class<?>>();
+        selectedClassTypes.add(String.class);
+        var selectedClassEditable = new java.util.ArrayList<Integer>();
+
+        this.teacherTable = new MSTable(selectedClassColumns, selectedClassTypes, selectedClassEditable);
+
+        var selectedClassScroll = teacherTable.getDisplayer();
+        selectedClassScroll.setPreferredSize(new Dimension(250, 150));
+        selectedClassPanel.add(selectedClassScroll, BorderLayout.CENTER);
+
+        // Available Classes Panel
+        var availableClassPanel = new JPanel(new BorderLayout(5, 5));
+        availableClassPanel.setBackground(Color.WHITE);
+        availableClassPanel.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(189, 195, 199), 1),
+                new EmptyBorder(10, 10, 10, 10)));
+
+        var availableClassLabel = new JLabel("Available Classes");
+        availableClassLabel.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        availableClassLabel.setForeground(PRIMARY_COLOR);
+        availableClassPanel.add(availableClassLabel, BorderLayout.NORTH);
+
+        String[] availableClassColumns = { "ID", "Class Name" };
+        var availableClassTypes = new java.util.ArrayList<Class<?>>();
+        availableClassTypes.add(String.class);
+        var availableClassEditable = new java.util.ArrayList<Integer>();
+
+        var availableClassTable = new MSTable(availableClassColumns, availableClassTypes, availableClassEditable);
+
+        var availableClassScroll = availableClassTable.getDisplayer();
+        availableClassScroll.setPreferredSize(new Dimension(250, 150));
+        availableClassPanel.add(availableClassScroll, BorderLayout.CENTER);
+
+        classTablesPanel.add(selectedClassPanel);
+        classTablesPanel.add(availableClassPanel);
+
+        // Class Buttons Panel
+        var classButtonsPanel = new JPanel(new GridLayout(2, 1, 0, 10));
+        classButtonsPanel.setBackground(BACKGROUND_COLOR);
+
+        var addClassBtn = createStyledButton("Add Class", new Color(52, 152, 219));
+        addClassBtn.setPreferredSize(new Dimension(150, 35));
+
+        var removeClassBtn = createStyledButton("Remove Class", new Color(231, 76, 60));
+        removeClassBtn.setPreferredSize(new Dimension(150, 35));
+
+        classButtonsPanel.add(addClassBtn);
+        classButtonsPanel.add(removeClassBtn);
+
+        // Add buttons to the right side of class section
+        var classButtonWrapper = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        classButtonWrapper.setBackground(BACKGROUND_COLOR);
+        classButtonWrapper.add(classButtonsPanel);
+
+        classSection.add(classTablesPanel, BorderLayout.CENTER);
+        classSection.add(classButtonWrapper, BorderLayout.EAST);
+
+        middlePanel.add(subjectSection);
+        middlePanel.add(classSection);
+        // Bottom Panel - Submit Button
         var bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 10));
         bottomPanel.setBackground(BACKGROUND_COLOR);
-        
-        var addTeacherBtn = createStyledButton("Add Teacher", new Color(39, 174, 96));
-        var removeTeacherBtn = createStyledButton("Remove Teacher", new Color(231, 76, 60));
-        
-        addTeacherBtn.setPreferredSize(new Dimension(150, 40));
-        removeTeacherBtn.setPreferredSize(new Dimension(150, 40));
-        
-        bottomPanel.add(addTeacherBtn);
-        bottomPanel.add(removeTeacherBtn);
-        
-        mainPanel.add(centerPanel, BorderLayout.CENTER);
+
+        var submitBtn = createStyledButton("Submit", new Color(39, 174, 96));
+        submitBtn.setPreferredSize(new Dimension(150, 40));
+
+        bottomPanel.add(submitBtn);
+
+        mainPanel.add(topPanel, BorderLayout.NORTH);
+        mainPanel.add(middlePanel, BorderLayout.CENTER);
         mainPanel.add(bottomPanel, BorderLayout.SOUTH);
-        
+
         this.add(mainPanel);
-        
-        // Add Teacher Button Action
-        addTeacherBtn.addActionListener(e -> {
-            openAddTeacherDialog();
+
+        this.target = target;
+        this.ttwc = new TeacherWinController();
+
+        if (this.target != null) {
+            if (this.target.getInfo().isSex()) {
+                femaleRadio.setSelected(true);
+            } else {
+                maleRadio.setSelected(true);
+            }
+            teacherNameField.setText(this.target.getInfo().getName());
+            dateOfBirthField.setText((this.target.getInfo().getBirth()).toString());
+            birthPlaceField.setText(
+                    this.target.getInfo().getPlaceOfBirth() != null ? this.target.getInfo().getPlaceOfBirth() : "");
+        }
+
+        // Submit Button Action
+        submitBtn.addActionListener(_ -> {
+            var submit = new SubmitWindow(false);
+            submit.setCancelAction(_ -> submit.dispose());
+            submit.setSubmitAction(_ -> {
+                String password = new String(passwordField.getPassword());
+
+                if (target == null) {
+                    ttwc.createTeacher(teacherNameField.getText(),
+                            LocalDate.parse(dateOfBirthField.getText(), DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+                            maleRadio.isSelected(),
+                            birthPlaceField.getText());
+                } else {
+                    ttwc.updateTeacher(this.target,
+                            teacherNameField.getText(),
+                            LocalDate.parse(dateOfBirthField.getText(), DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+                            maleRadio.isSelected(),
+                            birthPlaceField.getText());
+                }
+
+                submit.dispose();
+                TeacherWindow.this.dispose();
+                ((ManagerPage) ManagerPage.getPage()).refreshTeacher();
+            });
         });
-        
-        // Remove Teacher Button Action
-        removeTeacherBtn.addActionListener(e -> {
-            removeTeacher();
-        });
-        
+
         this.setVisible(true);
     }
-    
-    private void openAddTeacherDialog() {
-        JDialog dialog = new JDialog(this, "Add New Teacher", true);
-        dialog.setSize(450, 350);
-        dialog.setLocationRelativeTo(this);
-        dialog.setResizable(false);
-        
-        JPanel mainPanel = new JPanel(new BorderLayout(10, 10));
-        mainPanel.setBackground(Color.WHITE);
-        mainPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
-        
-        // Form Panel
-        JPanel formPanel = new JPanel(new GridLayout(5, 2, 10, 15));
-        formPanel.setBackground(Color.WHITE);
-        
-        // ID Field
-        JLabel idLabel = new JLabel("Teacher ID:");
-        idLabel.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        JTextField idField = createStyledTextField("", 200);
-        
-        // Name Field
-        JLabel nameLabel = new JLabel("Teacher Name:");
-        nameLabel.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        JTextField nameField = createStyledTextField("", 200);
-        
-        // Date of Birth Field
-        JLabel dobLabel = new JLabel("Date of Birth:");
-        dobLabel.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        JTextField dobField = createStyledTextField("YYYY-MM-DD", 200);
-        
-        // Subject Field
-        JLabel subjectLabel = new JLabel("Subject:");
-        subjectLabel.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        JTextField subjectField = createStyledTextField("", 200);
-        
-        // Department Field
-        JLabel deptLabel = new JLabel("Department:");
-        deptLabel.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        JTextField deptField = createStyledTextField("", 200);
-        
-        formPanel.add(idLabel);
-        formPanel.add(idField);
-        formPanel.add(nameLabel);
-        formPanel.add(nameField);
-        formPanel.add(dobLabel);
-        formPanel.add(dobField);
-        formPanel.add(subjectLabel);
-        formPanel.add(subjectField);
-        formPanel.add(deptLabel);
-        formPanel.add(deptField);
-        
-        // Button Panel
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 10));
-        buttonPanel.setBackground(Color.WHITE);
-        
-        JButton saveBtn = createStyledButton("Save", new Color(39, 174, 96));
-        JButton cancelBtn = createStyledButton("Cancel", new Color(149, 165, 166));
-        
-        saveBtn.setPreferredSize(new Dimension(120, 35));
-        cancelBtn.setPreferredSize(new Dimension(120, 35));
-        
-        buttonPanel.add(saveBtn);
-        buttonPanel.add(cancelBtn);
-        
-        mainPanel.add(formPanel, BorderLayout.CENTER);
-        mainPanel.add(buttonPanel, BorderLayout.SOUTH);
-        
-        dialog.add(mainPanel);
-        
-        // Save Button Action
-        saveBtn.addActionListener(e -> {
-            String id = idField.getText().trim();
-            String name = nameField.getText().trim();
-            String dob = dobField.getText().trim();
-            String subject = subjectField.getText().trim();
-            String dept = deptField.getText().trim();
-            
-            if(id.isEmpty() || name.isEmpty() || dob.isEmpty() || subject.isEmpty() || dept.isEmpty()) {
-                JOptionPane.showMessageDialog(
-                    dialog,
-                    "Please fill in all fields!",
-                    "Warning",
-                    JOptionPane.WARNING_MESSAGE
-                );
-                return;
-            }
-            
-            // Add row to table
-            tableModel.addRow(new Object[]{id, name, dob, subject, dept});
-            dialog.dispose();
-            
-            JOptionPane.showMessageDialog(
-                this,
-                "Teacher added successfully!",
-                "Success",
-                JOptionPane.INFORMATION_MESSAGE
-            );
-        });
-        
-        // Cancel Button Action
-        cancelBtn.addActionListener(e -> dialog.dispose());
-        
-        dialog.setVisible(true);
+
+    private JLabel createLabel(String text) {
+        var label = new JLabel(text);
+        label.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        label.setForeground(new Color(52, 73, 94));
+        return label;
     }
-    
-    private void removeTeacher() {
-        int selectedRow = teacherTable.getSelectedRow();
-        
-        if(selectedRow == -1) {
-            JOptionPane.showMessageDialog(
-                this,
-                "Please select a teacher to remove!",
-                "Warning",
-                JOptionPane.WARNING_MESSAGE
-            );
-            return;
-        }
-        
-        int confirm = JOptionPane.showConfirmDialog(
-            this,
-            "Are you sure you want to remove this teacher?",
-            "Confirm Removal",
-            JOptionPane.YES_NO_OPTION,
-            JOptionPane.QUESTION_MESSAGE
-        );
-        
-        if(confirm == JOptionPane.YES_OPTION) {
-            tableModel.removeRow(selectedRow);
-            
-            JOptionPane.showMessageDialog(
-                this,
-                "Teacher removed successfully!",
-                "Success",
-                JOptionPane.INFORMATION_MESSAGE
-            );
-        }
-    }
-    
+
     private JTextField createStyledTextField(String text, int width) {
         var textField = new JTextField(text);
-        textField.setForeground(Color.GRAY);
+        textField.setFont(new Font("Segoe UI", Font.PLAIN, 13));
         if (width > 0) {
             textField.setPreferredSize(new Dimension(width, 35));
         } else {
             textField.setPreferredSize(new Dimension(textField.getPreferredSize().width, 35));
         }
         textField.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(new Color(189, 195, 199), 1),
-            new EmptyBorder(5, 10, 5, 10)
-        ));
+                BorderFactory.createLineBorder(new Color(189, 195, 199), 1),
+                new EmptyBorder(5, 10, 5, 10)));
         return textField;
     }
-    
+
+    private JPasswordField createStyledPasswordField(int width) {
+        var passwordField = new JPasswordField();
+        passwordField.setEchoChar('*');
+        passwordField.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        if (width > 0) {
+            passwordField.setPreferredSize(new Dimension(width, 35));
+        }
+        passwordField.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(189, 195, 199), 1),
+                new EmptyBorder(5, 10, 5, 10)));
+        return passwordField;
+    }
+
     private JButton createStyledButton(String text, Color bgColor) {
         var button = new JButton(text);
         button.setForeground(Color.WHITE);
         button.setBackground(bgColor);
+        button.setFont(new Font("Segoe UI", Font.BOLD, 13));
         button.setFocusPainted(false);
         button.setBorderPainted(false);
-        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        button.setCursor(config.getHandCursor());
         button.setPreferredSize(new Dimension(180, 35));
-        
+
         button.addMouseListener(new MouseAdapter() {
             public void mouseEntered(MouseEvent evt) {
                 button.setBackground(bgColor.brighter());
             }
+
             public void mouseExited(MouseEvent evt) {
                 button.setBackground(bgColor);
             }
         });
-        
+
         return button;
-    }
-    
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new TeacherWindow());
     }
 }
