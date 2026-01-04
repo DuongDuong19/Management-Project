@@ -2,16 +2,12 @@ package com.myteam.work.management.handler;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
 
 import com.myteam.work.management.data.Student;
-import com.myteam.work.management.data.Subject;
-import com.myteam.work.management.data.User;
-
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

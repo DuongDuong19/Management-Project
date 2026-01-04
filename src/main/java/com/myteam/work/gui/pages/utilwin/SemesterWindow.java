@@ -51,8 +51,8 @@ public class SemesterWindow extends JFrame {
         panel.add(yearField);
 
 		if(target != null) {
-			semesterField.setText(target.getSemester());
-			yearField.setText(target.getYears());
+			semesterField.setText(String.valueOf(target.getSemester()));
+			yearField.setText(String.valueOf(target.getYears()));
 		}
 
         return panel;

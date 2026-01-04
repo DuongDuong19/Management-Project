@@ -261,8 +261,8 @@ public class ManagerPageEventController {
 		
 	}
 
-	public void AddStudent() {
-		
+	public void addStudent(Student student, String birth) {
+		this.sth.addStudent(student, birth);
 	}
 
 	public void deleteStudent(int id) {
@@ -284,6 +284,11 @@ public class ManagerPageEventController {
 	public void updateSemester(Semester target, String semester, String year) {
 
 	}
+
+	public void deleteClassManagement() {
+		
+	}
+
 
    
 	

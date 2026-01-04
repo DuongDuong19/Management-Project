@@ -42,6 +42,7 @@ public class ManagerPage extends JPanel {
 	private static final String teacherTableDefaultText = "Search by teacher name or teacher id";
 	private static final String studentTableDefaultText = "Search by student name or student id or student's place";
 	private static final String semesterTableDefaultText = "Search by semester";
+	private static final String classManagementTableDefaultText = "Search by class";
 	private static final Configuration config = Configuration.getConfiguration();
 	private static ManagerPageEventController mpec;
 	private static ManagerPage mp;
@@ -75,10 +76,13 @@ public class ManagerPage extends JPanel {
 	private JComboBox<Student> studentSelector;
 	@Getter
 	private JComboBox<Semester> semesterSelector;
+	@Getter
+	private JComboBox<String> birth;
 	private JTextField subjectSearchField;
 	private JTextField teacherSearchField;
 	private JTextField studentSearchField;
 	private JTextField semesterSearchField;
+	private JTextField classManagementSearchField;
 	private Runnable updateStudent;
 	private Runnable updateTeacher;
 	private Runnable updateSubject;
@@ -410,9 +414,9 @@ public class ManagerPage extends JPanel {
 		semesterSearchPanel.add(semesterSearchBtn, BorderLayout.EAST);
 		this.semesterTable = new MSTable(new String[] { "ID", "Semester", "Year" },
 				List.<Class<?>>of(Integer.class, Short.class, Short.class), Collections.EMPTY_LIST);
-		semesterEditBtn.addActionListener(e -> new SemesterWindow(new Semester(
+		// semesterEditBtn.addActionListener(e -> new SemesterWindow(new Semester(
 
-						)));
+		// 				)));
 		//semesterDeleteBtn.addActionListener(_ -> createDeleteWindow(this.semesterTable, ManagerPageEventController::deleteSemester, semesterSearchField, them default text o day, ham reload toan bo, ham reload khi co search))
 		semesterPanel.add(semesterSearchPanel, BorderLayout.NORTH);
 		semesterPanel.add(this.semesterTable.getDisplayer(), BorderLayout.CENTER);
@@ -442,15 +446,12 @@ public class ManagerPage extends JPanel {
 				e -> mpec.loadStudentInTeachClass((TeachClass) ((JComboBox) e.getSource()).getSelectedItem()));
 		var searchField = new JTextField();
 		var addStudentBtn = new JButton("Add student");
-		addStudentBtn.addActionListener(e -> mpec.AddStudent());
-		addStudentBtn.addActionListener(e -> new ClassManagementWindow());
+		addStudentBtn.addActionListener(e -> new ClassManagementWindow(null));
 		var editStudentBtn = new JButton("Edit student"); 
-		editStudentBtn.addActionListener(e -> new ClassManagementWindow());
-		// var removeStudentBtn = new JButton("Remove student");
-		// removeStudentBtn.addActionListener(e -> mpec.RemoveStudent());
-		// removeStudentBtn.addActionListener(e -> new ClassManagementWindow());
+		var deleteStudentBtn = new JButton("Delete student");
 		searchBtn.add(addStudentBtn, BorderLayout.WEST);
 		searchBtn.add(editStudentBtn, BorderLayout.CENTER);
+		searchBtn.add(deleteStudentBtn, BorderLayout.EAST);
 		//searchBtn.add(removeStudentBtn, BorderLayout.EAST);
 		selectorPanel.add(this.classManagementSemesterSelector, BorderLayout.WEST);
 		selectorPanel.add(this.classManagementSubjectSelector, BorderLayout.CENTER);
@@ -467,7 +468,20 @@ public class ManagerPage extends JPanel {
 		contentPanel.add(this.studentClassTable.getDisplayer(), BorderLayout.CENTER);
 		this.studentClassTable.setReorderingColumn(false);
 		this.studentClassTable.setResizingColumn(false);
+		editStudentBtn.addActionListener(_ -> {
+			var selectedRow = classTable.getSelectedRow();
 
+			if(selectedRow == -1) return;
+
+			var contentModel = studentClassTable.getContentModel();
+
+			new ClassManagementWindow(new TeachClass(
+				(Integer) classTable.getIDModel().getValueAt(selectedRow, 0),
+				(String) contentModel.getValueAt(selectedRow, 1)
+			));
+		});
+
+		//deleteStudentBtn.addActionListener(_ -> createDeleteWindow(classManagementTable, mpec::deleteClassManagement, classManagementSearchField, classManagementTableDefaultText, mpec::loadAllClassManagement, mpec::searchClassManagement));
 		return contentPanel;
 	}
 
@@ -519,6 +533,20 @@ public class ManagerPage extends JPanel {
 			model.getValueAt(row, col1),
 			model.getValueAt(row, col2)
 		};
+	}
+
+	private void createSubmitWindow() {
+		var submitWin = new SubmitWindow(true);
+		submitWin.setSubmitAction(e -> {
+			mpec.addStudent((Student) this.classManagementClassSelector.getSelectedItem(), String.valueOf(this.birth.getSelectedItem()));
+			submitWin.dispose();
+		});
+		submitWin.setRevokeAction(e -> {
+			mpec.getRecorder().clear();
+			mpec.loadStudentInTeachClass((TeachClass) this.classManagementClassSelector.getSelectedItem());
+			submitWin.dispose();
+		});
+		submitWin.setCancelAction(e -> submitWin.dispose());
 	}
 
 	
