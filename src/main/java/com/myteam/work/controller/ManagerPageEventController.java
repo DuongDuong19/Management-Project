@@ -308,4 +308,19 @@ public class ManagerPageEventController {
 
 		table.addData(this.parser.parseClassFetchInfo(classes));
 	}
+
+	public void addStudentTeachClass(TeachClass classes, String text) {
+		try{
+			this.tch.insertStudentIntoClass(classes, Integer.parseInt(text));
+		} catch (NumberFormatException e) {
+			log.error(e.toString());
+		}
+		loadStudentInTeachClass(classes);
+	}
+
+    public void removeStudentTeachClass(TeachClass classes, Integer valueAt) {
+	
+			this.tch.deleteStudentOutOfClass(classes, valueAt);
+			loadStudentInTeachClass(classes);
+    }
 }
