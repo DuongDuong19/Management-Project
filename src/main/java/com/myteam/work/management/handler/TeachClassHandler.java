@@ -411,4 +411,31 @@ public class TeachClassHandler {
 
 		return null;
 	}
+
+    public void insertStudentIntoClass(TeachClass classes, int int1) {
+        try {
+			var prepareStatement = this.connection.prepareStatement("""
+				insert into StudentListTeachClass(student, classes)
+values(?, ?);
+					""");
+			prepareStatement.setInt(1, classes.getId());
+			prepareStatement.setInt(2, int1);
+		} catch (SQLException e) {
+			log.error(e.toString());
+		}
+    }
+
+    public void deleteStudentOutOfClass(TeachClass classes, Integer valueAt) {
+        try {
+			var prepareStatement = this.connection.prepareStatement("""
+				DELETE FROM StudentListTeachClass
+WHERE student = ?
+  AND classes = ?;
+					""");
+			prepareStatement.setInt(1, classes.getId());
+			prepareStatement.setInt(2, valueAt);
+		} catch (SQLException e) {
+			log.error(e.toString());
+		}
+    }
 }

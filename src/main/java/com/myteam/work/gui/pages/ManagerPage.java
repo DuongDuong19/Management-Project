@@ -3,11 +3,10 @@ package com.myteam.work.gui.pages;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Dimension;
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
-
-import java.time.LocalDate;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -457,7 +456,7 @@ public class ManagerPage extends JPanel {
 		contentPanel.setBorder(new EmptyBorder(20, 25, 20, 25));
 		var searchPanel = new JPanel(new BorderLayout(15, 0));
 		var selectorPanel = new JPanel(new BorderLayout(12, 0));
-		var searchBtn = new JPanel(new BorderLayout());
+		var searchBtn = new JPanel(new BorderLayout(8, 0)); // Thêm gap giữa các components
 		searchPanel.setOpaque(false);
 		this.classManagementSemesterSelector = new JComboBox<>();
 		this.classManagementSemesterSelector.setRenderer(config.getComboBoxRenderer());
@@ -474,6 +473,7 @@ public class ManagerPage extends JPanel {
 		var editStudentBtn = new JButton("Edit student"); 
 		var deleteStudentBtn = new JButton("Delete student");
 		var inputArea = new JTextField();
+		inputArea.setPreferredSize(new java.awt.Dimension(200, 30)); // Set kích thước cho input area
 		addStudentBtn.addActionListener(e -> {
 			var classes = (TeachClass) classManagementClassSelector.getSelectedItem();
 
@@ -484,6 +484,7 @@ public class ManagerPage extends JPanel {
 		searchBtn.add(addStudentBtn, BorderLayout.CENTER);
 		//searchBtn.add(editStudentBtn, BorderLayout.CENTER);
 		searchBtn.add(deleteStudentBtn, BorderLayout.EAST);
+		searchBtn.setPreferredSize(new java.awt.Dimension(500, 35)); // Set kích thước cho cả panel searchBtn
 		//searchBtn.add(removeStudentBtn, BorderLayout.EAST);
 		selectorPanel.add(this.classManagementSemesterSelector, BorderLayout.WEST);
 		selectorPanel.add(this.classManagementSubjectSelector, BorderLayout.CENTER);
