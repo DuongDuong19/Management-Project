@@ -28,14 +28,12 @@ public class SubmitWindow extends JFrame {
         this.setResizable(false);
         this.setLocationRelativeTo(null);
 
-        // Main panel với padding
         var mainPanel = new JPanel(new GridBagLayout());
         mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         mainPanel.setBackground(Color.WHITE);
         
         GridBagConstraints gbc = new GridBagConstraints();
-        
-        // Question label ở giữa
+
         var question = new JLabel("Are you sure you want to proceed?");
         question.setFont(new Font("Arial", Font.PLAIN, 16));
         question.setHorizontalAlignment(SwingConstants.CENTER);
@@ -48,7 +46,6 @@ public class SubmitWindow extends JFrame {
         gbc.anchor = GridBagConstraints.CENTER;
         mainPanel.add(question, gbc);
 
-        // Panel chứa các button
         var buttonPanel = new JPanel(new GridBagLayout());
         buttonPanel.setOpaque(false);
         GridBagConstraints btnGbc = new GridBagConstraints();
@@ -57,17 +54,14 @@ public class SubmitWindow extends JFrame {
         btnGbc.fill = GridBagConstraints.HORIZONTAL;
         btnGbc.weightx = 1.0;
 
-        // Tạo các button
         this.cancel = new JButton("Cancel");
         this.revoke = new JButton("Revoke");
         this.submit = new JButton("Submit");
 
-        // Style cho các button
         styleButton(cancel, new Color(108, 117, 125), Color.WHITE);
         styleButton(revoke, new Color(220, 53, 69), Color.WHITE);
         styleButton(submit, new Color(40, 167, 69), Color.WHITE);
 
-        // Add buttons theo thứ tự: Cancel -> Revoke -> Submit
         if (showRevoke) {
             btnGbc.gridx = 0;
             buttonPanel.add(cancel, btnGbc);
@@ -82,7 +76,6 @@ public class SubmitWindow extends JFrame {
             buttonPanel.add(submit, btnGbc);
         }
 
-        // Add button panel vào main panel
         gbc.gridy = 1;
         gbc.gridwidth = showRevoke ? 3 : 2;
         gbc.weighty = 0;
@@ -102,8 +95,7 @@ public class SubmitWindow extends JFrame {
         button.setFont(new Font("Arial", Font.BOLD, 12));
         button.setPreferredSize(new Dimension(100, 35));
         button.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        
-        // Hover effect
+
         button.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 button.setBackground(bgColor.darker());

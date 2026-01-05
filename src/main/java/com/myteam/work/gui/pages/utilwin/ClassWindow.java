@@ -50,8 +50,7 @@ public class ClassWindow extends JFrame {
         var mainPanel = new JPanel(new BorderLayout(15, 15));
         mainPanel.setBackground(new Color(236, 240, 241));
         mainPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
-        
-        // Top Panel - Input Form
+
         var topPanel = new JPanel(new BorderLayout(10, 10));
         topPanel.setBackground(Color.WHITE);
         topPanel.setBorder(BorderFactory.createCompoundBorder(
@@ -62,13 +61,11 @@ public class ClassWindow extends JFrame {
         var titleLabel = new JLabel("Add New Class");
         titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 18));
         titleLabel.setForeground(new Color(41, 128, 185));
-        
-        // Form Panel with input fields
+
         var formPanel = new JPanel(new GridLayout(2, 4, 15, 15));
         formPanel.setBackground(Color.WHITE);
         formPanel.setBorder(new EmptyBorder(15, 0, 15, 0));
-        
-        // Class Name
+
         var nameLabel = new JLabel("Class Name:");
         nameLabel.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         formPanel.add(nameLabel);
@@ -80,21 +77,18 @@ public class ClassWindow extends JFrame {
             new EmptyBorder(5, 10, 5, 10)
         ));
         formPanel.add(nameField);
-        
-        // Semester
+
         var semesterLabel = new JLabel("Semester:");
         semesterLabel.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         formPanel.add(semesterLabel);
         
-        String[] semesters = {"Select Semester", "Semester 1", "Semester 2", "Semester 3", 
-                              "Semester 4", "Semester 5", "Semester 6"};
+        String[] semesters = {};
         semesterComboBox = new JComboBox<>(semesters);
         semesterComboBox.setPreferredSize(new Dimension(150, 35));
         semesterComboBox.setFont(new Font("Segoe UI", Font.PLAIN, 13));
         semesterComboBox.setBackground(Color.WHITE);
         formPanel.add(semesterComboBox);
-        
-        // Subject
+
         var subjectLabel = new JLabel("Subject:");
         subjectLabel.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         formPanel.add(subjectLabel);
@@ -105,8 +99,7 @@ public class ClassWindow extends JFrame {
         subjectComboBox.setFont(new Font("Segoe UI", Font.PLAIN, 13));
         subjectComboBox.setBackground(Color.WHITE);
         formPanel.add(subjectComboBox);
-        
-        // Teacher
+
         var teacherLabel = new JLabel("Teacher:");
         teacherLabel.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         formPanel.add(teacherLabel);
@@ -121,15 +114,12 @@ public class ClassWindow extends JFrame {
         
         topPanel.add(titleLabel, BorderLayout.NORTH);
         topPanel.add(formPanel, BorderLayout.CENTER);
-        
-        // Center Panel - Two Tables Side by Side
+
         var centerPanel = new JPanel(new GridLayout(1, 3, 15, 0));
         centerPanel.setBackground(new Color(236, 240, 241));
-        
-        // Selected Teachers Panel
+
         var selectedPanel = createTablePanel("Selected Teachers", true);
-        
-        // Middle Panel with Add/Remove Buttons
+
         var middlePanel = new JPanel();
         middlePanel.setLayout(new BoxLayout(middlePanel, BoxLayout.Y_AXIS));
         middlePanel.setBackground(new Color(236, 240, 241));
@@ -148,15 +138,13 @@ public class ClassWindow extends JFrame {
         middlePanel.add(removeBtn);
         
         middlePanel.add(Box.createVerticalGlue());
-        
-        // Available Teachers Panel
+
         var availablePanel = createTablePanel("Available Teachers", false);
         
         centerPanel.add(selectedPanel);
         centerPanel.add(middlePanel);
         centerPanel.add(availablePanel);
-        
-        // Bottom Panel - Submit Button
+
         var bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 10));
         bottomPanel.setBackground(new Color(236, 240, 241));
         
@@ -169,8 +157,7 @@ public class ClassWindow extends JFrame {
         mainPanel.add(bottomPanel, BorderLayout.SOUTH);
         
         this.add(mainPanel);
-        
-        // Add Teacher Button Action
+
         addBtn.addActionListener(e -> {
             int selectedRow = availableClassTable.getSelectedRow();
             
@@ -186,13 +173,11 @@ public class ClassWindow extends JFrame {
             
             String id = availableTableModel.getValueAt(selectedRow, 0).toString();
             String teacher = availableTableModel.getValueAt(selectedRow, 1).toString();
-            
-            // Move to selected teachers
+
             selectedTableModel.addRow(new Object[]{id, teacher});
             availableTableModel.removeRow(selectedRow);
         });
-        
-        // Remove Teacher Button Action
+
         removeBtn.addActionListener(e -> {
             int selectedRow = selectedClassTable.getSelectedRow();
             
@@ -208,13 +193,11 @@ public class ClassWindow extends JFrame {
             
             String id = selectedTableModel.getValueAt(selectedRow, 0).toString();
             String teacher = selectedTableModel.getValueAt(selectedRow, 1).toString();
-            
-            // Move back to available teachers
+
             availableTableModel.addRow(new Object[]{id, teacher});
             selectedTableModel.removeRow(selectedRow);
         });
-        
-        // Submit Button Action
+
         submitBtn.addActionListener(e -> {
             String className = nameField.getText().trim();
             String semester = (String) semesterComboBox.getSelectedItem();
@@ -260,15 +243,13 @@ public class ClassWindow extends JFrame {
                 );
                 return;
             }
-            
-            // Build selected teachers list
+
             StringBuilder selectedTeachers = new StringBuilder();
             for(int i = 0; i < selectedTableModel.getRowCount(); i++) {
                 if(i > 0) selectedTeachers.append(", ");
                 selectedTeachers.append(selectedTableModel.getValueAt(i, 1));
             }
-            
-            // Clear input fields
+
             nameField.setText("");
             teacherField.setText("");
             semesterComboBox.setSelectedIndex(0);
@@ -301,8 +282,7 @@ public class ClassWindow extends JFrame {
         var titleLabel = new JLabel(title);
         titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 16));
         titleLabel.setForeground(new Color(41, 128, 185));
-        
-        // Create Table
+
         String[] columnNames = {"ID", "Teacher Name"};
         DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0) {
             @Override
@@ -325,8 +305,7 @@ public class ClassWindow extends JFrame {
         table.getTableHeader().setForeground(Color.WHITE);
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         table.setSelectionBackground(new Color(52, 152, 219, 100));
-        
-        // Set column widths
+
         table.getColumnModel().getColumn(0).setPreferredWidth(50);
         table.getColumnModel().getColumn(1).setPreferredWidth(200);
         
