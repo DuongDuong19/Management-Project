@@ -28,14 +28,14 @@ import javax.swing.border.EmptyBorder;
 
 import com.myteam.work.Configuration;
 import com.myteam.work.controller.TeacherWinController;
+import com.myteam.work.gui.pages.DefaultTextDisplayer;
 import com.myteam.work.gui.pages.MSTable;
 import com.myteam.work.gui.pages.ManagerPage;
-import com.myteam.work.management.data.User;
-import com.myteam.work.gui.pages.DefaultTextDisplayer;
-import com.myteam.work.management.handler.TeachClassHandler;
-import com.myteam.work.management.handler.SubjectHandler;
 import com.myteam.work.management.data.Pair;
 import com.myteam.work.management.data.Subject;
+import com.myteam.work.management.data.User;
+import com.myteam.work.management.handler.SubjectHandler;
+import com.myteam.work.management.handler.TeachClassHandler;
 
 import lombok.Getter;
 
@@ -61,6 +61,7 @@ public class TeacherWindow extends JFrame {
 	private MSTable availableClassTable;
     private TeacherWinController ttwc;
 
+    @Deprecated
     public TeacherWindow(User target) {
         this.setTitle("Teacher Management");
         this.setSize(new Dimension(1100, 750));
@@ -73,7 +74,6 @@ public class TeacherWindow extends JFrame {
         mainPanel.setBackground(BACKGROUND_COLOR);
         mainPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
 
-        // Top Panel - Teacher Information Form
         var topPanel = new JPanel(new GridBagLayout());
         topPanel.setBackground(Color.WHITE);
         topPanel.setBorder(BorderFactory.createCompoundBorder(
@@ -112,7 +112,6 @@ public class TeacherWindow extends JFrame {
 		usernameField.addFocusListener(new DefaultTextDisplayer(defaultUsernameText));
 		passwordField.addFocusListener(new DefaultTextDisplayer(defaultPasswordText));
 
-        // Row 1: Sex and Name
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.weightx = 0;
@@ -127,7 +126,6 @@ public class TeacherWindow extends JFrame {
         gbc.weightx = 0.7;
         topPanel.add(teacherNameField, gbc);
 
-        // Row 2: Birth Date and Place
         gbc.gridx = 0;
         gbc.gridy = 1;
         gbc.weightx = 0;
@@ -156,18 +154,15 @@ public class TeacherWindow extends JFrame {
         gbc.weightx = 0.7;
         topPanel.add(passwordField, gbc);
 
-        // Middle Panel - Tables
         var middlePanel = new JPanel(new GridLayout(2, 1, 0, 15));
         middlePanel.setBackground(BACKGROUND_COLOR);
 
-        // // Subject Section with Add/Remove buttons
         var subjectSection = new JPanel(new BorderLayout(10, 0));
         subjectSection.setBackground(BACKGROUND_COLOR);
 
         var subjectTablesPanel = new JPanel(new GridLayout(1, 2, 15, 0));
         subjectTablesPanel.setBackground(BACKGROUND_COLOR);
 
-        // Selected Subjects Panel
         var selectedSubjectPanel = new JPanel(new BorderLayout(5, 5));
         selectedSubjectPanel.setBackground(Color.WHITE);
         selectedSubjectPanel.setBorder(BorderFactory.createCompoundBorder(
@@ -190,7 +185,6 @@ public class TeacherWindow extends JFrame {
         selectedSubjectScroll.setPreferredSize(new Dimension(250, 150));
         selectedSubjectPanel.add(selectedSubjectScroll, BorderLayout.CENTER);
 
-        // Available Subjects Panel
         var availableSubjectPanel = new JPanel(new BorderLayout(5, 5));
         availableSubjectPanel.setBackground(Color.WHITE);
         availableSubjectPanel.setBorder(BorderFactory.createCompoundBorder(
@@ -217,7 +211,6 @@ public class TeacherWindow extends JFrame {
         subjectTablesPanel.add(selectedSubjectPanel);
         subjectTablesPanel.add(availableSubjectPanel);
 
-        // Subject Buttons Panel
         var subjectButtonsPanel = new JPanel(new GridLayout(2, 1, 0, 10));
         subjectButtonsPanel.setBackground(BACKGROUND_COLOR);
 
@@ -230,7 +223,6 @@ public class TeacherWindow extends JFrame {
         subjectButtonsPanel.add(addSubjectBtn);
         subjectButtonsPanel.add(removeSubjectBtn);
 
-        // Add buttons to the right side of subject section
         var subjectButtonWrapper = new JPanel(new FlowLayout(FlowLayout.CENTER));
         subjectButtonWrapper.setBackground(BACKGROUND_COLOR);
         subjectButtonWrapper.add(subjectButtonsPanel);
@@ -238,14 +230,12 @@ public class TeacherWindow extends JFrame {
         subjectSection.add(subjectTablesPanel, BorderLayout.CENTER);
         subjectSection.add(subjectButtonWrapper, BorderLayout.EAST);
 
-        // Class Section with Add/Remove buttons
         var classSection = new JPanel(new BorderLayout(10, 0));
         classSection.setBackground(BACKGROUND_COLOR);
 
         var classTablesPanel = new JPanel(new GridLayout(1, 2, 15, 0));
         classTablesPanel.setBackground(BACKGROUND_COLOR);
 
-        // Selected Classes Panel
         var selectedClassPanel = new JPanel(new BorderLayout(5, 5));
         selectedClassPanel.setBackground(Color.WHITE);
         selectedClassPanel.setBorder(BorderFactory.createCompoundBorder(
@@ -268,7 +258,6 @@ public class TeacherWindow extends JFrame {
         selectedClassScroll.setPreferredSize(new Dimension(250, 150));
         selectedClassPanel.add(selectedClassScroll, BorderLayout.CENTER);
 
-        // Available Classes Panel
         var availableClassPanel = new JPanel(new BorderLayout(5, 5));
         availableClassPanel.setBackground(Color.WHITE);
         availableClassPanel.setBorder(BorderFactory.createCompoundBorder(
@@ -294,7 +283,6 @@ public class TeacherWindow extends JFrame {
         classTablesPanel.add(selectedClassPanel);
         classTablesPanel.add(availableClassPanel);
 
-        // Class Buttons Panel
         var classButtonsPanel = new JPanel(new GridLayout(2, 1, 0, 10));
         classButtonsPanel.setBackground(BACKGROUND_COLOR);
 
@@ -344,7 +332,7 @@ public class TeacherWindow extends JFrame {
             teacherNameField.setText(this.target.getInfo().getName());
             dateOfBirthField.setText((this.target.getInfo().getBirth()).toString());
             birthPlaceField.setText(
-                    this.target.getInfo().getPlaceOfBirth() != null ? this.target.getInfo().getPlaceOfBirth() : "");
+                    this.target.getInfo().getPlaceOfBirth() != "" ? this.target.getInfo().getPlaceOfBirth() : "");
 			usernameField.setText(this.target.getAuthName());
 			passwordField.setText(this.target.getAuthPass());
 			teacherNameField.setForeground(new Color(30, 30, 30));
@@ -415,7 +403,6 @@ public class TeacherWindow extends JFrame {
 			ttwc.loadAvailableClass(TeacherWindow.this);
 		});
 
-        // Submit Button Action
         submitBtn.addActionListener(_ -> {
             var submit = new SubmitWindow(false);
             submit.setCancelAction(_ -> submit.dispose());
@@ -524,10 +511,12 @@ public class TeacherWindow extends JFrame {
         button.setPreferredSize(new Dimension(180, 35));
 
         button.addMouseListener(new MouseAdapter() {
+            @Override
             public void mouseEntered(MouseEvent evt) {
                 button.setBackground(bgColor.brighter());
             }
 
+            @Override
             public void mouseExited(MouseEvent evt) {
                 button.setBackground(bgColor);
             }

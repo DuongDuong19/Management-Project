@@ -34,8 +34,6 @@ public class ClassWindow extends JFrame {
     private DefaultTableModel availableTableModel;
     private JTable selectedClassTable;
     private JTable availableClassTable;
-    private JLabel nameLabel, teacherLabel;
-    private JPanel formPanel, buttonPanel;
     private JComboBox<String> semesterComboBox;
     private JComboBox<String> subjectComboBox;
     
@@ -62,13 +60,11 @@ public class ClassWindow extends JFrame {
         var titleLabel = new JLabel("Add New Class");
         titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 18));
         titleLabel.setForeground(new Color(41, 128, 185));
-        
-        // Form Panel with input fields
+
         var formPanel = new JPanel(new GridLayout(2, 4, 15, 15));
         formPanel.setBackground(Color.WHITE);
         formPanel.setBorder(new EmptyBorder(15, 0, 15, 0));
-        
-        // Class Name
+
         var nameLabel = new JLabel("Class Name:");
         nameLabel.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         formPanel.add(nameLabel);
@@ -105,8 +101,7 @@ public class ClassWindow extends JFrame {
         subjectComboBox.setFont(new Font("Segoe UI", Font.PLAIN, 13));
         subjectComboBox.setBackground(Color.WHITE);
         formPanel.add(subjectComboBox);
-        
-        // Teacher
+
         var teacherLabel = new JLabel("Teacher:");
         teacherLabel.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         formPanel.add(teacherLabel);
@@ -358,9 +353,11 @@ public class ClassWindow extends JFrame {
         button.setFont(new Font("Segoe UI", Font.BOLD, 14));
         
         button.addMouseListener(new MouseAdapter() {
+            @Override
             public void mouseEntered(MouseEvent evt) {
                 button.setBackground(bgColor.brighter());
             }
+            @Override
             public void mouseExited(MouseEvent evt) {
                 button.setBackground(bgColor);
             }
