@@ -415,8 +415,21 @@ public class TeachClassHandler {
     public void insertStudentIntoClass(TeachClass classes, int int1) {
         try {
 			var prepareStatement = this.connection.prepareStatement("""
-				insert into StudentListTeachClass(student, classes)
-values(?, ?);
+				INSERT INTO StudentListTeachClass (
+    student,
+    classes,
+    test1,
+    test2,
+    endtest,
+    normalizedScore
+)
+VALUES (
+    ?,    
+    ?,    
+    ?,  
+    ?,  
+    ?,   
+    ? ;
 					""");
 			prepareStatement.setInt(1, classes.getId());
 			prepareStatement.setInt(2, int1);

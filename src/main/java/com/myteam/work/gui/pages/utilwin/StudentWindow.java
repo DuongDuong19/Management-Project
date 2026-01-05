@@ -64,8 +64,7 @@ public class StudentWindow extends JFrame {
         var mainPanel = new JPanel(new BorderLayout(15, 15));
         mainPanel.setBackground(BACKGROUND_COLOR);
         mainPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
-        
-        // Top Panel - Student Information Form
+
         var topPanel = new JPanel(new GridBagLayout());
         topPanel.setBackground(Color.WHITE);
         topPanel.setBorder(BorderFactory.createCompoundBorder(
@@ -98,8 +97,7 @@ public class StudentWindow extends JFrame {
         var dateOfBirthField = createStyledTextField(defaultDateOfBirthText, 150);
         var birthPlaceField = createStyledTextField(defaultBirthPlaceText, 300);
 		var generationField = createStyledTextField(defaultGenerationText, 300);
-        
-        // Row 1: Student Sex and Student Name
+
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.weightx = 0;
@@ -116,8 +114,7 @@ public class StudentWindow extends JFrame {
         gbc.gridx = 3;
         gbc.weightx = 0.7;
         topPanel.add(studentNameField, gbc);
-        
-        // Row 2: Date of Birth and Birth Place
+
         gbc.gridx = 0;
         gbc.gridy = 1;
         gbc.weightx = 0;
@@ -141,8 +138,7 @@ public class StudentWindow extends JFrame {
 
 		gbc.gridx = 1;
 		topPanel.add(generationField, gbc);
-        
-        // Bottom Panel - Submit Button
+
         var bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 10));
         bottomPanel.setBackground(BACKGROUND_COLOR);
         
@@ -155,8 +151,7 @@ public class StudentWindow extends JFrame {
         mainPanel.add(bottomPanel, BorderLayout.SOUTH);
         
         this.add(mainPanel);
-        
-        // Add Focus Listeners
+
         studentNameField.addFocusListener(new DefaultTextDisplayer(defaultStudentNameText));
         dateOfBirthField.addFocusListener(new DefaultTextDisplayer(defaultDateOfBirthText));
         birthPlaceField.addFocusListener(new DefaultTextDisplayer(defaultBirthPlaceText));
@@ -181,8 +176,7 @@ public class StudentWindow extends JFrame {
 			birthPlaceField.setForeground(new Color(30, 30, 30));
 			generationField.setForeground(new Color(30, 30, 30));
         }
-        
-        // Submit Button Action
+
         submitBtn.addActionListener(_ -> {
             var submit = new SubmitWindow(false);
             submit.setCancelAction(_ -> submit.dispose());
@@ -191,19 +185,6 @@ public class StudentWindow extends JFrame {
                 String dateOfBirth = dateOfBirthField.getText();
                 String birthPlace = birthPlaceField.getText();
                 
-                // Validate
-				/*
-                if(studentName.equals(defaultStudentNameText) || studentName.trim().isEmpty()) {
-                    JOptionPane.showMessageDialog(
-                        StudentWindow.this,
-                        "Please enter a valid Student Name!",
-                        "Validation Error",
-                        JOptionPane.WARNING_MESSAGE
-                    );
-                    submit.dispose();
-                    return;
-                }
-                */
                 if(target == null) {
                     stwc.createStudent(studentNameField.getText(), LocalDate.parse(dateOfBirthField.getText(), DateTimeFormatter.ofPattern("yyyy-MM-dd")), maleRadio.isSelected(), birthPlaceField.getText(), generationField.getText());
                 } else {
